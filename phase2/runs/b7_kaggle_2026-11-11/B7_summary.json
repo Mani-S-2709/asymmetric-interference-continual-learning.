@@ -1,0 +1,60 @@
+{
+  "across_order_summary": {
+    "ACC": {
+      "mean": 0.6138,
+      "population_std": 0.009019977827023754
+    },
+    "BWT": {
+      "mean": 0.09874999999999999,
+      "population_std": 0.010636023693091317
+    },
+    "F": {
+      "mean": -0.01099999999999999,
+      "population_std": 0.018748333259252677
+    },
+    "FWT": {
+      "mean": 0.15475,
+      "population_std": 0.00892328414878738
+    }
+  },
+  "complete": true,
+  "completed_orders": 5,
+  "data_manifest_sha256": "e459305688bf0ff5db4f744cee773ef2c0bb55c52df4bf71a7980479e58301a4",
+  "expected_orders": 5,
+  "method_id": "B7",
+  "method_interpretation": "COMPASS-inspired target-distribution-weighted semantic-cluster replay adaptation",
+  "per_order": {
+    "order-1": {
+      "ACC": 0.609,
+      "BWT": 0.1075,
+      "F": 0.017500000000000016,
+      "FWT": 0.16125
+    },
+    "order-2": {
+      "ACC": 0.605,
+      "BWT": 0.08125,
+      "F": 0.0050000000000000044,
+      "FWT": 0.15250000000000002
+    },
+    "order-3": {
+      "ACC": 0.63,
+      "BWT": 0.09999999999999999,
+      "F": -0.03,
+      "FWT": 0.13999999999999999
+    },
+    "order-4": {
+      "ACC": 0.617,
+      "BWT": 0.09375,
+      "F": -0.025000000000000022,
+      "FWT": 0.15375
+    },
+    "order-5": {
+      "ACC": 0.608,
+      "BWT": 0.11124999999999997,
+      "F": -0.02249999999999995,
+      "FWT": 0.16625
+    }
+  },
+  "protocol_id": "xnli-pilot-5lang-500x200-v1",
+  "protocol_sha256": "666044368518b0422705eab44e98a375650c60286ff8e560a7a24ab1944c0a3d"
+}

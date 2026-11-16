@@ -1,0 +1,242 @@
+{
+  "completed": true,
+  "data_manifest_sha256": "e459305688bf0ff5db4f744cee773ef2c0bb55c52df4bf71a7980479e58301a4",
+  "evaluation_mode": "sequential",
+  "final_accuracy_by_language": {
+    "de": 0.655,
+    "en": 0.665,
+    "es": 0.69,
+    "hi": 0.65,
+    "sw": 0.445
+  },
+  "metadata": {
+    "checkpoint_attempt": "xnli-pilot-5lang-500x200-v1-B8-order-4-seed-42",
+    "cuda_available": true,
+    "cuda_device": "Tesla T4",
+    "function_vector_definition": "normalized mean last-prompt-token final-layer activation per language stage",
+    "function_vector_loss": "current answer-token cross-entropy + coefficient * (1 - cosine similarity) on prior-language replay prompts",
+    "function_vector_regularization": 0.1,
+    "function_vector_source": "Jiang et al. (2025), arXiv:2502.11019",
+    "lora": {
+      "alpha": 32,
+      "dropout": 0.05,
+      "rank": 16,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ]
+    },
+    "method_deviation": "Function-vector-guided replay adaptation: maintain one activation-vector anchor per prior language, replay examples from a 125-example uniform reservoir, and penalize cosine drift of their final-layer prompt activations. This does not implement the source paper's activation-patched attention head vectors or function-vector-guided KL objective; it is a documented Phase 2 operationalization.",
+    "method_id": "B8",
+    "model_id": "meta-llama/Llama-3.2-1B",
+    "order_id": "order-4",
+    "package_versions": {
+      "accelerate": "1.15.0",
+      "bitsandbytes": "0.50.2",
+      "datasets": "5.0.1",
+      "peft": "0.21.2",
+      "torch": "2.11.0+cu130",
+      "transformers": "5.18.0"
+    },
+    "protocol_sha256": "666044368518b0422705eab44e98a375650c60286ff8e560a7a24ab1944c0a3d",
+    "replay_buffer_capacity_examples": 125,
+    "replay_examples_per_current_example": 1,
+    "replay_policy": "uniform-reservoir-with-function-vector-anchors",
+    "replay_seed": 20261112,
+    "replay_stages": [
+      {
+        "buffer_examples_by_language": {
+          "es": 125
+        },
+        "buffer_size_after_stage": 125,
+        "current_examples": 500,
+        "function_vector_dimension": 2048,
+        "function_vector_regularization": 0.1,
+        "language": "es",
+        "replay_examples": 0,
+        "replay_examples_by_language": {},
+        "selection": "uniform-reservoir-with-function-vector-anchors",
+        "stage_index": 0,
+        "training_examples": 500,
+        "training_seconds": 191.75065584799995
+      },
+      {
+        "buffer_examples_by_language": {
+          "en": 61,
+          "es": 64
+        },
+        "buffer_size_after_stage": 125,
+        "current_examples": 500,
+        "function_vector_dimension": 2048,
+        "function_vector_regularization": 0.1,
+        "language": "en",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "es": 500
+        },
+        "selection": "uniform-reservoir-with-function-vector-anchors",
+        "stage_index": 1,
+        "training_examples": 1000,
+        "training_seconds": 352.1357171010004
+      },
+      {
+        "buffer_examples_by_language": {
+          "en": 43,
+          "es": 42,
+          "sw": 40
+        },
+        "buffer_size_after_stage": 125,
+        "current_examples": 500,
+        "function_vector_dimension": 2048,
+        "function_vector_regularization": 0.1,
+        "language": "sw",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "en": 238,
+          "es": 262
+        },
+        "selection": "uniform-reservoir-with-function-vector-anchors",
+        "stage_index": 2,
+        "training_examples": 1000,
+        "training_seconds": 387.0325643109991
+      },
+      {
+        "buffer_examples_by_language": {
+          "en": 34,
+          "es": 31,
+          "hi": 29,
+          "sw": 31
+        },
+        "buffer_size_after_stage": 125,
+        "current_examples": 500,
+        "function_vector_dimension": 2048,
+        "function_vector_regularization": 0.1,
+        "language": "hi",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "en": 191,
+          "es": 146,
+          "sw": 163
+        },
+        "selection": "uniform-reservoir-with-function-vector-anchors",
+        "stage_index": 3,
+        "training_examples": 1000,
+        "training_seconds": 489.4034170699997
+      },
+      {
+        "buffer_examples_by_language": {
+          "de": 20,
+          "en": 25,
+          "es": 28,
+          "hi": 24,
+          "sw": 28
+        },
+        "buffer_size_after_stage": 125,
+        "current_examples": 500,
+        "function_vector_dimension": 2048,
+        "function_vector_regularization": 0.1,
+        "language": "de",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "en": 139,
+          "es": 115,
+          "hi": 110,
+          "sw": 136
+        },
+        "selection": "uniform-reservoir-with-function-vector-anchors",
+        "stage_index": 4,
+        "training_examples": 1000,
+        "training_seconds": 409.9699091319999
+      }
+    ],
+    "source_revision": "2a1ccdd595dff481c65f7f18d302f4aa5816dc6b",
+    "task_order": [
+      "es",
+      "en",
+      "sw",
+      "hi",
+      "de"
+    ],
+    "training": {
+      "epochs": 1,
+      "gradient_accumulation_steps": 8,
+      "gradient_checkpointing": true,
+      "learning_rate": 0.0002,
+      "load_in_4bit": true,
+      "max_length": 512,
+      "seeds": [
+        42
+      ],
+      "train_batch_size": 1
+    },
+    "training_seed": 42
+  },
+  "method_id": "B8",
+  "metrics": {
+    "AA": 0.621,
+    "ACC": 0.621,
+    "BWT": 0.09875,
+    "F": -0.003750000000000017,
+    "FP": 0.621,
+    "FWT": 0.1875
+  },
+  "order_id": "order-4",
+  "performance_matrix": [
+    [
+      0.395,
+      0.4,
+      0.315,
+      0.375,
+      0.32
+    ],
+    [
+      0.6,
+      0.64,
+      0.375,
+      0.545,
+      0.51
+    ],
+    [
+      0.625,
+      0.695,
+      0.41,
+      0.625,
+      0.64
+    ],
+    [
+      0.65,
+      0.695,
+      0.48,
+      0.61,
+      0.65
+    ],
+    [
+      0.69,
+      0.665,
+      0.445,
+      0.65,
+      0.655
+    ]
+  ],
+  "protocol_id": "xnli-pilot-5lang-500x200-v1",
+  "protocol_sha256": "666044368518b0422705eab44e98a375650c60286ff8e560a7a24ab1944c0a3d",
+  "run_id": "xnli-pilot-5lang-500x200-v1-B8-order-4-seed-42",
+  "schema_version": 1,
+  "task_order": [
+    "es",
+    "en",
+    "sw",
+    "hi",
+    "de"
+  ],
+  "training_seed": 42,
+  "zero_shot_accuracy": [
+    0.365,
+    0.32,
+    0.315,
+    0.35,
+    0.315
+  ]
+}

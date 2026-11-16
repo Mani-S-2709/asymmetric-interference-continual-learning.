@@ -1,0 +1,453 @@
+{
+  "completed": true,
+  "data_manifest_sha256": "e459305688bf0ff5db4f744cee773ef2c0bb55c52df4bf71a7980479e58301a4",
+  "evaluation_mode": "sequential",
+  "final_accuracy_by_language": {
+    "de": 0.595,
+    "en": 0.715,
+    "es": 0.645,
+    "hi": 0.61,
+    "sw": 0.46
+  },
+  "metadata": {
+    "checkpoint_attempt": "xnli-pilot-5lang-500x200-v1-B7-order-2-seed-42",
+    "cluster_count_rule": "min(8, round(sqrt(number_of_memory_examples)))",
+    "cluster_weighting": "current-stage cluster demand divided by prior-memory cluster supply",
+    "cuda_available": true,
+    "cuda_device": "Tesla T4",
+    "embedding_batch_size": 4,
+    "embedding_model": "current Phase 2 pretrained Llama backbone with LoRA disabled",
+    "embedding_pooling": "attention_masked_mean_last_hidden_state",
+    "lora": {
+      "alpha": 32,
+      "dropout": 0.05,
+      "rank": 16,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ]
+    },
+    "memory_update": "uniform reservoir after each language stage",
+    "method_deviation": "COMPASS-inspired semantic-cluster replay adaptation: embed train prompts with the frozen pretrained backbone, cluster the prior-language reservoir, and reweight replay examples so the replay cluster distribution follows the incoming training-stage proxy distribution. This XNLI/LoRA method does not reproduce COMPASS's DoRA adapters, external usage distribution proxy, multilingual auxiliary corpus, or full clustering/sampling procedure.",
+    "method_id": "B7",
+    "model_id": "meta-llama/Llama-3.2-1B",
+    "order_id": "order-2",
+    "package_versions": {
+      "accelerate": "1.15.0",
+      "bitsandbytes": "0.50.2",
+      "datasets": "5.0.1",
+      "peft": "0.21.2",
+      "torch": "2.11.0+cu130",
+      "transformers": "5.18.0"
+    },
+    "protocol_sha256": "666044368518b0422705eab44e98a375650c60286ff8e560a7a24ab1944c0a3d",
+    "replay_buffer_capacity_examples": 125,
+    "replay_examples_per_current_example": 1,
+    "replay_policy": "current-distribution-weighted-semantic-clusters",
+    "replay_seed": 20261112,
+    "replay_stages": [
+      {
+        "buffer_examples_by_language": {
+          "de": 125
+        },
+        "buffer_size_after_stage": 125,
+        "current_examples": 500,
+        "embedding_seconds": 48.65988474000005,
+        "language": "de",
+        "memory_update_seconds": 0.16859113999998954,
+        "replay_examples": 0,
+        "replay_examples_by_language": {},
+        "selection": "current-distribution-weighted-semantic-clusters",
+        "semantic_cluster_selection_seconds": 0.00017978799996853922,
+        "stage_index": 0,
+        "training_examples": 500,
+        "training_seconds": 169.2131203899994
+      },
+      {
+        "buffer_examples_by_language": {
+          "de": 64,
+          "es": 61
+        },
+        "buffer_size_after_stage": 125,
+        "cluster_count": 8,
+        "current_examples": 500,
+        "embedding_seconds": 45.5395985160003,
+        "language": "es",
+        "memory_cluster_counts": [
+          24,
+          15,
+          25,
+          14,
+          1,
+          12,
+          16,
+          18
+        ],
+        "memory_cluster_distribution": [
+          0.192,
+          0.12,
+          0.2,
+          0.112,
+          0.008,
+          0.096,
+          0.128,
+          0.144
+        ],
+        "memory_update_seconds": 0.17299813099998573,
+        "replay_cluster_counts": [
+          15,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          485
+        ],
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "de": 500
+        },
+        "selection": "current-distribution-weighted-semantic-clusters",
+        "semantic_cluster_selection_seconds": 0.08312121600010869,
+        "stage_index": 1,
+        "target_cluster_counts": [
+          17,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          482
+        ],
+        "target_cluster_distribution": [
+          0.034,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.002,
+          0.964
+        ],
+        "training_examples": 1000,
+        "training_seconds": 283.04992685199977
+      },
+      {
+        "buffer_examples_by_language": {
+          "de": 42,
+          "en": 40,
+          "es": 43
+        },
+        "buffer_size_after_stage": 125,
+        "cluster_count": 8,
+        "current_examples": 500,
+        "embedding_seconds": 39.45035791800001,
+        "language": "en",
+        "memory_cluster_counts": [
+          11,
+          8,
+          24,
+          8,
+          21,
+          9,
+          17,
+          27
+        ],
+        "memory_cluster_distribution": [
+          0.088,
+          0.064,
+          0.192,
+          0.064,
+          0.168,
+          0.072,
+          0.136,
+          0.216
+        ],
+        "memory_update_seconds": 0.17579148300046654,
+        "replay_cluster_counts": [
+          0,
+          0,
+          2,
+          0,
+          0,
+          0,
+          498,
+          0
+        ],
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "de": 2,
+          "es": 498
+        },
+        "selection": "current-distribution-weighted-semantic-clusters",
+        "semantic_cluster_selection_seconds": 0.07357137599956332,
+        "stage_index": 2,
+        "target_cluster_counts": [
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          498,
+          0
+        ],
+        "target_cluster_distribution": [
+          0.0,
+          0.0,
+          0.002,
+          0.002,
+          0.0,
+          0.0,
+          0.996,
+          0.0
+        ],
+        "training_examples": 1000,
+        "training_seconds": 257.9754531890003
+      },
+      {
+        "buffer_examples_by_language": {
+          "de": 31,
+          "en": 31,
+          "es": 34,
+          "sw": 29
+        },
+        "buffer_size_after_stage": 125,
+        "cluster_count": 8,
+        "current_examples": 500,
+        "embedding_seconds": 53.053839098000026,
+        "language": "sw",
+        "memory_cluster_counts": [
+          15,
+          28,
+          1,
+          11,
+          21,
+          7,
+          40,
+          2
+        ],
+        "memory_cluster_distribution": [
+          0.12,
+          0.224,
+          0.008,
+          0.088,
+          0.168,
+          0.056,
+          0.32,
+          0.016
+        ],
+        "memory_update_seconds": 0.16978062599991972,
+        "replay_cluster_counts": [
+          214,
+          0,
+          0,
+          175,
+          92,
+          0,
+          19,
+          0
+        ],
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "de": 19,
+          "en": 267,
+          "es": 214
+        },
+        "selection": "current-distribution-weighted-semantic-clusters",
+        "semantic_cluster_selection_seconds": 0.07440370099993743,
+        "stage_index": 3,
+        "target_cluster_counts": [
+          218,
+          1,
+          0,
+          169,
+          94,
+          0,
+          18,
+          0
+        ],
+        "target_cluster_distribution": [
+          0.436,
+          0.002,
+          0.0,
+          0.338,
+          0.188,
+          0.0,
+          0.036,
+          0.0
+        ],
+        "training_examples": 1000,
+        "training_seconds": 316.56090619099996
+      },
+      {
+        "buffer_examples_by_language": {
+          "de": 28,
+          "en": 28,
+          "es": 25,
+          "hi": 20,
+          "sw": 24
+        },
+        "buffer_size_after_stage": 125,
+        "cluster_count": 8,
+        "current_examples": 500,
+        "embedding_seconds": 79.61267350199978,
+        "language": "hi",
+        "memory_cluster_counts": [
+          25,
+          5,
+          6,
+          13,
+          30,
+          23,
+          13,
+          10
+        ],
+        "memory_cluster_distribution": [
+          0.2,
+          0.04,
+          0.048,
+          0.104,
+          0.24,
+          0.184,
+          0.104,
+          0.08
+        ],
+        "memory_update_seconds": 0.1741504959991289,
+        "replay_cluster_counts": [
+          114,
+          2,
+          0,
+          0,
+          54,
+          329,
+          1,
+          0
+        ],
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "de": 114,
+          "en": 277,
+          "es": 107,
+          "sw": 2
+        },
+        "selection": "current-distribution-weighted-semantic-clusters",
+        "semantic_cluster_selection_seconds": 0.08059678900008294,
+        "stage_index": 4,
+        "target_cluster_counts": [
+          106,
+          2,
+          0,
+          0,
+          48,
+          341,
+          3,
+          0
+        ],
+        "target_cluster_distribution": [
+          0.212,
+          0.004,
+          0.0,
+          0.0,
+          0.096,
+          0.682,
+          0.006,
+          0.0
+        ],
+        "training_examples": 1000,
+        "training_seconds": 397.24896793100015
+      }
+    ],
+    "source_revision": "2a1ccdd595dff481c65f7f18d302f4aa5816dc6b",
+    "task_order": [
+      "de",
+      "es",
+      "en",
+      "sw",
+      "hi"
+    ],
+    "training": {
+      "epochs": 1,
+      "gradient_accumulation_steps": 8,
+      "gradient_checkpointing": true,
+      "learning_rate": 0.0002,
+      "load_in_4bit": true,
+      "max_length": 512,
+      "seeds": [
+        42
+      ],
+      "train_batch_size": 1
+    },
+    "training_seed": 42
+  },
+  "method_id": "B7",
+  "metrics": {
+    "AA": 0.605,
+    "ACC": 0.605,
+    "BWT": 0.08125,
+    "F": 0.0050000000000000044,
+    "FP": 0.605,
+    "FWT": 0.15250000000000002
+  },
+  "order_id": "order-2",
+  "performance_matrix": [
+    [
+      0.45,
+      0.39,
+      0.41,
+      0.34,
+      0.43
+    ],
+    [
+      0.455,
+      0.51,
+      0.505,
+      0.345,
+      0.49
+    ],
+    [
+      0.645,
+      0.66,
+      0.69,
+      0.455,
+      0.595
+    ],
+    [
+      0.6,
+      0.63,
+      0.685,
+      0.44,
+      0.61
+    ],
+    [
+      0.595,
+      0.645,
+      0.715,
+      0.46,
+      0.61
+    ]
+  ],
+  "protocol_id": "xnli-pilot-5lang-500x200-v1",
+  "protocol_sha256": "666044368518b0422705eab44e98a375650c60286ff8e560a7a24ab1944c0a3d",
+  "run_id": "xnli-pilot-5lang-500x200-v1-B7-order-2-seed-42",
+  "schema_version": 1,
+  "task_order": [
+    "de",
+    "es",
+    "en",
+    "sw",
+    "hi"
+  ],
+  "training_seed": 42,
+  "zero_shot_accuracy": [
+    0.315,
+    0.365,
+    0.32,
+    0.315,
+    0.35
+  ]
+}

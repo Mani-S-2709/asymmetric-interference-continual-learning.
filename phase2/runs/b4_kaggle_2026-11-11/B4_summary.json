@@ -1,0 +1,60 @@
+{
+  "across_order_summary": {
+    "ACC": {
+      "mean": 0.6464,
+      "population_std": 0.012126005112979305
+    },
+    "BWT": {
+      "mean": 0.11825000000000001,
+      "population_std": 0.02851096280380584
+    },
+    "F": {
+      "mean": -0.025000000000000015,
+      "population_std": 0.017975678012247562
+    },
+    "FWT": {
+      "mean": 0.1815,
+      "population_std": 0.009663074045043851
+    }
+  },
+  "complete": true,
+  "completed_orders": 5,
+  "data_manifest_sha256": "e459305688bf0ff5db4f744cee773ef2c0bb55c52df4bf71a7980479e58301a4",
+  "expected_orders": 5,
+  "method_id": "B4",
+  "method_interpretation": "GCR-style gradient-herding adaptation; not an exact reproduction",
+  "per_order": {
+    "order-1": {
+      "ACC": 0.633,
+      "BWT": 0.08750000000000001,
+      "F": 0.007500000000000007,
+      "FWT": 0.18
+    },
+    "order-2": {
+      "ACC": 0.631,
+      "BWT": 0.08750000000000002,
+      "F": -0.018750000000000003,
+      "FWT": 0.195
+    },
+    "order-3": {
+      "ACC": 0.655,
+      "BWT": 0.13624999999999998,
+      "F": -0.035,
+      "FWT": 0.18374999999999997
+    },
+    "order-4": {
+      "ACC": 0.652,
+      "BWT": 0.11875000000000001,
+      "F": -0.04125000000000004,
+      "FWT": 0.16499999999999998
+    },
+    "order-5": {
+      "ACC": 0.661,
+      "BWT": 0.16125000000000003,
+      "F": -0.03750000000000003,
+      "FWT": 0.18375
+    }
+  },
+  "protocol_id": "xnli-pilot-5lang-500x200-v1",
+  "protocol_sha256": "666044368518b0422705eab44e98a375650c60286ff8e560a7a24ab1944c0a3d"
+}

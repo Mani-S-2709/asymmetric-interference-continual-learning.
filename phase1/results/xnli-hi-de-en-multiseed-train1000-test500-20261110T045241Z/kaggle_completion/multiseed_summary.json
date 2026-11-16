@@ -1,0 +1,175 @@
+{
+  "experiment_group_id": "xnli-hi-de-en-multiseed-train1000-test500-20261110T045241Z",
+  "task_order": [
+    "hi",
+    "de",
+    "en"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "train_examples_per_language": 1000,
+  "test_examples_per_language": 500,
+  "fixed_test_split_seed": 42,
+  "mean_performance_matrix_rows_after_each_stage": [
+    [
+      0.4766666666666667,
+      0.43866666666666665,
+      0.44266666666666665
+    ],
+    [
+      0.616,
+      0.6486666666666667,
+      0.702
+    ],
+    [
+      0.64,
+      0.6886666666666666,
+      0.7906666666666666
+    ]
+  ],
+  "std_performance_matrix_rows_after_each_stage": [
+    [
+      0.06070694633510515,
+      0.06800980321492876,
+      0.07621898276238889
+    ],
+    [
+      0.03218695387886219,
+      0.03177000681985031,
+      0.06437390775772432
+    ],
+    [
+      0.01907878402833893,
+      0.02700617213403876,
+      0.021939310229205734
+    ]
+  ],
+  "mean_final_accuracies_by_language": {
+    "hi": 0.64,
+    "de": 0.6886666666666666,
+    "en": 0.7906666666666666
+  },
+  "mean_first_seen_accuracies_by_language": {
+    "hi": 0.4766666666666667,
+    "de": 0.6486666666666667,
+    "en": 0.7906666666666666
+  },
+  "per_seed_results": [
+    {
+      "seed": 42,
+      "experiment_id": "xnli-hi-de-en-multiseed-train1000-test500-20261110T045241Z-seed42",
+      "matrix": [
+        [
+          0.542,
+          0.506,
+          0.522
+        ],
+        [
+          0.642,
+          0.668,
+          0.754
+        ],
+        [
+          0.65,
+          0.688,
+          0.778
+        ]
+      ],
+      "metrics": {
+        "ACC": 0.7053333333333334,
+        "AA": 0.7053333333333334,
+        "BWT": 0.06399999999999995,
+        "FWT": 0.296,
+        "F": -0.013999999999999957,
+        "FP": 0.7053333333333334
+      },
+      "evaluation_json": "/kaggle/working/phase1_completion/xnli-hi-de-en-multiseed-train1000-test500-20261110T045241Z/prior_results/seed-42-evaluation_results.json"
+    },
+    {
+      "seed": 43,
+      "experiment_id": "xnli-hi-de-en-multiseed-train1000-test500-20261110T045241Z-seed43",
+      "matrix": [
+        [
+          0.466,
+          0.44,
+          0.436
+        ],
+        [
+          0.626,
+          0.666,
+          0.722
+        ],
+        [
+          0.652,
+          0.716,
+          0.816
+        ]
+      ],
+      "metrics": {
+        "ACC": 0.7280000000000001,
+        "AA": 0.7280000000000001,
+        "BWT": 0.11799999999999997,
+        "FWT": 0.24699999999999997,
+        "F": -0.03799999999999998,
+        "FP": 0.7280000000000001
+      },
+      "evaluation_json": "/kaggle/working/phase1_completion/xnli-hi-de-en-multiseed-train1000-test500-20261110T045241Z/prior_results/seed-43-evaluation_results.json"
+    },
+    {
+      "seed": 44,
+      "experiment_id": "xnli-hi-de-en-multiseed-train1000-test500-20261110T045241Z-seed44",
+      "matrix": [
+        [
+          0.422,
+          0.37,
+          0.37
+        ],
+        [
+          0.58,
+          0.612,
+          0.63
+        ],
+        [
+          0.618,
+          0.662,
+          0.778
+        ]
+      ],
+      "metrics": {
+        "ACC": 0.6859999999999999,
+        "AA": 0.6859999999999999,
+        "BWT": 0.12300000000000003,
+        "FWT": 0.16599999999999998,
+        "F": -0.04400000000000004,
+        "FP": 0.6859999999999999
+      },
+      "evaluation_json": "/kaggle/working/phase1_completion/xnli-hi-de-en-multiseed-train1000-test500-20261110T045241Z/seed-44-attempts/attempt-20261110T154618Z/evaluation/evaluation_results.json"
+    }
+  ],
+  "per_seed_checkpoint_checks": [
+    {
+      "seed": 42,
+      "last_seen_language_strong_relative_to_previous_mean": true,
+      "earlier_languages_degraded_on_average": false,
+      "checkpoint_pattern_passed": false
+    },
+    {
+      "seed": 43,
+      "last_seen_language_strong_relative_to_previous_mean": true,
+      "earlier_languages_degraded_on_average": false,
+      "checkpoint_pattern_passed": false
+    },
+    {
+      "seed": 44,
+      "last_seen_language_strong_relative_to_previous_mean": true,
+      "earlier_languages_degraded_on_average": false,
+      "checkpoint_pattern_passed": false
+    }
+  ],
+  "checkpoint_pattern_pass_rate": 0.0,
+  "checkpoint_pattern_passed_all_seeds": false,
+  "interpretation_note": "Three completed seeds provide a preliminary repeatability check, not a definitive scientific conclusion."
+}

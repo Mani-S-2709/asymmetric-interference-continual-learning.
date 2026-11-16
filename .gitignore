@@ -40,6 +40,8 @@ wandb/
 mlruns/
 lightning_logs/
 *.log
+phase1/checkpoints/
+phase1/results/**/*.zip
 
 # Jupyter temporary checkpoints
 .ipynb_checkpoints/

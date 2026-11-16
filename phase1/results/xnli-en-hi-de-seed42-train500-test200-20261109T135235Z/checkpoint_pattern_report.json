@@ -1,0 +1,41 @@
+{
+  "experiment_id": "xnli-en-hi-de-seed42-train500-test200-20261109T135235Z",
+  "task_order": [
+    "en",
+    "hi",
+    "de"
+  ],
+  "performance_matrix_rows_after_each_stage": [
+    [
+      0.495,
+      0.41,
+      0.44
+    ],
+    [
+      0.52,
+      0.47,
+      0.495
+    ],
+    [
+      0.69,
+      0.55,
+      0.615
+    ]
+  ],
+  "final_accuracies_by_language": {
+    "en": 0.69,
+    "hi": 0.55,
+    "de": 0.615
+  },
+  "first_seen_accuracies": {
+    "en": 0.495,
+    "hi": 0.47,
+    "de": 0.615
+  },
+  "mean_previous_languages_first_seen": 0.4825,
+  "mean_previous_languages_final": 0.62,
+  "last_seen_language_strong_relative_to_previous_mean": false,
+  "earlier_languages_degraded_on_average": false,
+  "checkpoint_pattern_passed": false,
+  "pilot_sample_sizes_only": true
+}

@@ -1,15 +1,14 @@
 # Project status
 
-**Last reviewed:** 2026-11-11
-**Current focus:** Finish a comparable Phase 2 baseline set.
+**Last reviewed:** 2026-11-16
+**Current focus:** Publish the completed Phase 0–2 code and compact result records.
 
 ## At a glance
 
 | Workstream | Status | What is established |
 |---|---|---|
 | Phase 1: harness and pilot evidence | Complete for project progression; target checkpoint pattern not reproduced | The English → Hindi → German pilot and the Hindi → German → English three-seed follow-up are saved. The follow-up has validated results for seeds 42, 43, and 44, with a 0/3 pass rate for the predefined pattern. |
-| Phase 2: B0–B8 baselines | In progress | B0 is complete for all five current-protocol orders and validated. One current-protocol B1 run is saved. B2–B4 have runnable local runners/notebooks but no local result archives; B5–B8 remain outstanding. |
-| Later research phases | Not yet at their Phase 2 entry checkpoint | Start the prior-comparison and proposed-method work only after the required baseline results are collected and reviewed. |
+| Phase 2: B0–B8 baselines | Pilot baseline coverage complete; source-paper reproductions remain qualified | B0, B2–B8 each have five current-protocol orders; B1 has its single order-independent run. Every selected result record validates against its matching manifest. B3 and B7 (and other described methods) are adaptations, not exact paper reproductions. |
 
 Phase 1 being accepted for project progression is **not** a claim that the original checkpoint pattern was reproduced.
 
@@ -33,23 +32,18 @@ Current Phase 2 comparison target: five languages (`en`, `hi`, `es`, `de`, `sw`)
 | Method | What exists now | Status / next action |
 |---|---|---|
 | **B0 — sequential fine-tuning, no replay** | Five completed orders, seed 42; mean ACC 0.5822 (SD 0.0484), BWT 0.0983 (SD 0.0447), FWT 0.1100 (SD 0.0274), F -0.0458 (SD 0.0475). | Complete for the current five-order protocol. All result records and prepared-data checksums validate locally. The public repo will contain the results and selection manifest, not upstream XNLI sentence text or model checkpoints. See the [B0 run record](./phase2/runs/b0_kaggle_2026-11-11/README.md). |
-| **B1 — joint multilingual training** | One completed, current-protocol run: ACC 0.623; adapter, fixed data, result, and matching manifest are saved together. | Complete for B1's order-invariant single-run protocol. Do not mix with the older order-1 B1 record (ACC 0.671). |
-| **B2 — Uniform Experience Replay** | Runner and clean Kaggle notebook are available; no B2 result archive is present in this local project. | Run/collect all five orders and validate artifacts before aggregation. |
-| **B3 — DER++** | Runnable causal-LM adaptation and Kaggle notebook are available; no B3 result archive is present locally. | Run all five orders. This is a documented candidate-label-logit adaptation, not full-vocabulary DER++. |
-| **B4 — GCR** | Runnable gradient-herding adapter and Kaggle notebook are available; no B4 result archive is present. | Run all five orders, preferably across saved Kaggle sessions. This is a documented GCR-style adaptation, not an exact paper reproduction; it adds 2,500 per-example gradient passes/order and uses 1:1 replay. |
-| **B5–B8** | Planning/setup is documented, but method implementations/results are not a complete comparable set. | Still outstanding; see [Phase 2 plan](./phase2/README.md). |
+| **B1 — joint multilingual training** | One completed, current-protocol run: ACC 0.623; compact result and matching manifest are published. | Complete for B1's order-invariant single-run protocol. The adapter and fixed data remain local; do not mix with the older order-1 B1 record (ACC 0.671). |
+| **B2 — Uniform Experience Replay** | Five completed orders, seed 42; mean ACC 0.6344 (SD 0.0143), BWT 0.0980 (SD 0.0275), FWT 0.1825 (SD 0.0299), F -0.0055 (SD 0.0172). | Complete for the current five-order protocol. All result records and prepared-data checksums validate locally. See the [B2 run record](./phase2/runs/b2_kaggle_2026-11-11/README.md). |
+| **B3 — DER++** | Five completed orders, seed 42; mean ACC 0.4206 (SD 0.0079), BWT -0.0375 (SD 0.0328), FWT 0.0283 (SD 0.0145), F 0.0585 (SD 0.0260). | Complete for the current five-order protocol; compact results validate against the shared manifest. This is a documented candidate-label-logit adaptation, not full-vocabulary DER++. |
+| **B4 — GCR-style adaptation** | Five orders; mean ACC 0.6464 (SD 0.0121), BWT 0.1183 (SD 0.0285), FWT 0.1815 (SD 0.0097), F -0.0250 (SD 0.0180). | Complete and validated. Reports the CountSketch/gradient-herding adaptation and added gradient-selection compute; not an exact paper reproduction. |
+| **B5 — Embedding-Similarity Replay** | Five orders; mean ACC 0.6020 (SD 0.0271), BWT 0.0833 (SD 0.0342), FWT 0.1558 (SD 0.0144), F -0.0118 (SD 0.0466). | Complete and validated; frozen-base nearest-neighbor adaptation. |
+| **B6 — LR-ADJUST** | Five orders; mean ACC 0.5610 (SD 0.0466), BWT 0.0943 (SD 0.0382), FWT 0.1085 (SD 0.0239), F -0.0313 (SD 0.0276). | Complete and validated; report the gamma and learning-rate floor as adaptation choices. |
+| **B7 — COMPASS-inspired replay** | Five orders; mean ACC 0.6138 (SD 0.0090), BWT 0.0988 (SD 0.0106), FWT 0.1548 (SD 0.0089), F -0.0110 (SD 0.0187). | Complete and validated; semantic-cluster/target-distribution adaptation, not the paper's DoRA setup. |
+| **B8 — Activation-anchor replay** | Five orders; mean ACC 0.6314 (SD 0.0154), BWT 0.0865 (SD 0.0127), FWT 0.1948 (SD 0.0163), F 0.0010 (SD 0.0116). | Complete and validated; distinguish the adaptation from the source paper's attention-head intervention and KL objective. |
 
 For B2, the implemented policy samples uniformly from a stagewise reservoir containing only previously seen languages. Before each later stage it draws one replay example (with replacement) per current example; the current stage is added to the reservoir afterward. The first stage has no replay. The 125-example capacity and 1:1 replay ratio are protocol choices, and replay means B2 sees more total training-example exposures than B0.
 
-The root [Phase 2 README](./phase2/README.md) contains protocol details and artifact locations. The local `phase2/artifacts/protocol_manifest.json` is a legacy manifest and must not be used to schedule or aggregate new runs; use the current protocol builder/configuration and validate each run against its matching manifest. The B0 Kaggle working archive is retained locally in `phase2/runs/archives/`; the public B0 record contains results, ledgers, summary, and selection manifest, while dataset text and checkpoints remain local.
-
-## Recommended next steps
-
-1. Run B2 for the same five orders with the B0 fixed data, training settings, and order/seed assignments.
-2. Run B3's documented adaptation for the same five orders and compare it with B0/B2, clearly reporting replay exposure and the candidate-logit target.
-3. Run B4's GCR-style adaptation for the same five orders, reporting the additional gradient-selection compute and method deviations.
-4. Validate and aggregate only results whose protocol/data hashes match the frozen current protocol.
-5. Continue B5–B8 implementation and execution, then assess whether the Phase 2 checkpoint is met.
+The [Phase 2 run index](./phase2/runs/README.md) maps the canonical result records, manifests, summaries, and clean notebooks. Full Kaggle archives, fixed XNLI sentence data, and model checkpoints remain local. The local `phase2/artifacts/protocol_manifest.json` is a legacy manifest and must not be used to schedule or aggregate new runs. All nine selected result sets have current-protocol records and the same frozen data-manifest hash. These v1 runs are not compute-matched: replay adds example exposures and B4 adds gradient-selection work. The SDs are across five orders with one training seed per order; they are descriptive and not significance tests. Use a new protocol ID for any v2 rerun and do not mix it with v1.
 
 ## Key references
 
@@ -57,7 +51,10 @@ The root [Phase 2 README](./phase2/README.md) contains protocol details and arti
 - [Phase 1 results index](./phase1/results/README.md)
 - [Phase 2 README and run instructions](./phase2/README.md)
 - [Phase 2 protocol configuration](./phase2/configs/pilot_protocol.json)
-- [B0-B4 runner](./phase2/run_baseline.py)
-- [Executed B0 Kaggle notebook](./phase2/notebooks/phase2_b0_kaggle_executed.ipynb)
+- [B0-B5 runner](./phase2/run_baseline.py)
+- [B0 Kaggle notebook](./phase2/notebooks/phase2_b0_kaggle.ipynb)
 - [B2 Kaggle notebook](./phase2/notebooks/phase2_b2_kaggle.ipynb)
+- [Phase 2 run index](./phase2/runs/README.md)
+- [B3 Kaggle notebook](./phase2/notebooks/phase2_b3_kaggle.ipynb)
 - [B4 Kaggle notebook](./phase2/notebooks/phase2_b4_kaggle.ipynb)
+- [B5 Kaggle notebook](./phase2/notebooks/phase2_b5_kaggle.ipynb)

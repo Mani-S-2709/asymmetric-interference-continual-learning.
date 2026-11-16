@@ -82,7 +82,8 @@ def test_all_manifest_runs_are_assigned_once():
 
     assert summary["total_runs"] == 41
     assert set(assignments) == {
-        "kaggle-1", "kaggle-2", "kaggle-3", "colab-1", "colab-2", "colab-3", "colab-4"
+        "kaggle-1", "kaggle-2", "kaggle-3", "colab-1",
+        "kaggle-4", "kaggle-5", "kaggle-6"
     }
     assert sum(len(runs) for runs in assignments.values()) == 41
 

@@ -1,0 +1,194 @@
+{
+  "completed": true,
+  "data_manifest_sha256": "e459305688bf0ff5db4f744cee773ef2c0bb55c52df4bf71a7980479e58301a4",
+  "evaluation_mode": "sequential",
+  "final_accuracy_by_language": {
+    "de": 0.635,
+    "en": 0.745,
+    "es": 0.65,
+    "hi": 0.635,
+    "sw": 0.44
+  },
+  "metadata": {
+    "checkpoint_attempt": "xnli-pilot-5lang-500x200-v1-B2-order-1-seed-42",
+    "cuda_available": true,
+    "cuda_device": "Tesla T4",
+    "lora": {
+      "alpha": 32,
+      "dropout": 0.05,
+      "rank": 16,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ]
+    },
+    "method_deviation": "Stagewise uniform experience replay adaptation: before each language stage, sample one replay example with replacement per current example from a uniform reservoir containing only prior languages; append the current stage to the reservoir after training data for that stage is formed. The first stage has no replay. Replay increases training-example exposure relative to B0.",
+    "method_id": "B2",
+    "model_id": "meta-llama/Llama-3.2-1B",
+    "order_id": "order-1",
+    "package_versions": {
+      "accelerate": "1.15.0",
+      "bitsandbytes": "0.50.2",
+      "datasets": "5.0.1",
+      "peft": "0.21.2",
+      "torch": "2.11.0+cu130",
+      "transformers": "5.18.0"
+    },
+    "protocol_sha256": "666044368518b0422705eab44e98a375650c60286ff8e560a7a24ab1944c0a3d",
+    "replay_buffer_capacity_examples": 125,
+    "replay_examples_per_current_example": 1,
+    "replay_policy": "stagewise_uniform_reservoir",
+    "replay_seed": 20261112,
+    "replay_stages": [
+      {
+        "buffer_size_after_stage": 125,
+        "current_examples": 500,
+        "language": "en",
+        "replay_examples": 0,
+        "replay_examples_by_language": {},
+        "stage_index": 0,
+        "training_examples": 500
+      },
+      {
+        "buffer_size_after_stage": 125,
+        "current_examples": 500,
+        "language": "hi",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "en": 500
+        },
+        "stage_index": 1,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 125,
+        "current_examples": 500,
+        "language": "es",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "en": 253,
+          "hi": 247
+        },
+        "stage_index": 2,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 125,
+        "current_examples": 500,
+        "language": "de",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "en": 169,
+          "es": 180,
+          "hi": 151
+        },
+        "stage_index": 3,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 125,
+        "current_examples": 500,
+        "language": "sw",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "de": 126,
+          "en": 140,
+          "es": 118,
+          "hi": 116
+        },
+        "stage_index": 4,
+        "training_examples": 1000
+      }
+    ],
+    "replay_update_timing": "after_each_language_stage",
+    "source_revision": "4dddb2925d0982d3f526f1be985706581a8f1af1",
+    "task_order": [
+      "en",
+      "hi",
+      "es",
+      "de",
+      "sw"
+    ],
+    "training": {
+      "epochs": 1,
+      "gradient_accumulation_steps": 8,
+      "gradient_checkpointing": true,
+      "learning_rate": 0.0002,
+      "load_in_4bit": true,
+      "max_length": 512,
+      "seeds": [
+        42
+      ],
+      "train_batch_size": 1
+    },
+    "training_seed": 42
+  },
+  "method_id": "B2",
+  "metrics": {
+    "AA": 0.621,
+    "ACC": 0.621,
+    "BWT": 0.08499999999999999,
+    "F": 0.017500000000000016,
+    "FP": 0.621,
+    "FWT": 0.195
+  },
+  "order_id": "order-1",
+  "performance_matrix": [
+    [
+      0.5,
+      0.445,
+      0.42,
+      0.43,
+      0.325
+    ],
+    [
+      0.67,
+      0.495,
+      0.595,
+      0.51,
+      0.38
+    ],
+    [
+      0.73,
+      0.61,
+      0.665,
+      0.625,
+      0.43
+    ],
+    [
+      0.745,
+      0.66,
+      0.66,
+      0.665,
+      0.46
+    ],
+    [
+      0.745,
+      0.635,
+      0.65,
+      0.635,
+      0.44
+    ]
+  ],
+  "protocol_id": "xnli-pilot-5lang-500x200-v1",
+  "protocol_sha256": "666044368518b0422705eab44e98a375650c60286ff8e560a7a24ab1944c0a3d",
+  "run_id": "xnli-pilot-5lang-500x200-v1-B2-order-1-seed-42",
+  "schema_version": 1,
+  "task_order": [
+    "en",
+    "hi",
+    "es",
+    "de",
+    "sw"
+  ],
+  "training_seed": 42,
+  "zero_shot_accuracy": [
+    0.32,
+    0.35,
+    0.365,
+    0.315,
+    0.315
+  ]
+}
