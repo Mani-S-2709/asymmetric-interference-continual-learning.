@@ -139,3 +139,15 @@ and exports a ZIP under `/kaggle/working`.
 The repository changes must be pushed to the public repository before Kaggle
 can clone them. A Hugging Face token is not needed for the public XNLI dataset
 or encoder model; the notebook does download them if they are not cached.
+
+## Confirmatory B0 follow-up
+
+The initial Kaggle RQ1 run found no Holm-significant prior, so do not select a
+Phase 4 replay prior from this pilot alone. The result files are organized in
+[`results/rq1_kaggle_2026-11-16/`](./results/rq1_kaggle_2026-11-16/README.md).
+
+Use the [confirmatory B0 seeds notebook](./notebooks/phase3_confirmatory_b0_seeds.ipynb)
+to run seeds 43 and 44 across the same five orders. It checks that the fixed
+XNLI sample hash matches the original B0 run and exports ten validated result
+records in a ZIP. After the run, combine those records with the original seed
+42 B0 results and recompute RQ1 before proceeding to Phase 4.
