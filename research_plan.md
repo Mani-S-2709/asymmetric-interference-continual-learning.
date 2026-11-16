@@ -99,9 +99,9 @@ For our purposes, lang2vec gives us symmetric distances between any two language
 
 ### 3.5 The Interference Matrix
 
-Alastruey et al. (2025) define the interference matrix entry *M*(*B*, *A*) = (*L*_{A,B} − *L*_A) / *L*_A, where *L*_A is the loss of a model trained only on language A, and *L*_{A,B} is the loss on A of a model trained on both A and B. Positive *M*(*B*, *A*) = adding B hurts A. The matrix is **asymmetric**: *M*(*B*, *A*) ≠ *M*(*A*, *B*).
+Alastruey et al. (2025) define the matrix entry *I*(*A*, *B*) = (*L*_A − *L*_{A,B}) / *L*_A, where *L*_A is the loss on A for a model trained only on language A, and *L*_{A,B} is the loss on A for a model trained on both A and B. **Rows are the affected/evaluated language A; columns are the added language B.** Since adding a language usually increases loss, harmful interference is generally negative: a more negative *I*(*A*, *B*) means B causes more harm to A. The matrix is **asymmetric**: *I*(*A*, *B*) ≠ *I*(*B*, *A*).
 
-This is the prior we want to use for replay weighting.
+For replay weighting, when *L*_{new} arrives and *L*_i is a past language, look up *I*(*L*_i, *L*_{new}) and convert it to a non-negative risk score, *r*(*L*_i, *L*_{new}) = max(0, −*I*(*L*_i, *L*_{new})). This keeps the paper's row/column and sign conventions explicit.
 
 ### 3.6 Parameter-efficient fine-tuning (PEFT) and LoRA
 
@@ -169,7 +169,18 @@ Run the baselines repeatedly with a *single* knob varied: which similarity matri
 
 For each, measure the rank correlation between the prior's predicted forgetting and the actual per-language forgetting observed in Phase 2's sequential-fine-tuning run.
 
-**Checkpoint:** A clear winner among priors, with statistical significance over 5+ permutations. If no prior beats random with *p* < 0.05, the project's premise is wrong — stop, talk to Sayan, possibly pivot.
+For each composite, convert each component to percentile ranks over all directed pilot-language pairs and average component ranks equally. Fix this rule before examining forgetting; do not tune composite weights on the Phase 2 outcomes. Report pooled and per-order Spearman correlations. For the five-language pilot, use an exact language-label permutation test that permutes the prior matrix's language labels while keeping observed pair-forgetting fixed; apply Holm correction across the tested priors. This is a conditional test of language-label alignment, not a substitute for replication across training seeds.
+
+For the embedding prior, use the fixed Phase 2 XNLI training examples and a
+pre-specified multilingual encoder; record the exact model revision, sample
+manifest, and embedding aggregation rule. This is encoder inference only, not
+additional fine-tuning. The current Phase 2 pilot uses en/hi/es/de/sw, but
+Grambank v1.0.3 has no Spanish or German language records. Do not impute those
+values or silently substitute languages. For the current pilot, omit Grambank
+and report this coverage gap. A future Grambank comparison requires changing
+the language stream and rerunning the corresponding Phase 2 baselines.
+
+**Checkpoint:** A clear, directionally correct winner among priors, with a pre-specified statistical test and uncertainty limitations reported. If no prior beats the random control, stop, talk to Sayan, and consider a pivot. The five existing B0 orders with one training seed are pilot evidence only; add independent training seeds before making a robust generalization claim.
 
 ### Phase 4 — Method development and matched-budget comparison (RQ2) (weeks 8–10)
 
@@ -295,8 +306,9 @@ Same as M1 but *d*(*L_i*, *L_{new}*) = 1 if scripts differ, 0 if same. Tests whe
 ### M3 — Asymmetric interference-matrix replay (**the main contribution**)
 
 For each replay step when training on *L_{new}*:
-- Look up the directional interference score *M*(*L_{new}*, *L_i*) from the Alastruey matrix — this is "how much will *L_i* be hurt by training on *L_{new}*?"
-- Set replay weight *w*(*L_i*) ∝ *M*(*L_{new}*, *L_i*) — languages predicted to be hurt the most get more replay.
+- Look up *I*(*L_i*, *L_{new}*) from the Alastruey matrix. The row is the past language whose loss is evaluated; the column is the incoming language added to training.
+- Convert it to non-negative risk *r*(*L_i*, *L_{new}*) = max(0, −*I*(*L_i*, *L_{new}*)), because more-negative values in the published matrix indicate more harm.
+- Set replay weight *w*(*L_i*) ∝ *r*(*L_i*, *L_{new}*) — languages predicted to be hurt the most get more replay. If all eligible risks are zero, use uniform language weights.
 - Sample replay batch proportionally to *w*.
 
 For languages not in Alastruey's 83-language set, impute via k-NN in the URIEL+ space (the same imputation strategy lang2vec uses for missing typological features).

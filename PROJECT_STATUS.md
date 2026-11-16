@@ -1,7 +1,7 @@
 # Project status
 
 **Last reviewed:** 2026-11-16
-**Current focus:** Publish the completed Phase 0–2 code and compact result records.
+**Current focus:** Phase 3 RQ1 prior comparison; preparation and analysis code are implemented, but the numeric interference input and Grambank language coverage remain unresolved.
 
 ## At a glance
 
@@ -9,6 +9,7 @@
 |---|---|---|
 | Phase 1: harness and pilot evidence | Existing pilots complete; matched stream-order comparison pending | The Hindi → German → English 1,000/500 three-seed run is complete (pattern pass rate 0/3). Its matching English → Hindi → German template is prepared; the existing English → Hindi → German 500/200 single-seed run is separate. |
 | Phase 2: B0–B8 baselines | Pilot baseline coverage complete; source-paper reproductions remain qualified | B0, B2–B8 each have five current-protocol orders; B1 has its single order-independent run. Every selected result record validates against its matching manifest. B3 and B7 (and other described methods) are adaptations, not exact paper reproductions. |
+| Phase 3: prior comparison (RQ1) | Analysis and prior-preparation code implemented; comparison incomplete | The pipeline extracts 20 directed language pairs from five B0 orders; supports separate and composite priors, per-order correlations, and exact language-label permutation tests with Holm correction. URIEL+ was regenerated and exactly matched the supplied CSV. The embedding generator is ready but has not been run locally. Grambank v1.0.3 lacks Spanish and German and is intentionally omitted from this pilot. The numeric interference matrix remains an externally supplied input. No training is required; embedding inference can run on CPU. |
 
 Phase 1 being accepted for project progression is **not** a claim that the original checkpoint pattern was reproduced.
 
@@ -60,3 +61,5 @@ The [Phase 2 run index](./phase2/runs/README.md) maps the canonical result recor
 - [B3 Kaggle notebook](./phase2/notebooks/phase2_b3_kaggle.ipynb)
 - [B4 Kaggle notebook](./phase2/notebooks/phase2_b4_kaggle.ipynb)
 - [B5 Kaggle notebook](./phase2/notebooks/phase2_b5_kaggle.ipynb)
+- [Phase 3 README and inputs](./phase3/README.md)
+- [Phase 3 RQ1 Kaggle notebook](./phase3/notebooks/phase3_rq1_prior_comparison.ipynb)
