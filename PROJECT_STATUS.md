@@ -7,7 +7,7 @@
 
 | Workstream | Status | What is established |
 |---|---|---|
-| Phase 1: harness and pilot evidence | Complete for project progression; target checkpoint pattern not reproduced | The English → Hindi → German pilot and the Hindi → German → English three-seed follow-up are saved. The follow-up has validated results for seeds 42, 43, and 44, with a 0/3 pass rate for the predefined pattern. |
+| Phase 1: harness and pilot evidence | Existing pilots complete; matched stream-order comparison pending | The Hindi → German → English 1,000/500 three-seed run is complete (pattern pass rate 0/3). Its matching English → Hindi → German template is prepared; the existing English → Hindi → German 500/200 single-seed run is separate. |
 | Phase 2: B0–B8 baselines | Pilot baseline coverage complete; source-paper reproductions remain qualified | B0, B2–B8 each have five current-protocol orders; B1 has its single order-independent run. Every selected result record validates against its matching manifest. B3 and B7 (and other described methods) are adaptations, not exact paper reproductions. |
 
 Phase 1 being accepted for project progression is **not** a claim that the original checkpoint pattern was reproduced.
@@ -24,6 +24,8 @@ The completed Hindi → German → English group uses 1,000 training and 500 tes
 | Mean ACC | **0.7064** | — | — | — | **0/3 passed** |
 
 Use the [Phase 1 completion summary](./phase1/results/xnli-hi-de-en-multiseed-train1000-test500-20261110T045241Z/kaggle_completion/README.md) as the result source of truth. Keep the separate English → Hindi → German pilot and incomplete attempts separate; their results are not interchangeable.
+
+For a matched order comparison, use the [EN → HI → DE Colab template](./phase1/notebooks/phase1_xnli_sequential_wandb_colab.ipynb) and the [HI → DE → EN Colab template](./phase1/notebooks/phase1_xnli_hi_de_en_sequential_wandb_colab.ipynb). Both use 1,000 training and 500 test examples per language, test-selection seed 42, and training seeds 42–44; the order and output folder differ. The EN → HI → DE multi-seed run still needs to be executed. Its existing 500/200 single-seed result is not a substitute.
 
 ## Phase 2: baseline status
 
