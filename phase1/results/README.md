@@ -11,14 +11,16 @@ and both orders use the same fixed test subset.
 
 | Stream order | Status | Notebook / result |
 |---|---|---|
-| English → Hindi → German | **Pending matched run.** Do not substitute the older 500/200 single-seed pilot. | [Clean Colab template](../notebooks/phase1_xnli_sequential_wandb_colab.ipynb) |
+| English → Hindi → German | **Pending matched run.** Do not substitute the older 500/200 single-seed pilot. | [Clean Colab template](../notebooks/phase1_xnli_sequential_wandb_colab.ipynb); [Kaggle notebook](../notebooks/phase1_xnli_en_hi_de_multiseed_kaggle.ipynb) |
 | Hindi → German → English | Complete for seeds 42, 43, and 44; the predefined checkpoint pattern passed 0/3 seeds. | [Completion summary](./xnli-hi-de-en-multiseed-train1000-test500-20261110T045241Z/kaggle_completion/README.md) |
 
-Run the English → Hindi → German template to complete the matched comparison.
-It writes to a separate Drive folder and creates a timestamped result group;
-keep that group separate from the existing pilots. The complete comparison is
-not available until this run has finished and its result records have been
-validated.
+Run either English → Hindi → German template to complete the matched
+comparison. The Colab version writes to a separate Drive folder; the Kaggle
+version requires the source-package ZIP, a GPU, Internet access, and an
+`HF_TOKEN` Kaggle secret, and writes a timestamped result group under
+`/kaggle/working`. Keep the group separate from existing pilots. The complete
+comparison is not available until this run has finished and its result
+records have been validated.
 
 ## Separate English → Hindi → German pilots
 
