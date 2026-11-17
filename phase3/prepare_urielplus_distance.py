@@ -1,4 +1,4 @@
-"""Generate the five-language URIEL+ syntactic-distance CSV."""
+"""Generate a URIEL+ syntactic-distance CSV for configured XNLI languages."""
 
 from __future__ import annotations
 
@@ -8,19 +8,38 @@ import hashlib
 import importlib.metadata
 import json
 from pathlib import Path
+from collections.abc import Sequence
 from typing import Any
 
 
-PILOT_LANGUAGE_CODES = {
+URIEL_LANGUAGE_CODES = {
     "en": "eng",
     "hi": "hin",
     "es": "spa",
     "de": "deu",
     "sw": "swa",
+    "ar": "arb",
+    "ru": "rus",
+    "tr": "tur",
+    "th": "tha",
+    "zh": "cmn",
 }
+DEFAULT_LANGUAGES = ("en", "hi", "es", "de", "sw")
 
 
-def generate_matrix() -> tuple[list[str], list[list[float]], str]:
+def codes_for_languages(languages: Sequence[str]) -> list[str]:
+    """Resolve XNLI codes to the URIEL+ ISO 639-3 identifiers."""
+    unknown = sorted(set(languages) - set(URIEL_LANGUAGE_CODES))
+    if unknown:
+        raise ValueError(f"No URIEL+ language-code mapping is configured for {unknown}.")
+    if len(set(languages)) != len(languages):
+        raise ValueError("Language codes must be unique.")
+    return [URIEL_LANGUAGE_CODES[language] for language in languages]
+
+
+def generate_matrix(
+    languages: Sequence[str] = DEFAULT_LANGUAGES,
+) -> tuple[list[str], list[list[float]], str]:
     """Query the pinned URIEL+ package and validate its distance matrix."""
     import numpy as np
     from urielplus import urielplus
@@ -31,12 +50,12 @@ def generate_matrix() -> tuple[list[str], list[list[float]], str]:
             f"Expected urielplus 1.3.3; found {version}. "
             "Pin the validated package version for reproducibility."
         )
-    languages = list(PILOT_LANGUAGE_CODES.values())
+    uriel_codes = codes_for_languages(languages)
     raw_matrix = np.asarray(
-        urielplus.URIELPlus().new_distance("syntactic", languages),
+        urielplus.URIELPlus().new_distance("syntactic", uriel_codes),
         dtype=np.float64,
     )
-    if raw_matrix.shape != (len(languages), len(languages)):
+    if raw_matrix.shape != (len(uriel_codes), len(uriel_codes)):
         raise ValueError(f"Unexpected URIEL+ matrix shape: {raw_matrix.shape}.")
     if not np.isfinite(raw_matrix).all():
         raise ValueError("URIEL+ returned non-finite distances.")
@@ -46,7 +65,7 @@ def generate_matrix() -> tuple[list[str], list[list[float]], str]:
         raise ValueError("URIEL+ syntactic distances are not symmetric.")
     if not np.allclose(np.diag(raw_matrix), 0.0, atol=1e-12, rtol=0):
         raise ValueError("URIEL+ syntactic distance diagonal must be zero.")
-    return languages, raw_matrix.tolist(), version
+    return uriel_codes, raw_matrix.tolist(), version
 
 
 def write_matrix(
@@ -75,7 +94,7 @@ def write_matrix(
         "package_version": package_version,
         "language_codes": {
             project_code: matrix_code
-            for project_code, matrix_code in PILOT_LANGUAGE_CODES.items()
+            for project_code, matrix_code in URIEL_LANGUAGE_CODES.items()
             if matrix_code in languages
         },
         "matrix_sha256": digest,
@@ -98,8 +117,14 @@ def main() -> None:
         type=Path,
         default=Path("uriel_syntactic_distance.csv"),
     )
+    parser.add_argument(
+        "--languages",
+        nargs="+",
+        default=list(DEFAULT_LANGUAGES),
+        help="XNLI language codes to include in the matrix.",
+    )
     args = parser.parse_args()
-    languages, matrix, version = generate_matrix()
+    languages, matrix, version = generate_matrix(args.languages)
     metadata = write_matrix(args.output, languages, matrix, version)
     print(json.dumps(metadata, indent=2))
 

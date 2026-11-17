@@ -140,6 +140,65 @@ The repository changes must be pushed to the public repository before Kaggle
 can clone them. A Hugging Face token is not needed for the public XNLI dataset
 or encoder model; the notebook does download them if they are not cached.
 
+## Expanded RQ1 v2 workflow
+
+The original five-language pilot is complete and remains unchanged. Its
+five-language label-permutation test has only 120 possible permutations; with
+seven prior tests, Holm-adjusted significance at 0.05 is unattainable even at
+the smallest possible raw permutation p-value. The v2 protocol therefore
+expands the stream to ten XNLI languages before collecting new forgetting
+observations:
+
+`en, hi, es, de, sw, ar, ru, tr, th, zh`
+
+It keeps the 500/200 examples-per-language selection and B0 training settings,
+uses three training seeds (`42`, `43`, `44`) and five frozen ten-language
+orders, and uses a separate protocol ID. Two order pairs are reversals to
+ensure all 90 directed language pairs are observed; the fifth order is another
+fixed permutation. Do not mix v2 records with the five-language pilot.
+
+The complete prepared workflow is:
+
+1. Run
+   [the v2 input-preparation notebook](./notebooks/phase3_rq1_v2_prepare_inputs.ipynb).
+   It needs Kaggle Internet, but no GPU. It prepares the fixed XNLI selection,
+   URIEL+ and embedding matrices, and a checksummed input ZIP.
+2. Keep the resulting `phase3_rq1_v2_inputs.zip` in a **private Kaggle
+   dataset**. It contains priors, protocol/provenance, and the fixed-data hash;
+   it does not contain XNLI sentence text.
+3. Run
+   [the v2 B0 training notebook](./notebooks/phase3_rq1_v2_train_b0.ipynb)
+   once for each seed. Attach the private input dataset and download the
+   resulting per-seed ZIP after each run. Each run covers all five orders and
+   checks the XNLI data hash before training.
+4. Attach the input ZIP and all three per-seed ZIPs to
+   [the v2 analysis notebook](./notebooks/phase3_rq1_v2_analyze.ipynb).
+   It validates seeds, orders, result records, and data hashes before
+   computing pooled and per-order correlations.
+
+If no verified 10x10 interference matrix is supplied, the analysis is
+intentionally partial: it tests only available priors and reports the missing
+comparison. Do not claim a winner over the unavailable priors.
+
+**GPU requirement:** only B0 fine-tuning requires a Kaggle GPU/CUDA runtime.
+The model is the gated `meta-llama/Llama-3.2-1B` checkpoint with the existing
+4-bit LoRA settings, so accept its Hugging Face terms and provide a Kaggle
+secret named `HF_TOKEN`. Input preparation and statistics run on CPU;
+sentence-embedding inference can use a GPU for speed, but does not fine-tune.
+
+The published interference matrix currently available to this project covers
+only the original five languages, so it is not used for v2. Grambank v1.0.3
+also lacks Spanish and German for this stream and is explicitly excluded.
+Neither prior is imputed or silently substituted. A verified numeric 10x10
+interference matrix can be supplied later; the workflow validates its
+direction and coverage before including it.
+
+With ten languages, the label test uses 10,000 Monte Carlo language-label
+permutations and Holm correction. Three seeds are an initial expanded pilot,
+not strong evidence of generalization or a guarantee of a winning prior.
+Choose no winner unless its corrected test and consistency checks pass; do
+not change the priors or analysis after seeing the results.
+
 ## Confirmatory B0 follow-up
 
 The initial Kaggle RQ1 run found no Holm-significant prior, so do not select a

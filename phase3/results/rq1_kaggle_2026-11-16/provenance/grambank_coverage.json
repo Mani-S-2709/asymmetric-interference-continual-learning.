@@ -1,0 +1,23 @@
+{
+  "dataset": "Grambank v1.0.3",
+  "dataset_url": "https://doi.org/10.5281/zenodo.7740139",
+  "languages_csv_sha256": "25042195d5fb84806fba3877fd47ad47b4946c84e32a822adcf5bb4832a5b416",
+  "matrix_generated": false,
+  "missing_project_languages": [
+    "es",
+    "de"
+  ],
+  "resolved_language_ids": {
+    "de": [],
+    "en": [
+      "stan1293"
+    ],
+    "es": [],
+    "hi": [
+      "hind1269"
+    ],
+    "sw": [
+      "swah1253"
+    ]
+  }
+}

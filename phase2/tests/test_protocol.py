@@ -28,6 +28,22 @@ def test_frozen_protocol_has_five_distinct_orders_and_41_runs():
     assert manifest["runs"][0]["run_id"].startswith(protocol["protocol_id"])
 
 
+def test_rq1_v2_protocol_supports_ten_languages_and_three_seeds():
+    v2_path = (
+        Path(__file__).parents[2]
+        / "phase3"
+        / "configs"
+        / "rq1_v2_10lang_protocol.json"
+    )
+    protocol = load_protocol(v2_path)
+    manifest = build_manifest(protocol)
+
+    assert len(protocol["dataset"]["languages"]) == 10
+    assert protocol["training"]["seeds"] == [42, 43, 44]
+    assert manifest["expected_run_count"] == 123
+    assert sum(run["method_id"] == "B0" for run in manifest["runs"]) == 15
+
+
 def test_manifest_has_reproducible_fixed_subset_indices():
     protocol = load_protocol(PROTOCOL_PATH)
     sizes = {

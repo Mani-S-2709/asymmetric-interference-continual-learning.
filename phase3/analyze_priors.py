@@ -125,8 +125,8 @@ def main() -> None:
     if not args.grambank_distance:
         if "grambank_distance" in args.exclude_prior:
             excluded_priors["grambank_distance"] = (
-                "Excluded for the five-language pilot: Grambank v1.0.3 lacks "
-                "Spanish and German records."
+                "Excluded because Grambank v1.0.3 does not cover every "
+                "configured language; see grambank_coverage.json."
             )
         else:
             missing_priors.append("grambank_distance")

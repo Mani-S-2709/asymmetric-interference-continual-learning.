@@ -8,6 +8,7 @@ import hashlib
 import json
 from pathlib import Path
 import urllib.request
+from collections.abc import Sequence
 from typing import Any
 
 
@@ -20,6 +21,11 @@ LANGUAGE_NAMES = {
     "es": ("Spanish",),
     "de": ("German",),
     "sw": ("Swahili",),
+    "ar": ("Arabic", "Standard Arabic", "Modern Standard Arabic"),
+    "ru": ("Russian",),
+    "tr": ("Turkish",),
+    "th": ("Thai",),
+    "zh": ("Chinese", "Mandarin", "Mandarin Chinese"),
 }
 ISO3_ALIASES = {
     "en": {"eng"},
@@ -27,7 +33,13 @@ ISO3_ALIASES = {
     "es": {"spa"},
     "de": {"deu"},
     "sw": {"swa", "swh"},
+    "ar": {"ara", "arb"},
+    "ru": {"rus"},
+    "tr": {"tur"},
+    "th": {"tha"},
+    "zh": {"zho", "chi", "cmn"},
 }
+DEFAULT_LANGUAGES = ("en", "hi", "es", "de", "sw")
 MISSING_VALUES = {"", "?", "-", "NA", "N/A"}
 
 
@@ -43,9 +55,15 @@ def _download(url: str, destination: Path) -> None:
 
 def resolve_language_ids(
     languages_csv: str | Path,
+    languages: Sequence[str] = DEFAULT_LANGUAGES,
 ) -> tuple[dict[str, list[str]], list[str]]:
-    """Resolve pilot codes using ISO-639-3 codes or exact language names."""
-    resolved = {language: [] for language in LANGUAGE_NAMES}
+    """Resolve configured codes using ISO-639-3 codes or exact language names."""
+    unknown = sorted(set(languages) - set(LANGUAGE_NAMES))
+    if unknown:
+        raise ValueError(f"No Grambank language mapping is configured for {unknown}.")
+    if len(set(languages)) != len(languages):
+        raise ValueError("Language codes must be unique.")
+    resolved = {language: [] for language in languages}
     with Path(languages_csv).open(encoding="utf-8-sig", newline="") as source:
         reader = csv.DictReader(source)
         required = {"ID", "Name", "ISO639P3code"}
@@ -57,7 +75,9 @@ def resolve_language_ids(
             iso_code = (row.get("ISO639P3code") or "").strip().lower()
             if not row_id:
                 continue
-            for language, names in LANGUAGE_NAMES.items():
+            for language, names in (
+                (code, LANGUAGE_NAMES[code]) for code in languages
+            ):
                 if iso_code in ISO3_ALIASES[language] or name in {
                     item.casefold() for item in names
                 }:
@@ -71,10 +91,12 @@ def _write_coverage(
     resolved: dict[str, list[str]],
     missing: list[str],
     source_sha256: str,
+    requested_languages: Sequence[str],
 ) -> None:
     report = {
         "dataset": "Grambank v1.0.3",
         "dataset_url": "https://doi.org/10.5281/zenodo.7740139",
+        "requested_languages": list(requested_languages),
         "languages_csv_sha256": source_sha256,
         "resolved_language_ids": resolved,
         "missing_project_languages": missing,
@@ -158,6 +180,7 @@ def _write_matrix(
 def prepare(
     output_dir: str | Path,
     *,
+    languages: Sequence[str] = DEFAULT_LANGUAGES,
     languages_csv: str | Path | None = None,
     values_csv: str | Path | None = None,
 ) -> dict[str, Any]:
@@ -174,12 +197,14 @@ def prepare(
             languages_path,
         )
     languages_hash = hashlib.sha256(languages_path.read_bytes()).hexdigest()
-    resolved, missing = resolve_language_ids(languages_path)
+    resolved, missing = resolve_language_ids(languages_path, languages)
     coverage_path = destination / "grambank_coverage.json"
-    _write_coverage(coverage_path, resolved, missing, languages_hash)
+    _write_coverage(
+        coverage_path, resolved, missing, languages_hash, languages
+    )
     if missing:
         raise ValueError(
-            "The pinned Grambank release does not cover every pilot language: "
+            "The pinned Grambank release does not cover every requested language: "
             f"{missing}. See {coverage_path}; do not impute or substitute a "
             "different language silently."
         )
@@ -240,9 +265,16 @@ def main() -> None:
     )
     parser.add_argument("--languages-csv", type=Path)
     parser.add_argument("--values-csv", type=Path)
+    parser.add_argument(
+        "--languages",
+        nargs="+",
+        default=list(DEFAULT_LANGUAGES),
+        help="Configured project language codes to check and include.",
+    )
     args = parser.parse_args()
     print(json.dumps(prepare(
         args.output_dir,
+        languages=args.languages,
         languages_csv=args.languages_csv,
         values_csv=args.values_csv,
     ), indent=2))

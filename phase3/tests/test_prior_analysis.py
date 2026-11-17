@@ -228,7 +228,38 @@ def test_per_order_correlations_are_reported_separately():
 
     assert len(rows) == 1
     assert rows[0]["order_id"] == "order-1"
-    assert rows[0]["directed_language_pairs"] == 2
+    assert rows[0]["forgetting_observations"] == 2
+
+
+def test_per_order_count_is_observations_across_seeds():
+    observations = [
+        {
+            "order_id": "order-1",
+            "past_language": "en",
+            "incoming_language": "hi",
+            "forgetting": value,
+        }
+        for value in (0.1, 0.2)
+    ] + [
+        {
+            "order_id": "order-1",
+            "past_language": "hi",
+            "incoming_language": "en",
+            "forgetting": value,
+        }
+        for value in (0.2, 0.3)
+    ]
+    prior = PriorMatrix(
+        name="risk",
+        values={"en": {"en": 0.0, "hi": 1.0}, "hi": {"en": 0.0, "hi": 0.0}},
+        value_kind="risk",
+        language_codes={"en": "en", "hi": "hi"},
+    )
+
+    rows = compare_priors_by_order(observations, {"risk": prior})
+
+    assert rows[0]["forgetting_observations"] == 4
+    assert "directed_language_pairs" not in rows[0]
 
 
 def test_script_and_family_priors_match_pilot_metadata():
@@ -238,6 +269,55 @@ def test_script_and_family_priors_match_pilot_metadata():
     assert priors["script_mismatch"].score("en", "sw") == 0.0
     assert priors["family_mismatch"].score("en", "hi") == 0.0
     assert priors["family_mismatch"].score("en", "sw") == 1.0
+
+
+def test_v2_script_and_family_priors_cover_new_languages():
+    languages = ["en", "hi", "es", "de", "sw", "ar", "ru", "tr", "th", "zh"]
+    priors = make_builtin_prior_matrices(languages)
+
+    assert priors["script_mismatch"].score("en", "ru") == 1.0
+    assert priors["script_mismatch"].score("en", "tr") == 0.0
+    assert priors["family_mismatch"].score("en", "ru") == 0.0
+    assert priors["family_mismatch"].score("en", "ar") == 1.0
+
+
+def test_ten_language_label_test_uses_monte_carlo_permutations():
+    languages = ("en", "hi", "es", "de", "sw", "ar", "ru", "tr", "th", "zh")
+    pairs = [
+        PairForgetting(
+            past,
+            incoming,
+            float((left_index * 3 + right_index) % 17),
+            1,
+            ("order-1",),
+        )
+        for left_index, past in enumerate(languages)
+        for right_index, incoming in enumerate(languages)
+        if past != incoming
+    ]
+    prior = PriorMatrix(
+        name="risk",
+        values={
+            left: {
+                right: float((left_index * 7 + right_index * 2) % 19)
+                for right_index, right in enumerate(languages)
+            }
+            for left_index, left in enumerate(languages)
+        },
+        value_kind="risk",
+        language_codes={language: language for language in languages},
+    )
+
+    result = label_permutation_test(
+        pairs,
+        prior,
+        monte_carlo_repetitions=30,
+        seed=7,
+    )
+
+    assert result["test_method"] == "monte_carlo_language_label_permutation"
+    assert result["permutation_count"] == 30
+    assert 0.0 < result["p_one_sided"] <= 1.0
 
 
 def test_random_control_is_seed_reproducible():

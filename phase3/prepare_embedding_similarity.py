@@ -1,4 +1,4 @@
-"""Generate a reproducible XNLI embedding-similarity prior for the pilot."""
+"""Generate a reproducible XNLI embedding-similarity prior."""
 
 from __future__ import annotations
 
@@ -14,7 +14,6 @@ import numpy as np
 
 
 DEFAULT_MODEL = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
-PILOT_LANGUAGES = ("en", "hi", "es", "de", "sw")
 
 
 def centroid_similarity(
@@ -106,11 +105,6 @@ def prepare(
 
     protocol = load_protocol(protocol_path)
     protocol_languages = tuple(protocol["dataset"]["languages"])
-    if protocol_languages != PILOT_LANGUAGES:
-        raise ValueError(
-            "The embedding prior requires the Phase 2 pilot language order "
-            f"{PILOT_LANGUAGES}; found {protocol_languages}."
-        )
     prepared_dir = Path(prepared_data_dir)
     if not (prepared_dir / "protocol_manifest.json").is_file():
         prepare_xnli(protocol_path, prepared_dir)

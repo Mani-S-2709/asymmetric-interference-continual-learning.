@@ -1,7 +1,7 @@
 # Project status
 
 **Last reviewed:** 2026-11-16
-**Current focus:** Confirmatory Phase 3 RQ1 validation; the initial Kaggle comparison is organized, but it does not establish a statistically supported winning prior.
+**Current focus:** Phase 3 v2 protocol and Kaggle workflow prepared; its input-preparation preflight and B0 runs have not yet been executed.
 
 ## At a glance
 
@@ -9,7 +9,7 @@
 |---|---|---|
 | Phase 1: harness and pilot evidence | Existing pilots complete; matched stream-order comparison pending | The Hindi → German → English 1,000/500 three-seed run is complete (pattern pass rate 0/3). Its matching English → Hindi → German template is prepared; the existing English → Hindi → German 500/200 single-seed run is separate. |
 | Phase 2: B0–B8 baselines | Pilot baseline coverage complete; source-paper reproductions remain qualified | B0, B2–B8 each have five current-protocol orders; B1 has its single order-independent run. Every selected result record validates against its matching manifest. B3 and B7 (and other described methods) are adaptations, not exact paper reproductions. |
-| Phase 3: prior comparison (RQ1) | Initial Kaggle pilot complete; confirmatory seeds prepared before selecting a prior | The run covers five B0 orders, 20 directed pairs, and 50 forgetting observations. Family mismatch has the highest raw correlation (rho 0.460), followed by URIEL+ (0.414) and embeddings (0.345), but no prior is significant after Holm correction. Grambank v1.0.3 lacks Spanish and German and is intentionally omitted. See the organized [RQ1 result folder](./phase3/results/rq1_kaggle_2026-11-16/README.md) and [confirmatory B0 notebook](./phase3/notebooks/phase3_confirmatory_b0_seeds.ipynb). |
+| Phase 3: prior comparison (RQ1) | Original pilot and seed-43/44 follow-up complete; separate ten-language v2 protocol and Kaggle notebooks prepared | The combined v1 analysis covers 15 B0 runs, 20 directed pairs, and 150 forgetting observations. No prior is significant after Holm correction. V2 uses ten XNLI languages, five frozen orders, and three seeds; it has not been run. Its Kaggle CPU preflight must validate URIEL+ and embedding matrix coverage before any GPU training. Grambank lacks Spanish/German, and the available published interference matrix covers only five languages, so both are excluded unless complete values are supplied. See the [original RQ1 result folder](./phase3/results/rq1_kaggle_2026-11-16/README.md) and [v2 README](./phase3/README.md#expanded-rq1-v2-workflow). |
 
 Phase 1 being accepted for project progression is **not** a claim that the original checkpoint pattern was reproduced.
 

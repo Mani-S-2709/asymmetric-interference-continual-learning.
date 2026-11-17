@@ -11,6 +11,7 @@ from phase3.prepare_grambank_distance import (
     resolve_language_ids,
 )
 from phase3.prepare_urielplus_distance import write_matrix
+from phase3.prepare_urielplus_distance import codes_for_languages
 
 
 def test_centroid_similarity_is_symmetric_with_unit_diagonal():
@@ -44,7 +45,7 @@ def test_grambank_reports_missing_pilot_languages_without_fake_matrix(tmp_path):
         encoding="utf-8",
     )
 
-    with pytest.raises(ValueError, match="does not cover every pilot language"):
+    with pytest.raises(ValueError, match="does not cover every requested language"):
         prepare_grambank(tmp_path / "out", languages_csv=languages_path)
 
     coverage = json.loads(
@@ -53,6 +54,31 @@ def test_grambank_reports_missing_pilot_languages_without_fake_matrix(tmp_path):
     assert coverage["missing_project_languages"] == ["es", "de"]
     assert coverage["matrix_generated"] is False
     assert not (tmp_path / "out" / "grambank_distance.csv").exists()
+
+
+def test_grambank_coverage_is_checked_for_the_configured_ten_languages(tmp_path):
+    languages_path = tmp_path / "languages.csv"
+    languages_path.write_text(
+        "ID,Name,ISO639P3code\n"
+        "stan1293,English,\n"
+        "hind1269,Hindi,\n"
+        "swah1253,Swahili,\n"
+        "arab1267,Arabic,\n"
+        "russ1263,Russian,\n"
+        "nucl1301,Turkish,\n"
+        "thai1261,Thai,\n"
+        "mand1415,Mandarin Chinese,\n",
+        encoding="utf-8",
+    )
+
+    resolved, missing = resolve_language_ids(
+        languages_path,
+        ("en", "hi", "es", "de", "sw", "ar", "ru", "tr", "th", "zh"),
+    )
+
+    assert sorted(resolved["ar"]) == ["arab1267"]
+    assert sorted(resolved["zh"]) == ["mand1415"]
+    assert missing == ["es", "de"]
 
 
 def test_grambank_categorical_distance_uses_only_shared_non_missing_features(
@@ -108,3 +134,9 @@ def test_urielplus_matrix_writer_records_sha256_and_iso3_codes(tmp_path):
         )
     )
     assert sidecar["matrix_sha256"] == metadata["matrix_sha256"]
+
+
+def test_urielplus_resolves_all_v2_language_codes():
+    assert codes_for_languages(
+        ("en", "hi", "es", "de", "sw", "ar", "ru", "tr", "th", "zh")
+    ) == ["eng", "hin", "spa", "deu", "swa", "arb", "rus", "tur", "tha", "cmn"]

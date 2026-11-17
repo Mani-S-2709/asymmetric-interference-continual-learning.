@@ -1,0 +1,8 @@
+prior,spearman_rho,p_one_sided,p_holm,permutation_count,test_method,directed_language_pairs,forgetting_observations,order_count
+script_mismatch,0.10619884881071831,0.6,1.0,120,exact_language_label_permutation,20,50,5
+family_mismatch,0.46019501151311265,0.2,1.0,120,exact_language_label_permutation,20,50,5
+published_interference,-0.022823952703925548,0.55,1.0,120,exact_language_label_permutation,20,50,5
+uriel_syntactic_distance,0.4135878504045766,0.125,0.875,120,exact_language_label_permutation,20,50,5
+embedding_similarity,0.3451402942045411,0.15,0.8999999999999999,120,exact_language_label_permutation,20,50,5
+composite_script_uriel,0.29585116306312775,0.225,1.0,120,exact_language_label_permutation,20,50,5
+composite_interference_script,0.04684605042398268,0.5083333333333333,1.0,120,exact_language_label_permutation,20,50,5

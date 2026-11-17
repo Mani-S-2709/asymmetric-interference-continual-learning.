@@ -1,0 +1,13 @@
+{
+  "organized_folders": {
+    "analysis": "CSV analysis outputs and summary",
+    "archives": "Original Kaggle ZIP downloads, retained unchanged",
+    "priors": "All three prior matrices used by the run, with Kaggle inputs hash-verified",
+    "provenance": "Run metadata and Grambank coverage/exclusion report"
+  },
+  "run_id": "rq1_kaggle_2026-11-16",
+  "source_archives": {
+    "phase3_complete_working_directory.zip": "5c6ac06bdad3c0ee9fb356214cf9cde91c22096f602a8f7be496add748b19651",
+    "phase3_rq1_results.zip": "54578dec7db11737f71e25215d9303cd55710645e7fba8cff3d019d5f99ce984"
+  }
+}

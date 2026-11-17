@@ -14,6 +14,7 @@ def collect_preflight(
     *,
     require_cuda: bool = False,
     check_gated_model: bool = False,
+    protocol_path: str | Path | None = None,
 ) -> dict[str, Any]:
     """Inspect packages, accelerator, auth presence, and optional model metadata."""
     import torch
@@ -60,8 +61,12 @@ def collect_preflight(
 
         from phase2.protocol import load_protocol
 
-        protocol_path = Path(__file__).parent / "configs" / "pilot_protocol.json"
-        model_id = load_protocol(protocol_path)["model"]["id"]
+        selected_protocol = (
+            Path(protocol_path)
+            if protocol_path is not None
+            else Path(__file__).parent / "configs" / "pilot_protocol.json"
+        )
+        model_id = load_protocol(selected_protocol)["model"]["id"]
         AutoConfig.from_pretrained(model_id, token=True)
         tokenizer = AutoTokenizer.from_pretrained(model_id, token=True)
         report["gated_model_metadata_checked"] = True
@@ -75,12 +80,14 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--require-cuda", action="store_true")
     parser.add_argument("--check-gated-model", action="store_true")
+    parser.add_argument("--protocol", type=Path)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
     report = collect_preflight(
         require_cuda=args.require_cuda,
         check_gated_model=args.check_gated_model,
+        protocol_path=args.protocol,
     )
     output = json.dumps(report, indent=2, sort_keys=True)
     if args.output is not None:

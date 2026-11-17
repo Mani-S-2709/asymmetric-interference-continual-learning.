@@ -1,0 +1,12 @@
+{
+  "analysis": "phase3_rq1_prior_comparison",
+  "gpu_required": false,
+  "missing_prior_inputs": [],
+  "prior_input_sha256": {
+    "embedding_similarity": "5992c2c0ade75d8c3412dd4ab3e7909b7810ba4054168ccab960363f168fd903",
+    "interference_matrix": "4207bee27e392e62d889c403653736f98deb61d61d5d1c4a0c73a43560272219",
+    "uriel_distance": "151a8eb68f58103af12bbb20088db9d3c3629a0a90195b81fd46c0678b1d0962"
+  },
+  "repository_revision": "37b1e1b62ad578fc6f7ad76eb052d087bd133b47",
+  "training_performed": false
+}

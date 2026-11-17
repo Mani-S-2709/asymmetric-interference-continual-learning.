@@ -28,11 +28,11 @@ def validate_protocol(protocol: Mapping[str, Any]) -> None:
     languages = dataset.get("languages")
     if (
         not isinstance(languages, list)
-        or len(languages) != 5
-        or len(set(languages)) != 5
+        or len(languages) < 2
+        or len(set(languages)) != len(languages)
         or any(not isinstance(language, str) or not language for language in languages)
     ):
-        raise ValueError("dataset.languages must contain five unique language codes.")
+        raise ValueError("dataset.languages must contain at least two unique language codes.")
 
     if dataset.get("id") == "facebook/xnli":
         supported = {

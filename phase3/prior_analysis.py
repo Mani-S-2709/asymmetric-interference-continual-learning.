@@ -35,6 +35,26 @@ LANGUAGE_METADATA: dict[str, dict[str, str]] = {
         "matrix_code": "swh_Latn", "iso3_code": "swa",
         "script": "Latn", "family": "Niger-Congo",
     },
+    "ar": {
+        "matrix_code": "arb_Arab", "iso3_code": "arb",
+        "script": "Arab", "family": "Afro-Asiatic",
+    },
+    "ru": {
+        "matrix_code": "rus_Cyrl", "iso3_code": "rus",
+        "script": "Cyrl", "family": "Indo-European",
+    },
+    "tr": {
+        "matrix_code": "tur_Latn", "iso3_code": "tur",
+        "script": "Latn", "family": "Turkic",
+    },
+    "th": {
+        "matrix_code": "tha_Thai", "iso3_code": "tha",
+        "script": "Thai", "family": "Tai-Kadai",
+    },
+    "zh": {
+        "matrix_code": "cmn_Hans", "iso3_code": "cmn",
+        "script": "Hans", "family": "Sino-Tibetan",
+    },
 }
 
 
@@ -147,7 +167,7 @@ def load_wide_matrix(path: str | Path) -> dict[str, dict[str, float]]:
 def make_builtin_prior_matrices(
     languages: Sequence[str],
 ) -> dict[str, PriorMatrix]:
-    """Build the script and broad-family mismatch priors for known pilot languages."""
+    """Build script and broad-family mismatch priors for configured languages."""
     unknown = sorted(set(languages) - set(LANGUAGE_METADATA))
     if unknown:
         raise ValueError(f"No script/family metadata is configured for {unknown}.")
@@ -516,7 +536,7 @@ def compare_priors_by_order(
                 "order_id": order_id,
                 "prior": prior_name,
                 "spearman_rho": spearman_correlation(scores, observed),
-                "directed_language_pairs": len(scores),
+                "forgetting_observations": len(scores),
             })
     return rows
 
@@ -636,7 +656,7 @@ def write_analysis_outputs(
         "w", encoding="utf-8", newline=""
     ) as output:
         fields = (
-            "order_id", "prior", "spearman_rho", "directed_language_pairs",
+            "order_id", "prior", "spearman_rho", "forgetting_observations",
         )
         writer = csv.DictWriter(output, fieldnames=fields)
         writer.writeheader()
