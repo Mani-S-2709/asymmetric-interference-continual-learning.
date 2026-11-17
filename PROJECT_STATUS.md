@@ -1,13 +1,13 @@
 # Project status
 
-**Last reviewed:** 2026-11-16
+**Last reviewed:** 2026-11-17
 **Current focus:** Phase 3 v2 protocol and Kaggle workflow prepared; its input-preparation preflight and B0 runs have not yet been executed.
 
 ## At a glance
 
 | Workstream | Status | What is established |
 |---|---|---|
-| Phase 1: harness and pilot evidence | Existing pilots complete; matched stream-order comparison pending | The Hindi → German → English 1,000/500 three-seed run is complete (pattern pass rate 0/3). Its matching English → Hindi → German template is prepared; the existing English → Hindi → German 500/200 single-seed run is separate. |
+| Phase 1: harness and pilot evidence | Matched stream-order comparison complete; target checkpoint pattern not reproduced | Both 1,000/500 arms are complete for seeds 42–44. Mean ACC is 0.6911 for English → Hindi → German and 0.7064 for Hindi → German → English; each arm passed the predefined checkpoint pattern in 0/3 seeds. The older English → Hindi → German 500/200 single-seed pilot remains separate. |
 | Phase 2: B0–B8 baselines | Pilot baseline coverage complete; source-paper reproductions remain qualified | B0, B2–B8 each have five current-protocol orders; B1 has its single order-independent run. Every selected result record validates against its matching manifest. B3 and B7 (and other described methods) are adaptations, not exact paper reproductions. |
 | Phase 3: prior comparison (RQ1) | Original pilot and seed-43/44 follow-up complete; separate ten-language v2 protocol and Kaggle notebooks prepared | The combined v1 analysis covers 15 B0 runs, 20 directed pairs, and 150 forgetting observations. No prior is significant after Holm correction. V2 uses ten XNLI languages, five frozen orders, and three seeds; it has not been run. Its Kaggle CPU preflight must validate URIEL+ and embedding matrix coverage before any GPU training. Grambank lacks Spanish/German, and the available published interference matrix covers only five languages, so both are excluded unless complete values are supplied. See the [original RQ1 result folder](./phase3/results/rq1_kaggle_2026-11-16/README.md) and [v2 README](./phase3/README.md#expanded-rq1-v2-workflow). |
 
@@ -15,7 +15,21 @@ Phase 1 being accepted for project progression is **not** a claim that the origi
 
 ## Phase 1 results
 
-The completed Hindi → German → English group uses 1,000 training and 500 test examples per language and three seeds:
+Both matched stream-order runs use 1,000 training and 500 test examples per
+language, test-selection seed 42, training seeds 42–44, and
+`meta-llama/Llama-3.2-1B`. The English → Hindi → German results are:
+
+| Seed | ACC | BWT | FWT | Forgetting | Pattern passed |
+|---:|---:|---:|---:|---:|:---:|
+| 42 | 0.7093 | 0.1420 | 0.1880 | -0.0800 | No |
+| 43 | 0.6787 | 0.1130 | 0.1780 | -0.1130 | No |
+| 44 | 0.6853 | 0.1010 | 0.1730 | -0.0650 | No |
+| Mean ACC | **0.6911** | — | — | — | **0/3 passed** |
+
+Mean final accuracy by language: English 0.7440, Hindi 0.6507, German 0.6787.
+See the [English → Hindi → German run summary](./phase1/results/xnli-en-hi-de-multiseed-train1000-test500-20261116T074727501956Z/README.md).
+
+The completed Hindi → German → English group has:
 
 | Seed | ACC | BWT | FWT | Forgetting | Pattern passed |
 |---:|---:|---:|---:|---:|:---:|
@@ -24,9 +38,17 @@ The completed Hindi → German → English group uses 1,000 training and 500 tes
 | 44 | 0.6860 | 0.1230 | 0.1660 | -0.0440 | No |
 | Mean ACC | **0.7064** | — | — | — | **0/3 passed** |
 
-Use the [Phase 1 completion summary](./phase1/results/xnli-hi-de-en-multiseed-train1000-test500-20261110T045241Z/kaggle_completion/README.md) as the result source of truth. Keep the separate English → Hindi → German pilot and incomplete attempts separate; their results are not interchangeable.
+Use the [Phase 1 results index](./phase1/results/README.md) and each run's
+summary as the result sources of truth. The mean ACC difference between the
+matched orders is descriptive only; three seeds do not establish significance.
+Keep the separate English → Hindi → German pilot and incomplete attempts
+separate; their results are not interchangeable.
 
-For a matched order comparison, use the [EN → HI → DE Colab template](./phase1/notebooks/phase1_xnli_sequential_wandb_colab.ipynb) and the [HI → DE → EN Colab template](./phase1/notebooks/phase1_xnli_hi_de_en_sequential_wandb_colab.ipynb). Both use 1,000 training and 500 test examples per language, test-selection seed 42, and training seeds 42–44; the order and output folder differ. The EN → HI → DE multi-seed run still needs to be executed. Its existing 500/200 single-seed result is not a substitute.
+Both matched runs are complete. Their clean notebooks remain available as
+templates: [EN → HI → DE Kaggle notebook](./phase1/notebooks/phase1_xnli_en_hi_de_multiseed_kaggle.ipynb)
+and [HI → DE → EN Colab notebook](./phase1/notebooks/phase1_xnli_hi_de_en_sequential_wandb_colab.ipynb).
+The existing 500/200 single-seed result is not a substitute for either matched
+arm.
 
 ## Phase 2: baseline status
 

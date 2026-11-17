@@ -1,0 +1,196 @@
+{
+  "experiment_group_id": "xnli-en-hi-de-multiseed-train1000-test500-20261116T074727501956Z",
+  "dataset": "facebook/xnli",
+  "task_order": [
+    "en",
+    "hi",
+    "de"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "train_examples_per_language": 1000,
+  "test_examples_per_language": 500,
+  "fixed_test_split_seed": 42,
+  "model": "meta-llama/Llama-3.2-1B",
+  "method": "sequential_finetuning_no_replay",
+  "prompt_protocol": "phase1_b0_nli_prompt_candidate_label_log_likelihood",
+  "training": {
+    "task_mode": "causal_lm",
+    "max_length": 512,
+    "learning_rate": 0.0002,
+    "train_batch_size": 1,
+    "eval_batch_size": 1,
+    "gradient_accumulation_steps": 8,
+    "num_train_epochs": 1,
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.05,
+    "load_in_4bit": true,
+    "gradient_checkpointing": true
+  },
+  "mean_performance_matrix_rows_after_each_stage": [
+    [
+      0.572,
+      0.4593333333333333,
+      0.49133333333333334
+    ],
+    [
+      0.6366666666666667,
+      0.5853333333333334,
+      0.568
+    ],
+    [
+      0.744,
+      0.6506666666666667,
+      0.6786666666666668
+    ]
+  ],
+  "std_performance_matrix_rows_after_each_stage": [
+    [
+      0.01039230484541321,
+      0.021007935008784964,
+      0.008082903768654767
+    ],
+    [
+      0.0552207690396769,
+      0.025482019804821815,
+      0.02116601048851668
+    ],
+    [
+      0.03469870314579498,
+      0.008082903768654767,
+      0.006429100507328643
+    ]
+  ],
+  "mean_final_accuracies_by_language": {
+    "en": 0.744,
+    "hi": 0.6506666666666667,
+    "de": 0.6786666666666668
+  },
+  "mean_first_seen_accuracies_by_language": {
+    "en": 0.572,
+    "hi": 0.5853333333333334,
+    "de": 0.6786666666666668
+  },
+  "per_seed_results": [
+    {
+      "seed": 42,
+      "experiment_id": "xnli-en-hi-de-multiseed-train1000-test500-20261116T074727501956Z-seed42",
+      "matrix": [
+        [
+          0.56,
+          0.46,
+          0.49
+        ],
+        [
+          0.684,
+          0.598,
+          0.584
+        ],
+        [
+          0.782,
+          0.66,
+          0.686
+        ]
+      ],
+      "metrics": {
+        "ACC": 0.7093333333333334,
+        "AA": 0.7093333333333334,
+        "BWT": 0.14200000000000002,
+        "FWT": 0.18799999999999997,
+        "F": -0.08000000000000002,
+        "FP": 0.7093333333333334
+      },
+      "evaluation_json": "results/seed-42/evaluation_results.json",
+      "evaluation_csv": "results/seed-42/evaluation_results.csv"
+    },
+    {
+      "seed": 43,
+      "experiment_id": "xnli-en-hi-de-multiseed-train1000-test500-20261116T074727501956Z-seed43",
+      "matrix": [
+        [
+          0.578,
+          0.48,
+          0.5
+        ],
+        [
+          0.576,
+          0.556,
+          0.544
+        ],
+        [
+          0.714,
+          0.646,
+          0.676
+        ]
+      ],
+      "metrics": {
+        "ACC": 0.6786666666666666,
+        "AA": 0.6786666666666666,
+        "BWT": 0.11299999999999999,
+        "FWT": 0.178,
+        "F": -0.11299999999999999,
+        "FP": 0.6786666666666666
+      },
+      "evaluation_json": "results/seed-43/evaluation_results.json",
+      "evaluation_csv": "results/seed-43/evaluation_results.csv"
+    },
+    {
+      "seed": 44,
+      "experiment_id": "xnli-en-hi-de-multiseed-train1000-test500-20261116T074727501956Z-seed44",
+      "matrix": [
+        [
+          0.578,
+          0.438,
+          0.484
+        ],
+        [
+          0.65,
+          0.602,
+          0.576
+        ],
+        [
+          0.736,
+          0.646,
+          0.674
+        ]
+      ],
+      "metrics": {
+        "ACC": 0.6853333333333333,
+        "AA": 0.6853333333333333,
+        "BWT": 0.10100000000000003,
+        "FWT": 0.17299999999999996,
+        "F": -0.065,
+        "FP": 0.6853333333333333
+      },
+      "evaluation_json": "results/seed-44/evaluation_results.json",
+      "evaluation_csv": "results/seed-44/evaluation_results.csv"
+    }
+  ],
+  "per_seed_checkpoint_checks": [
+    {
+      "seed": 42,
+      "last_seen_language_strong_relative_to_previous_mean": false,
+      "earlier_languages_degraded_on_average": false,
+      "checkpoint_pattern_passed": false
+    },
+    {
+      "seed": 43,
+      "last_seen_language_strong_relative_to_previous_mean": false,
+      "earlier_languages_degraded_on_average": false,
+      "checkpoint_pattern_passed": false
+    },
+    {
+      "seed": 44,
+      "last_seen_language_strong_relative_to_previous_mean": false,
+      "earlier_languages_degraded_on_average": false,
+      "checkpoint_pattern_passed": false
+    }
+  ],
+  "checkpoint_pattern_pass_rate": 0.0,
+  "checkpoint_pattern_passed_all_seeds": false,
+  "interpretation_note": "Three completed seeds provide a preliminary repeatability check, not a definitive scientific conclusion."
+}

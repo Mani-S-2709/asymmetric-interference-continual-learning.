@@ -1,0 +1,13 @@
+{
+  "experiment_group_id": "xnli-en-hi-de-multiseed-train1000-test500-20261116T074727501956Z",
+  "completed_seeds": [
+    42,
+    43,
+    44
+  ],
+  "expected_seeds": [
+    42,
+    43,
+    44
+  ]
+}
