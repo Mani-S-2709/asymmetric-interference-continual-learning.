@@ -29,9 +29,11 @@ sign and direction statements in the earlier research-plan draft.
 The prior files are optional for a partial smoke test. For the current pilot,
 Grambank is explicitly excluded due to language coverage; the remaining
 planned inputs are the published interference matrix, URIEL+, and embeddings.
-The published matrix file is not included in this repository; the paper page
-currently exposes the matrix as a figure rather than a directly downloadable
-numeric CSV. Do not digitize its colors and treat them as exact measurements.
+The numeric published matrix used by this project is retained at
+[`results/rq1_kaggle_2026-11-16/priors/interference_matrix.csv`](./results/rq1_kaggle_2026-11-16/priors/interference_matrix.csv).
+The paper page itself exposes the matrix as a figure rather than a directly
+downloadable numeric CSV. Do not digitize its colors and treat them as exact
+measurements.
 
 ## Prepare the prior matrices
 
@@ -94,8 +96,9 @@ languages. Use the paper's language identifiers (for example `eng_Latn`,
 `deu`, and `swa` are also accepted. URIEL+ and Grambank files should contain
 distances. The embedding file should contain similarities.
 
-The pilot metadata uses ISO 15924 script identifiers and broad language
-families. It currently supports only the five Phase 2 pilot languages.
+The metadata uses ISO 15924 script identifiers and broad language families.
+It covers the Phase 2 pilot, Phase 3 ten-language protocol, and the approved
+Phase 4 roster; it is not a general language metadata registry.
 
 ## Outputs and interpretation
 
@@ -149,11 +152,12 @@ the smallest possible raw permutation p-value. The v2 protocol therefore
 expands the stream to ten XNLI languages before collecting new forgetting
 observations:
 
-`en, hi, es, de, sw, ar, ru, tr, th, zh`
+`en, de, es, fr, sw, ar, ur, bg, ru, hi`
 
 It keeps the 500/200 examples-per-language selection and B0 training settings,
 uses three training seeds (`42`, `43`, `44`) and five frozen ten-language
-orders, and uses a separate protocol ID. Two order pairs are reversals to
+orders, and uses a separate protocol ID. This is the same roster as the Phase 4
+controlled stream. Two order pairs are reversals to
 ensure all 90 directed language pairs are observed; the fifth order is another
 fixed permutation. Do not mix v2 records with the five-language pilot.
 
@@ -162,7 +166,10 @@ The complete prepared workflow is:
 1. Run
    [the v2 input-preparation notebook](./notebooks/phase3_rq1_v2_prepare_inputs.ipynb).
    It needs Kaggle Internet, but no GPU. It prepares the fixed XNLI selection,
-   URIEL+ and embedding matrices, and a checksummed input ZIP.
+   URIEL+ and embedding matrices, and a checksummed input ZIP. Because the
+   roster and protocol ID were updated to match Phase 4, regenerate any
+   previously prepared v2 input ZIP; training and analysis reject old-protocol
+   bundles.
 2. Keep the resulting `phase3_rq1_v2_inputs.zip` in a **private Kaggle
    dataset**. It contains priors, protocol/provenance, and the fixed-data hash;
    it does not contain XNLI sentence text.
@@ -176,9 +183,14 @@ The complete prepared workflow is:
    It validates seeds, orders, result records, and data hashes before
    computing pooled and per-order correlations.
 
-If no verified 10x10 interference matrix is supplied, the analysis is
-intentionally partial: it tests only available priors and reports the missing
-comparison. Do not claim a winner over the unavailable priors.
+The published interference source has scores for the nine roster languages
+other than Arabic. The input-preparation notebook uses the Phase 4
+pre-specified `k=5` URIEL+ syntactic-neighbor rule to impute Arabic's directed
+row and column. The matrix and analysis provenance identify this as an
+imputed—not directly published—prior and record the neighbor list and source
+and output checksums. Grambank is excluded only if the generated coverage
+report shows that it misses one or more roster languages; no values are
+silently imputed.
 
 **GPU requirement:** only B0 fine-tuning requires a Kaggle GPU/CUDA runtime.
 The model is the gated `meta-llama/Llama-3.2-1B` checkpoint with the existing
@@ -186,12 +198,10 @@ The model is the gated `meta-llama/Llama-3.2-1B` checkpoint with the existing
 secret named `HF_TOKEN`. Input preparation and statistics run on CPU;
 sentence-embedding inference can use a GPU for speed, but does not fine-tune.
 
-The published interference matrix currently available to this project covers
-only the original five languages, so it is not used for v2. Grambank v1.0.3
-also lacks Spanish and German for this stream and is explicitly excluded.
-Neither prior is imputed or silently substituted. A verified numeric 10x10
-interference matrix can be supplied later; the workflow validates its
-direction and coverage before including it.
+The ten-language v2 roster matches Phase 4. The published-interference prior
+uses the explicitly recorded Phase 4 Arabic imputation; do not describe the
+result as a fully observed published matrix. Grambank coverage is checked
+against all ten languages and any exclusion is recorded in the input summary.
 
 With ten languages, the label test uses 10,000 Monte Carlo language-label
 permutations and Holm correction. Three seeds are an initial expanded pilot,
@@ -205,8 +215,10 @@ The initial Kaggle RQ1 run found no Holm-significant prior, so do not select a
 Phase 4 replay prior from this pilot alone. The result files are organized in
 [`results/rq1_kaggle_2026-11-16/`](./results/rq1_kaggle_2026-11-16/README.md).
 
-Use the [confirmatory B0 seeds notebook](./notebooks/phase3_confirmatory_b0_seeds.ipynb)
-to run seeds 43 and 44 across the same five orders. It checks that the fixed
-XNLI sample hash matches the original B0 run and exports ten validated result
-records in a ZIP. After the run, combine those records with the original seed
-42 B0 results and recompute RQ1 before proceeding to Phase 4.
+Seeds 43 and 44 have now been executed and exported separately using
+[the seed 43 notebook](./notebooks/phase3_confirmatory_b0_seed_43.ipynb)
+and [the seed 44 notebook](./notebooks/phase3_confirmatory_b0_seed_44.ipynb).
+Each run covers the same five frozen orders and verifies the fixed XNLI data
+hash. The unchanged downloads, grouped result records, combined 15-run RQ1
+analysis, and provenance are organized in
+[`results/confirmatory_b0_seeds_43_44_2026-11-19/`](./results/confirmatory_b0_seeds_43_44_2026-11-19/README.md).

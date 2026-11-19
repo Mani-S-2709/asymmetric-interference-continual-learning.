@@ -64,21 +64,23 @@ def test_grambank_coverage_is_checked_for_the_configured_ten_languages(tmp_path)
         "hind1269,Hindi,\n"
         "swah1253,Swahili,\n"
         "arab1267,Arabic,\n"
-        "russ1263,Russian,\n"
-        "nucl1301,Turkish,\n"
-        "thai1261,Thai,\n"
-        "mand1415,Mandarin Chinese,\n",
+        "urdu1239,Urdu,\n"
+        "bulg1262,Bulgarian,\n"
+        "fren1241,French,\n"
+        "russ1263,Russian,\n",
         encoding="utf-8",
     )
 
     resolved, missing = resolve_language_ids(
         languages_path,
-        ("en", "hi", "es", "de", "sw", "ar", "ru", "tr", "th", "zh"),
+        ("en", "de", "es", "fr", "sw", "ar", "ur", "bg", "ru", "hi"),
     )
 
     assert sorted(resolved["ar"]) == ["arab1267"]
-    assert sorted(resolved["zh"]) == ["mand1415"]
-    assert missing == ["es", "de"]
+    assert sorted(resolved["ur"]) == ["urdu1239"]
+    assert sorted(resolved["bg"]) == ["bulg1262"]
+    assert sorted(resolved["fr"]) == ["fren1241"]
+    assert missing == ["de", "es"]
 
 
 def test_grambank_categorical_distance_uses_only_shared_non_missing_features(
@@ -138,5 +140,5 @@ def test_urielplus_matrix_writer_records_sha256_and_iso3_codes(tmp_path):
 
 def test_urielplus_resolves_all_v2_language_codes():
     assert codes_for_languages(
-        ("en", "hi", "es", "de", "sw", "ar", "ru", "tr", "th", "zh")
-    ) == ["eng", "hin", "spa", "deu", "swa", "arb", "rus", "tur", "tha", "cmn"]
+        ("en", "de", "es", "fr", "sw", "ar", "ur", "bg", "ru", "hi")
+    ) == ["eng", "deu", "spa", "fra", "swa", "arb", "urd", "bul", "rus", "hin"]

@@ -142,3 +142,35 @@ class AsymmetricInterferenceReplaySelector:
             selected.append(remaining[language].pop(item_index))
 
         return selected
+
+    def select_with_replacement(
+        self,
+        candidates: Sequence[ReplayItem],
+        sample_count: int,
+        incoming_language: str,
+    ) -> list[ReplayItem]:
+        """Select a fixed-size replay batch, sampling examples with replacement."""
+        if isinstance(sample_count, bool) or not isinstance(sample_count, int):
+            raise TypeError("sample_count must be an integer.")
+        if sample_count < 0:
+            raise ValueError("sample_count cannot be negative.")
+        if sample_count == 0 or not candidates:
+            return []
+
+        items_by_language: dict[str, list[ReplayItem]] = defaultdict(list)
+        for item in candidates:
+            items_by_language[item.language].append(item)
+        weights = self.language_weights(
+            list(items_by_language),
+            incoming_language,
+        )
+        available_languages = sorted(items_by_language)
+        selected = []
+        for _ in range(sample_count):
+            language = self._random.choices(
+                available_languages,
+                weights=[weights[language] for language in available_languages],
+                k=1,
+            )[0]
+            selected.append(self._random.choice(items_by_language[language]))
+        return selected

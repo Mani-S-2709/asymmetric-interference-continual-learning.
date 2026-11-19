@@ -10,6 +10,7 @@ from phase2.protocol import (
     validate_protocol,
     write_manifest,
 )
+from phase3.prior_analysis import LANGUAGE_METADATA
 
 
 PROTOCOL_PATH = Path(__file__).parents[1] / "configs" / "pilot_protocol.json"
@@ -39,9 +40,68 @@ def test_rq1_v2_protocol_supports_ten_languages_and_three_seeds():
     manifest = build_manifest(protocol)
 
     assert len(protocol["dataset"]["languages"]) == 10
+    assert protocol["dataset"]["languages"] == [
+        "en", "de", "es", "fr", "sw", "ar", "ur", "bg", "ru", "hi"
+    ]
+    assert protocol["dataset"]["languages"] == load_protocol(
+        Path(__file__).parents[2]
+        / "phase4"
+        / "configs"
+        / "controlled_10lang_pilot_protocol.json"
+    )["dataset"]["languages"]
     assert protocol["training"]["seeds"] == [42, 43, 44]
     assert manifest["expected_run_count"] == 123
     assert sum(run["method_id"] == "B0" for run in manifest["runs"]) == 15
+
+
+def test_phase4_protocol_pairs_five_seeds_with_five_orders():
+    phase4_path = (
+        Path(__file__).parents[2]
+        / "phase4"
+        / "configs"
+        / "controlled_10lang_pilot_protocol.json"
+    )
+    protocol = load_protocol(phase4_path)
+    manifest = build_manifest(protocol)
+
+    assert protocol["dataset"]["languages"] == [
+        "en", "de", "es", "fr", "sw", "ar", "ur", "bg", "ru", "hi"
+    ]
+    assert manifest["expected_run_count"] == 50
+    assert sum(run["method_id"] == "M3" for run in manifest["runs"]) == 5
+    assert sum(run["method_id"] == "B1" for run in manifest["runs"]) == 5
+    assert {
+        (run["order_id"], run["training_seed"])
+        for run in manifest["runs"]
+        if run["method_id"] == "M3"
+    } == {
+        (pair["order_id"], pair["seed"])
+        for pair in protocol["training"]["order_seed_pairs"]
+    }
+    assert protocol["dataset"]["train_examples_per_language"] == 500
+    assert protocol["dataset"]["test_examples_per_language"] == 200
+    assert {
+        LANGUAGE_METADATA[language]["script"]
+        for language in protocol["dataset"]["languages"]
+    } == {"Latn", "Arab", "Cyrl", "Deva"}
+    assert {
+        LANGUAGE_METADATA[language]["family"]
+        for language in protocol["dataset"]["languages"]
+    } == {"Indo-European", "Afro-Asiatic", "Niger-Congo"}
+
+
+def test_protocol_rejects_duplicate_seed_order_assignment():
+    phase4_path = (
+        Path(__file__).parents[2]
+        / "phase4"
+        / "configs"
+        / "controlled_10lang_pilot_protocol.json"
+    )
+    protocol = load_protocol(phase4_path)
+    protocol["training"]["order_seed_pairs"][1]["order_id"] = "order-1"
+
+    with pytest.raises(ValueError, match="exactly one seed to every order|one distinct seed"):
+        validate_protocol(protocol)
 
 
 def test_manifest_has_reproducible_fixed_subset_indices():

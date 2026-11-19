@@ -11,7 +11,10 @@ from phase3.rq1_v2_workflow import (
     PROTOCOL_ARCHIVE_NAME,
     _load_input_bundle,
     _validated_interference_matrix,
+    _write_imputed_interference_prior,
 )
+from phase3.prior_analysis import LANGUAGE_METADATA, load_wide_matrix
+from phase4 import interference_matrix as phase4_interference_matrix
 
 
 PROTOCOL_PATH = (
@@ -21,8 +24,15 @@ PROTOCOL_PATH = (
 )
 
 
-def _write_input_bundle(path: Path, *, bad_matrix_hash: bool = False) -> None:
+def _write_input_bundle(
+    path: Path,
+    *,
+    bad_matrix_hash: bool = False,
+    stale_protocol: bool = False,
+) -> None:
     protocol = load_protocol(PROTOCOL_PATH)
+    if stale_protocol:
+        protocol["protocol_id"] = "xnli-rq1-v2-10lang-500x200-v1"
     protocol_manifest = build_manifest(protocol)
     matrix = b"language,en\n"
     summary = {
@@ -62,6 +72,9 @@ def test_v2_protocol_covers_every_directed_language_pair():
     }
     language_count = len(protocol["dataset"]["languages"])
 
+    assert protocol["dataset"]["languages"] == [
+        "en", "de", "es", "fr", "sw", "ar", "ur", "bg", "ru", "hi"
+    ]
     assert protocol["training"]["seeds"] == [42, 43, 44]
     assert len(protocol["orders"]) == 5
     assert len(observed_pairs) == language_count * (language_count - 1)
@@ -85,6 +98,14 @@ def test_input_bundle_rejects_matrix_hash_mismatch(tmp_path):
         _load_input_bundle(bundle_path)
 
 
+def test_input_bundle_rejects_previous_roster_protocol(tmp_path):
+    bundle_path = tmp_path / "input.zip"
+    _write_input_bundle(bundle_path, stale_protocol=True)
+
+    with pytest.raises(ValueError, match="current frozen RQ1 v2 protocol"):
+        _load_input_bundle(bundle_path)
+
+
 def test_incomplete_published_interference_matrix_is_rejected(tmp_path):
     matrix_path = tmp_path / "interference.csv"
     matrix_path.write_text(
@@ -99,3 +120,40 @@ def test_incomplete_published_interference_matrix_is_rejected(tmp_path):
             matrix_path,
             ["en", "hi", "es"],
         )
+
+
+def test_imputed_interference_prior_is_written_in_rq1_matrix_codes(
+    tmp_path,
+    monkeypatch,
+):
+    languages = phase4_interference_matrix.PHASE4_LANGUAGES
+    scores = {
+        past: {
+            incoming: 0.0 if past == incoming else -0.1
+            for incoming in languages
+        }
+        for past in languages
+    }
+    metadata = {
+        "source_matrix_sha256": "a" * 64,
+        "imputation": {"language": "ar", "k": 5},
+    }
+    monkeypatch.setattr(
+        phase4_interference_matrix,
+        "prepare_phase4_matrix",
+        lambda source: (scores, metadata),
+    )
+    output = tmp_path / "priors" / "interference_matrix.csv"
+
+    written_metadata = _write_imputed_interference_prior(
+        output,
+        tmp_path / "source.csv",
+    )
+
+    matrix_codes = {
+        language: LANGUAGE_METADATA[language]["matrix_code"]
+        for language in languages
+    }
+    assert set(load_wide_matrix(output)) == set(matrix_codes.values())
+    assert written_metadata["imputation"]["language"] == "ar"
+    assert written_metadata["matrix_sha256"]

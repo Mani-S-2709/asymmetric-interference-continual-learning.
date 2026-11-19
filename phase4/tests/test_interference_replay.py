@@ -73,3 +73,26 @@ def test_select_rejects_negative_budget():
 
     with pytest.raises(ValueError, match="budget cannot be negative"):
         selector.select([], -1, incoming_language="de")
+
+
+def test_select_with_replacement_returns_requested_batch_size():
+    item = _item("hi", 1)
+    selector = AsymmetricInterferenceReplaySelector(
+        {"hi": {"de": -0.5}},
+        seed=42,
+    )
+
+    selected = selector.select_with_replacement(
+        [item],
+        sample_count=5,
+        incoming_language="de",
+    )
+
+    assert selected == [item] * 5
+
+
+def test_select_with_replacement_rejects_negative_count():
+    selector = AsymmetricInterferenceReplaySelector({})
+
+    with pytest.raises(ValueError, match="sample_count cannot be negative"):
+        selector.select_with_replacement([], -1, incoming_language="de")

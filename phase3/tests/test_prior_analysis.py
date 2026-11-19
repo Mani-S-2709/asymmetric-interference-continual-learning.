@@ -272,17 +272,18 @@ def test_script_and_family_priors_match_pilot_metadata():
 
 
 def test_v2_script_and_family_priors_cover_new_languages():
-    languages = ["en", "hi", "es", "de", "sw", "ar", "ru", "tr", "th", "zh"]
+    languages = ["en", "de", "es", "fr", "sw", "ar", "ur", "bg", "ru", "hi"]
     priors = make_builtin_prior_matrices(languages)
 
     assert priors["script_mismatch"].score("en", "ru") == 1.0
-    assert priors["script_mismatch"].score("en", "tr") == 0.0
+    assert priors["script_mismatch"].score("en", "fr") == 0.0
+    assert priors["script_mismatch"].score("ar", "ur") == 0.0
     assert priors["family_mismatch"].score("en", "ru") == 0.0
     assert priors["family_mismatch"].score("en", "ar") == 1.0
 
 
 def test_ten_language_label_test_uses_monte_carlo_permutations():
-    languages = ("en", "hi", "es", "de", "sw", "ar", "ru", "tr", "th", "zh")
+    languages = ("en", "de", "es", "fr", "sw", "ar", "ur", "bg", "ru", "hi")
     pairs = [
         PairForgetting(
             past,

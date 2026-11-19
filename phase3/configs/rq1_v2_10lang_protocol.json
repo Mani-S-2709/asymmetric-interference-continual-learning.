@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
-  "protocol_id": "xnli-rq1-v2-10lang-500x200-v1",
+  "protocol_id": "xnli-rq1-v2-phase4-roster-10lang-500x200-v2",
   "dataset": {
     "id": "facebook/xnli",
     "languages": [
       "en",
-      "hi",
-      "es",
       "de",
+      "es",
+      "fr",
       "sw",
       "ar",
+      "ur",
+      "bg",
       "ru",
-      "tr",
-      "th",
-      "zh"
+      "hi"
     ],
     "train_examples_per_language": 500,
     "test_examples_per_language": 200,
@@ -29,21 +29,21 @@
         "de",
         "hi",
         "ru",
-        "zh",
+        "fr",
         "sw",
-        "th",
+        "ur",
         "ar",
-        "tr"
+        "bg"
       ]
     },
     {
       "id": "order-2",
       "languages": [
-        "tr",
+        "bg",
         "ar",
-        "th",
+        "ur",
         "sw",
-        "zh",
+        "fr",
         "ru",
         "hi",
         "de",
@@ -55,13 +55,13 @@
       "id": "order-3",
       "languages": [
         "en",
-        "zh",
+        "fr",
         "ar",
         "es",
         "ru",
         "de",
-        "th",
-        "tr",
+        "ur",
+        "bg",
         "hi",
         "sw"
       ]
@@ -71,13 +71,13 @@
       "languages": [
         "sw",
         "hi",
-        "tr",
-        "th",
+        "bg",
+        "ur",
         "de",
         "ru",
         "es",
         "ar",
-        "zh",
+        "fr",
         "en"
       ]
     },
@@ -85,13 +85,13 @@
       "id": "order-5",
       "languages": [
         "es",
-        "zh",
+        "fr",
         "sw",
         "ar",
         "ru",
-        "tr",
+        "bg",
         "hi",
-        "th",
+        "ur",
         "en",
         "de"
       ]

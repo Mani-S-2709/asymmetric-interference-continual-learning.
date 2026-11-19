@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import csv
 import hashlib
 import json
 from pathlib import Path
@@ -71,6 +72,16 @@ def _load_input_bundle(
         protocol = _read_archive_json(archive, PROTOCOL_ARCHIVE_NAME)
     validate_protocol(protocol)
     manifest = build_manifest(protocol)
+    current_protocol = load_protocol(DEFAULT_PROTOCOL)
+    current_manifest = build_manifest(current_protocol)
+    if (
+        protocol.get("protocol_id") != current_protocol.get("protocol_id")
+        or manifest["protocol_sha256"] != current_manifest["protocol_sha256"]
+    ):
+        raise ValueError(
+            "Input bundle does not match the current frozen RQ1 v2 protocol. "
+            "Rerun input preparation before training or analysis."
+        )
     if summary.get("protocol_id") != protocol.get("protocol_id"):
         raise ValueError("Input bundle protocol ID does not match protocol.json.")
     if summary.get("protocol_sha256") != manifest["protocol_sha256"]:
@@ -87,6 +98,28 @@ def _load_input_bundle(
     hashes = summary.get("prior_matrix_sha256")
     if not isinstance(hashes, dict):
         raise ValueError("Input bundle is missing prior-matrix checksums.")
+    if "published_interference" in summary.get("included_priors", []):
+        interference_metadata = summary.get("interference_metadata")
+        matrix_hash = hashes.get("priors/interference_matrix.csv")
+        if (
+            not isinstance(interference_metadata, dict)
+            or not isinstance(matrix_hash, str)
+            or interference_metadata.get("matrix_sha256") != matrix_hash
+        ):
+            raise ValueError(
+                "Input bundle is missing matching published-interference provenance."
+            )
+        imputation = interference_metadata.get("imputation")
+        if imputation is not None:
+            if not isinstance(imputation, dict) or (
+                imputation.get("method") != "uniform_mean_of_k_nearest_languages"
+                or imputation.get("language") != "ar"
+                or imputation.get("k") != 5
+                or imputation.get("distance") != "URIEL+ syntactic"
+            ):
+                raise ValueError(
+                    "Input bundle has unexpected Arabic-interference imputation metadata."
+                )
     with ZipFile(input_zip) as archive:
         for name, expected_hash in hashes.items():
             if not isinstance(name, str) or not name.startswith("priors/"):
@@ -143,14 +176,76 @@ def _validate_prior_matrix(
             prior.score(past_language, incoming_language)
 
 
+def _write_imputed_interference_prior(
+    output_path: str | Path,
+    source_matrix: str | Path | None = None,
+) -> dict[str, Any]:
+    """Write the frozen Phase 4 Arabic-imputed matrix in RQ1 matrix codes."""
+    from phase4.interference_matrix import (
+        DEFAULT_SOURCE_MATRIX,
+        PHASE4_LANGUAGES,
+        prepare_phase4_matrix,
+    )
+
+    languages = list(PHASE4_LANGUAGES)
+    if languages != [
+        "en", "de", "es", "fr", "sw", "ar", "ur", "bg", "ru", "hi"
+    ]:
+        raise ValueError(
+            "Phase 4 language roster does not match the frozen RQ1 v2 roster."
+        )
+    scores, metadata = prepare_phase4_matrix(
+        source_matrix or DEFAULT_SOURCE_MATRIX,
+    )
+    matrix_codes = {
+        language: LANGUAGE_METADATA[language]["matrix_code"]
+        for language in languages
+    }
+    output = Path(output_path)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("w", encoding="utf-8", newline="") as destination:
+        writer = csv.writer(destination)
+        writer.writerow([
+            "language",
+            *(matrix_codes[language] for language in languages),
+        ])
+        for past_language in languages:
+            writer.writerow([
+                matrix_codes[past_language],
+                *(scores[past_language][incoming] for incoming in languages),
+            ])
+    _validate_prior_matrix(
+        output,
+        languages,
+        name="published_interference",
+        value_kind="paper_interference",
+    )
+    result = dict(metadata)
+    result["matrix_sha256"] = hashlib.sha256(output.read_bytes()).hexdigest()
+    result["matrix_path"] = "priors/interference_matrix.csv"
+    result["matrix_codes"] = matrix_codes
+    return result
+
+
 def prepare_inputs(
     *,
     protocol_path: str | Path = DEFAULT_PROTOCOL,
     output_dir: str | Path,
     embedding_device: str | None = None,
     interference_matrix: str | Path | None = None,
+    impute_arabic_interference: bool = False,
+    interference_source_matrix: str | Path | None = None,
 ) -> dict[str, Any]:
     """Prepare fixed XNLI-derived priors and package their provenance."""
+    if interference_matrix is not None and impute_arabic_interference:
+        raise ValueError(
+            "Supply either a complete interference matrix or request the "
+            "frozen Arabic imputation, not both."
+        )
+    if interference_source_matrix is not None and not impute_arabic_interference:
+        raise ValueError(
+            "An interference source matrix requires Arabic imputation."
+        )
     protocol = load_protocol(protocol_path)
     languages = protocol["dataset"]["languages"]
     output_root = Path(output_dir)
@@ -259,18 +354,32 @@ def prepare_inputs(
                 "published_interference",
                 "composite_interference_script",
             ])
-        else:
-            excluded_priors["published_interference"] = (
-                "No verified numeric 10x10 published-interference matrix "
-                "was supplied. The existing five-language matrix is not used."
-            )
-        if interference_matrix is not None:
             interference_metadata = {
                 "matrix_sha256": hashlib.sha256(
-                    (priors_dir / "interference_matrix.csv").read_bytes()
+                    interference_path.read_bytes()
                 ).hexdigest(),
                 "matrix_path": "priors/interference_matrix.csv",
+                "source": "complete supplied 10-language matrix",
             }
+        elif impute_arabic_interference:
+            interference_path = priors_dir / "interference_matrix.csv"
+            interference_metadata = _write_imputed_interference_prior(
+                interference_path,
+                interference_source_matrix,
+            )
+            _write_json(
+                priors_dir / "interference_matrix_metadata.json",
+                interference_metadata,
+            )
+            included_priors.extend([
+                "published_interference",
+                "composite_interference_script",
+            ])
+        else:
+            excluded_priors["published_interference"] = (
+                "No complete 10-language published-interference matrix was "
+                "supplied and Arabic imputation was not requested."
+            )
 
     matrix_files = sorted(priors_dir.glob("*.csv"))
     prior_hashes = {
@@ -597,6 +706,7 @@ def analyze(
         "data_manifest_sha256": input_summary["data_manifest_sha256"],
         "included_priors": input_summary["included_priors"],
         "excluded_priors": input_summary["excluded_priors"],
+        "interference_metadata": input_summary.get("interference_metadata"),
         "seed_summaries": sorted(seed_summaries, key=lambda item: item["seed"]),
         "input_bundle": Path(input_zip).name,
         "result_bundles": [Path(path).name for path in result_zips],
@@ -634,6 +744,16 @@ def main() -> None:
         help="Embedding inference device; this is not model training.",
     )
     prepare_parser.add_argument("--interference-matrix", type=Path)
+    prepare_parser.add_argument(
+        "--impute-arabic-interference",
+        action="store_true",
+        help="Use the frozen Phase 4 k=5 URIEL+ rule for the missing Arabic scores.",
+    )
+    prepare_parser.add_argument(
+        "--interference-source-matrix",
+        type=Path,
+        help="Published source matrix for Arabic imputation; defaults to Phase 4's source.",
+    )
 
     train_parser = commands.add_parser(
         "train-seed",
@@ -666,6 +786,8 @@ def main() -> None:
             output_dir=args.output_dir,
             embedding_device=args.embedding_device,
             interference_matrix=args.interference_matrix,
+            impute_arabic_interference=args.impute_arabic_interference,
+            interference_source_matrix=args.interference_source_matrix,
         )
     elif args.command == "train-seed":
         train_seed(

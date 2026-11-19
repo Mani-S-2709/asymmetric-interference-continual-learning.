@@ -35,9 +35,21 @@ LANGUAGE_METADATA: dict[str, dict[str, str]] = {
         "matrix_code": "swh_Latn", "iso3_code": "swa",
         "script": "Latn", "family": "Niger-Congo",
     },
+    "fr": {
+        "matrix_code": "fra_Latn", "iso3_code": "fra",
+        "script": "Latn", "family": "Indo-European",
+    },
     "ar": {
         "matrix_code": "arb_Arab", "iso3_code": "arb",
         "script": "Arab", "family": "Afro-Asiatic",
+    },
+    "ur": {
+        "matrix_code": "urd_Arab", "iso3_code": "urd",
+        "script": "Arab", "family": "Indo-European",
+    },
+    "bg": {
+        "matrix_code": "bul_Cyrl", "iso3_code": "bul",
+        "script": "Cyrl", "family": "Indo-European",
     },
     "ru": {
         "matrix_code": "rus_Cyrl", "iso3_code": "rus",
