@@ -194,7 +194,7 @@ def test_train_seed_can_export_a_single_order(tmp_path, monkeypatch):
         ]) == 1
 
 
-def test_analyze_accepts_all_per_order_archives(tmp_path, monkeypatch):
+def test_analyze_accepts_mixed_seed_and_order_archives(tmp_path, monkeypatch):
     input_zip = tmp_path / "input.zip"
     _write_input_bundle(input_zip)
     protocol = load_protocol(PROTOCOL_PATH)
@@ -209,6 +209,31 @@ def test_analyze_accepts_all_per_order_archives(tmp_path, monkeypatch):
         seed_protocol["training"]["seeds"] = [seed]
         manifest = build_manifest(seed_protocol)
         manifest["data_manifest_sha256"] = data_hash
+        if seed == 42:
+            b0_runs = [
+                run for run in manifest["runs"] if run["method_id"] == "B0"
+            ]
+            result_zip = tmp_path / "phase3_rq1_v2_b0_seed_42.zip"
+            seed_summary = {
+                "workflow": "phase3_rq1_v2",
+                "protocol_id": protocol["protocol_id"],
+                "seed_protocol_id": seed_protocol["protocol_id"],
+                "seed": seed,
+                "completed_runs": len(b0_runs),
+                "expected_runs": len(b0_runs),
+                "orders": [order["id"] for order in protocol["orders"]],
+                "data_manifest_sha256": data_hash,
+            }
+            with ZipFile(result_zip, "w", compression=ZIP_DEFLATED) as archive:
+                archive.writestr(SEED_SUMMARY_NAME, json.dumps(seed_summary))
+                archive.writestr(SEED_MANIFEST_NAME, json.dumps(manifest))
+                for run in b0_runs:
+                    archive.writestr(
+                        f"results/{run['run_id']}.json",
+                        json.dumps(_make_record(manifest, run)),
+                    )
+            result_zips.append(result_zip)
+            continue
         for order_id in [order["id"] for order in protocol["orders"]]:
             run = next(
                 item for item in manifest["runs"]

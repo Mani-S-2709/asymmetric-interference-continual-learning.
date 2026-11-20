@@ -603,12 +603,11 @@ def analyze(
     expected_orders = set(ordered_orders)
     seed_archive_count = len(expected_seeds)
     order_archive_count = seed_archive_count * len(expected_orders)
-    if len(result_zips) not in (seed_archive_count, order_archive_count):
+    if not seed_archive_count <= len(result_zips) <= order_archive_count:
         raise ValueError(
-            f"Expected either {seed_archive_count} complete-seed archives or "
+            f"Expected between {seed_archive_count} complete-seed archives and "
             f"{order_archive_count} per-order archives; received {len(result_zips)}."
         )
-    per_order_archives = len(result_zips) == order_archive_count
 
     output_root = Path(output_dir)
     results_dir = output_root / "results"
@@ -621,7 +620,12 @@ def analyze(
     for result_zip in result_zips:
         with ZipFile(result_zip) as archive:
             run_manifest = _read_archive_json(archive, SEED_MANIFEST_NAME)
-            if per_order_archives:
+            archive_names = set(archive.namelist())
+            if ORDER_SUMMARY_NAME in archive_names:
+                if SEED_SUMMARY_NAME in archive_names:
+                    raise ValueError(
+                        f"Result archive has both seed and order summaries: {result_zip}."
+                    )
                 order_summary = _read_archive_json(archive, ORDER_SUMMARY_NAME)
                 seed = order_summary.get("seed")
                 order_id = order_summary.get("order_id")
@@ -629,6 +633,10 @@ def analyze(
                     raise ValueError(f"Invalid seed in {result_zip}.")
                 if seed not in expected_seeds:
                     raise ValueError(f"Unexpected training seed {seed}.")
+                if seed in seen_seeds:
+                    raise ValueError(
+                        f"Seed {seed} has both a complete-seed and per-order archive."
+                    )
                 if not isinstance(order_id, str) or order_id not in expected_orders:
                     raise ValueError(f"Unexpected order in {result_zip}.")
                 if (seed, order_id) in seen_seed_orders:
@@ -687,7 +695,6 @@ def analyze(
                 run_ids.add(record["run_id"])
                 seen_seed_orders.add((seed, order_id))
                 order_records_by_seed.setdefault(seed, []).append(record)
-                seen_seeds.add(seed)
                 destination = results_dir / Path(name).name
                 destination.write_text(
                     json.dumps(record, indent=2, sort_keys=True) + "\n",
@@ -695,6 +702,10 @@ def analyze(
                 )
                 continue
 
+            if SEED_SUMMARY_NAME not in archive_names:
+                raise ValueError(
+                    f"Result archive is missing a recognized summary: {result_zip}."
+                )
             seed_summary = _read_archive_json(archive, SEED_SUMMARY_NAME)
             seed = seed_summary.get("seed")
             if isinstance(seed, bool) or not isinstance(seed, int):
@@ -702,6 +713,10 @@ def analyze(
             if seed not in expected_seeds or seed in seen_seeds:
                 raise ValueError(
                     f"Unexpected or duplicate training seed {seed}."
+                )
+            if any(order_seed == seed for order_seed, _ in seen_seed_orders):
+                raise ValueError(
+                    f"Seed {seed} has both a complete-seed and per-order archive."
                 )
             if seed_summary.get("protocol_id") != protocol["protocol_id"]:
                 raise ValueError(f"Protocol mismatch in {result_zip}.")
@@ -755,48 +770,39 @@ def analyze(
             seed_summaries.append(seed_summary)
             seen_seeds.add(seed)
 
-    if per_order_archives:
-        expected_seed_orders = {
-            (seed, order_id)
-            for seed in expected_seeds
-            for order_id in expected_orders
-        }
-        if seen_seed_orders != expected_seed_orders:
-            missing = sorted(expected_seed_orders - seen_seed_orders)
-            raise ValueError(f"Missing seed/order archives: {missing}.")
-        metrics = ("ACC", "BWT", "FWT", "F")
-        for seed in sorted(expected_seeds):
-            records = order_records_by_seed[seed]
-            records_by_order = {
-                record["order_id"]: record for record in records
-            }
-            records = [records_by_order[order_id] for order_id in ordered_orders]
-            seed_summaries.append({
-                "workflow": "phase3_rq1_v2",
-                "protocol_id": protocol["protocol_id"],
-                "seed_protocol_id": f"{protocol['protocol_id']}-seed-{seed}",
-                "seed": seed,
-                "completed_runs": len(records),
-                "expected_runs": len(ordered_orders),
-                "orders": ordered_orders,
-                "data_manifest_sha256": input_summary["data_manifest_sha256"],
-                "metrics_mean_across_orders": {
-                    name: statistics.mean(
-                        record["metrics"][name] for record in records
-                    )
-                    for name in metrics
-                },
-                "metrics_population_std_across_orders": {
-                    name: statistics.pstdev(
-                        record["metrics"][name] for record in records
-                    )
-                    for name in metrics
-                },
-            })
-    elif seen_seeds != expected_seeds:
-        raise ValueError(
-            f"Missing seed archives: {sorted(expected_seeds - seen_seeds)}."
-        )
+    metrics = ("ACC", "BWT", "FWT", "F")
+    for seed in sorted(expected_seeds - seen_seeds):
+        records = order_records_by_seed.get(seed, [])
+        records_by_order = {record["order_id"]: record for record in records}
+        found_orders = set(records_by_order)
+        if found_orders != expected_orders:
+            missing = sorted(expected_orders - found_orders)
+            raise ValueError(
+                f"Seed {seed} is missing order archives: {missing}."
+            )
+        records = [records_by_order[order_id] for order_id in ordered_orders]
+        seed_summaries.append({
+            "workflow": "phase3_rq1_v2",
+            "protocol_id": protocol["protocol_id"],
+            "seed_protocol_id": f"{protocol['protocol_id']}-seed-{seed}",
+            "seed": seed,
+            "completed_runs": len(records),
+            "expected_runs": len(ordered_orders),
+            "orders": ordered_orders,
+            "data_manifest_sha256": input_summary["data_manifest_sha256"],
+            "metrics_mean_across_orders": {
+                name: statistics.mean(
+                    record["metrics"][name] for record in records
+                )
+                for name in metrics
+            },
+            "metrics_population_std_across_orders": {
+                name: statistics.pstdev(
+                    record["metrics"][name] for record in records
+                )
+                for name in metrics
+            },
+        })
 
     priors_dir = output_root / "priors"
     priors_dir.mkdir(parents=True, exist_ok=True)

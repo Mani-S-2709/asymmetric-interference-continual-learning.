@@ -186,10 +186,11 @@ The complete prepared workflow is:
    completion. Attach the private input dataset each time, set both
    `SEED_TO_RUN` and `ORDER_TO_RUN`, and download each ZIP before starting the
    next run. The workflow checks the XNLI data hash before training.
-4. Attach the input ZIP and all 15 per-order ZIPs to
+4. Attach the input ZIP and each seed's complete result to
    [the v2 analysis notebook](./notebooks/phase3_rq1_v2_analyze.ipynb).
-   It validates seeds, orders, result records, and data hashes before
-   computing pooled and per-order correlations.
+   For each seed, provide either its complete seed ZIP or all five per-order
+   ZIPs. The workflow validates complete seed/order coverage, result records,
+   and data hashes before computing pooled and per-order correlations.
 
 The published interference source has scores for the nine roster languages
 other than Arabic. The input-preparation notebook uses the Phase 4
