@@ -161,6 +161,12 @@ controlled stream. Two order pairs are reversals to
 ensure all 90 directed language pairs are observed; the fifth order is another
 fixed permutation. Do not mix v2 records with the five-language pilot.
 
+Input preparation completed on 2026-11-20. The notebook had no cell errors,
+and the generated ZIP validates against the current protocol. Its organized
+copy remains a local run artifact for upload to Kaggle, not a repository file.
+The next step is B0 training for seeds 42, 43, and 44; these runs and the
+combined analysis are not yet complete.
+
 The complete prepared workflow is:
 
 1. Run
@@ -169,16 +175,18 @@ The complete prepared workflow is:
    URIEL+ and embedding matrices, and a checksummed input ZIP. Because the
    roster and protocol ID were updated to match Phase 4, regenerate any
    previously prepared v2 input ZIP; training and analysis reject old-protocol
-   bundles.
+   bundles. Use the validated current bundle for this run.
 2. Keep the resulting `phase3_rq1_v2_inputs.zip` in a **private Kaggle
    dataset**. It contains priors, protocol/provenance, and the fixed-data hash;
    it does not contain XNLI sentence text.
 3. Run
    [the v2 B0 training notebook](./notebooks/phase3_rq1_v2_train_b0.ipynb)
-   once for each seed. Attach the private input dataset and download the
-   resulting per-seed ZIP after each run. Each run covers all five orders and
-   checks the XNLI data hash before training.
-4. Attach the input ZIP and all three per-seed ZIPs to
+   once for each of the 15 seed/order pairs (seeds 42–44 and orders 1–5).
+   Each Kaggle session trains one order and produces its own result ZIP after
+   completion. Attach the private input dataset each time, set both
+   `SEED_TO_RUN` and `ORDER_TO_RUN`, and download each ZIP before starting the
+   next run. The workflow checks the XNLI data hash before training.
+4. Attach the input ZIP and all 15 per-order ZIPs to
    [the v2 analysis notebook](./notebooks/phase3_rq1_v2_analyze.ipynb).
    It validates seeds, orders, result records, and data hashes before
    computing pooled and per-order correlations.

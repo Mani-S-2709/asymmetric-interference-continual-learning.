@@ -42,6 +42,7 @@ INPUT_ZIP_NAME = "phase3_rq1_v2_inputs.zip"
 INPUT_SUMMARY_NAME = "rq1_v2_input_summary.json"
 PROTOCOL_ARCHIVE_NAME = "protocol.json"
 SEED_SUMMARY_NAME = "rq1_v2_b0_seed_summary.json"
+ORDER_SUMMARY_NAME = "rq1_v2_b0_order_summary.json"
 SEED_MANIFEST_NAME = "protocol_manifest.json"
 ANALYSIS_ZIP_NAME = "phase3_rq1_v2_analysis.zip"
 
@@ -442,8 +443,9 @@ def train_seed(
     seed: int,
     work_dir: str | Path,
     output_dir: str | Path,
+    order_id: str | None = None,
 ) -> dict[str, Any]:
-    """Run all five B0 orders for one seed and export validated records."""
+    """Run B0 for one seed, optionally limiting execution to one order."""
     base_protocol, input_summary = _load_input_bundle(input_zip)
     if seed not in base_protocol["training"]["seeds"]:
         raise ValueError(
@@ -454,6 +456,12 @@ def train_seed(
     protocol["protocol_id"] = f"{base_protocol['protocol_id']}-seed-{seed}"
     protocol["training"]["seeds"] = [seed]
     validate_protocol(protocol)
+    all_order_ids = [order["id"] for order in protocol["orders"]]
+    if order_id is not None and order_id not in all_order_ids:
+        raise ValueError(
+            f"Unknown order {order_id!r}; expected one of {all_order_ids}."
+        )
+    order_ids = [order_id] if order_id is not None else all_order_ids
 
     output_root = Path(output_dir)
     output_root.mkdir(parents=True, exist_ok=True)
@@ -484,7 +492,6 @@ def train_seed(
             "training did not start."
         )
 
-    order_ids = [order["id"] for order in protocol["orders"]]
     command = [
         sys.executable,
         "-m",
@@ -496,8 +503,8 @@ def train_seed(
         "--artifact-root",
         str(artifact_root),
     ]
-    for order_id in order_ids:
-        command.extend(["--order-id", order_id])
+    for selected_order_id in order_ids:
+        command.extend(["--order-id", selected_order_id])
     subprocess.run(command, cwd=PROJECT_ROOT, check=True)
 
     run_manifest = build_manifest(protocol)
@@ -506,13 +513,17 @@ def train_seed(
     expected_runs = [
         run for run in run_manifest["runs"] if run["method_id"] == "B0"
     ]
+    expected_runs = [
+        run for run in expected_runs if run["order_id"] in order_ids
+    ]
     if len(expected_runs) != len(order_ids):
         raise ValueError(
             f"Expected {len(order_ids)} B0 records for seed {seed}; "
             f"found {len(expected_runs)}."
         )
 
-    export_root = output_root / f"seed_{seed}_export"
+    export_suffix = f"order_{order_id}" if order_id is not None else "export"
+    export_root = output_root / f"seed_{seed}_{export_suffix}"
     results_dir = export_root / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
     records = []
@@ -527,7 +538,7 @@ def train_seed(
         records.append(record)
         shutil.copy2(result_path, results_dir / result_path.name)
     if {record["order_id"] for record in records} != set(order_ids):
-        raise ValueError("Completed B0 records do not cover all five orders.")
+        raise ValueError("Completed B0 records do not cover the requested order set.")
 
     metrics = ("ACC", "BWT", "FWT", "F")
     summary = {
@@ -553,11 +564,19 @@ def train_seed(
             for name in metrics
         },
     }
-    _write_json(export_root / SEED_SUMMARY_NAME, summary)
+    if order_id is not None:
+        summary["expected_orders"] = all_order_ids
+        summary["order_id"] = order_id
+        summary_name = ORDER_SUMMARY_NAME
+        zip_name = f"phase3_rq1_v2_b0_seed_{seed}_{order_id}.zip"
+    else:
+        summary_name = SEED_SUMMARY_NAME
+        zip_name = f"phase3_rq1_v2_b0_seed_{seed}.zip"
+    _write_json(export_root / summary_name, summary)
     _write_json(export_root / SEED_MANIFEST_NAME, run_manifest)
     shutil.copy2(protocol_path, export_root / "protocol.json")
 
-    zip_path = output_root / f"phase3_rq1_v2_b0_seed_{seed}.zip"
+    zip_path = output_root / zip_name
     with ZipFile(zip_path, "w", compression=ZIP_DEFLATED) as archive:
         for path in sorted(export_root.rglob("*")):
             if path.is_file():
@@ -577,26 +596,106 @@ def analyze(
     output_dir: str | Path,
     random_repetitions: int = 10000,
 ) -> dict[str, Any]:
-    """Validate three seed archives and run the combined RQ1 analysis."""
+    """Validate complete-seed or per-order archives and run combined analysis."""
     protocol, input_summary = _load_input_bundle(input_zip)
     expected_seeds = set(protocol["training"]["seeds"])
-    expected_orders = {order["id"] for order in protocol["orders"]}
-    if len(result_zips) != len(expected_seeds):
+    ordered_orders = [order["id"] for order in protocol["orders"]]
+    expected_orders = set(ordered_orders)
+    seed_archive_count = len(expected_seeds)
+    order_archive_count = seed_archive_count * len(expected_orders)
+    if len(result_zips) not in (seed_archive_count, order_archive_count):
         raise ValueError(
-            f"Expected one result archive for each of {len(expected_seeds)} "
-            f"seeds; received {len(result_zips)}."
+            f"Expected either {seed_archive_count} complete-seed archives or "
+            f"{order_archive_count} per-order archives; received {len(result_zips)}."
         )
+    per_order_archives = len(result_zips) == order_archive_count
 
     output_root = Path(output_dir)
     results_dir = output_root / "results"
     results_dir.mkdir(parents=True, exist_ok=True)
     seed_summaries = []
     seen_seeds: set[int] = set()
+    seen_seed_orders: set[tuple[int, str]] = set()
+    order_records_by_seed: dict[int, list[dict[str, Any]]] = {}
     run_ids: set[str] = set()
     for result_zip in result_zips:
         with ZipFile(result_zip) as archive:
-            seed_summary = _read_archive_json(archive, SEED_SUMMARY_NAME)
             run_manifest = _read_archive_json(archive, SEED_MANIFEST_NAME)
+            if per_order_archives:
+                order_summary = _read_archive_json(archive, ORDER_SUMMARY_NAME)
+                seed = order_summary.get("seed")
+                order_id = order_summary.get("order_id")
+                if isinstance(seed, bool) or not isinstance(seed, int):
+                    raise ValueError(f"Invalid seed in {result_zip}.")
+                if seed not in expected_seeds:
+                    raise ValueError(f"Unexpected training seed {seed}.")
+                if not isinstance(order_id, str) or order_id not in expected_orders:
+                    raise ValueError(f"Unexpected order in {result_zip}.")
+                if (seed, order_id) in seen_seed_orders:
+                    raise ValueError(
+                        f"Duplicate result archive for seed {seed}, order {order_id}."
+                    )
+                if order_summary.get("protocol_id") != protocol["protocol_id"]:
+                    raise ValueError(f"Protocol mismatch in {result_zip}.")
+                if order_summary.get("seed_protocol_id") != (
+                    f"{protocol['protocol_id']}-seed-{seed}"
+                ):
+                    raise ValueError(f"Seed protocol mismatch in {result_zip}.")
+                if order_summary.get("data_manifest_sha256") != input_summary[
+                    "data_manifest_sha256"
+                ]:
+                    raise ValueError(f"XNLI sample hash mismatch in {result_zip}.")
+                if run_manifest.get("data_manifest_sha256") != input_summary[
+                    "data_manifest_sha256"
+                ]:
+                    raise ValueError(
+                        f"Result manifest data hash mismatch in {result_zip}."
+                    )
+                if order_summary.get("protocol_sha256") != run_manifest.get(
+                    "protocol_sha256"
+                ):
+                    raise ValueError(
+                        f"Result protocol hash mismatch in {result_zip}."
+                    )
+                if order_summary.get("completed_runs") != 1 or (
+                    order_summary.get("orders") != [order_id]
+                    or order_summary.get("expected_orders") != ordered_orders
+                ):
+                    raise ValueError(f"Incomplete order summary in {result_zip}.")
+                records = [
+                    name for name in archive.namelist()
+                    if name.startswith("results/") and name.endswith(".json")
+                ]
+                if len(records) != 1:
+                    raise ValueError(
+                        f"Expected one result JSON in {result_zip}; "
+                        f"found {len(records)}."
+                    )
+                name = records[0]
+                record = json.loads(archive.read(name))
+                validate_result_record(record, run_manifest)
+                if record.get("training_seed") != seed:
+                    raise ValueError(
+                        f"Result {name} has a different training seed."
+                    )
+                if record.get("order_id") != order_id:
+                    raise ValueError(
+                        f"Result {name} does not match its order summary."
+                    )
+                if record["run_id"] in run_ids:
+                    raise ValueError(f"Duplicate run ID: {record['run_id']}.")
+                run_ids.add(record["run_id"])
+                seen_seed_orders.add((seed, order_id))
+                order_records_by_seed.setdefault(seed, []).append(record)
+                seen_seeds.add(seed)
+                destination = results_dir / Path(name).name
+                destination.write_text(
+                    json.dumps(record, indent=2, sort_keys=True) + "\n",
+                    encoding="utf-8",
+                )
+                continue
+
+            seed_summary = _read_archive_json(archive, SEED_SUMMARY_NAME)
             seed = seed_summary.get("seed")
             if isinstance(seed, bool) or not isinstance(seed, int):
                 raise ValueError(f"Invalid seed in {result_zip}.")
@@ -656,7 +755,45 @@ def analyze(
             seed_summaries.append(seed_summary)
             seen_seeds.add(seed)
 
-    if seen_seeds != expected_seeds:
+    if per_order_archives:
+        expected_seed_orders = {
+            (seed, order_id)
+            for seed in expected_seeds
+            for order_id in expected_orders
+        }
+        if seen_seed_orders != expected_seed_orders:
+            missing = sorted(expected_seed_orders - seen_seed_orders)
+            raise ValueError(f"Missing seed/order archives: {missing}.")
+        metrics = ("ACC", "BWT", "FWT", "F")
+        for seed in sorted(expected_seeds):
+            records = order_records_by_seed[seed]
+            records_by_order = {
+                record["order_id"]: record for record in records
+            }
+            records = [records_by_order[order_id] for order_id in ordered_orders]
+            seed_summaries.append({
+                "workflow": "phase3_rq1_v2",
+                "protocol_id": protocol["protocol_id"],
+                "seed_protocol_id": f"{protocol['protocol_id']}-seed-{seed}",
+                "seed": seed,
+                "completed_runs": len(records),
+                "expected_runs": len(ordered_orders),
+                "orders": ordered_orders,
+                "data_manifest_sha256": input_summary["data_manifest_sha256"],
+                "metrics_mean_across_orders": {
+                    name: statistics.mean(
+                        record["metrics"][name] for record in records
+                    )
+                    for name in metrics
+                },
+                "metrics_population_std_across_orders": {
+                    name: statistics.pstdev(
+                        record["metrics"][name] for record in records
+                    )
+                    for name in metrics
+                },
+            })
+    elif seen_seeds != expected_seeds:
         raise ValueError(
             f"Missing seed archives: {sorted(expected_seeds - seen_seeds)}."
         )
@@ -764,6 +901,16 @@ def main() -> None:
     train_parser.add_argument("--work-dir", type=Path, required=True)
     train_parser.add_argument("--output-dir", type=Path, required=True)
 
+    order_parser = commands.add_parser(
+        "train-order",
+        help="Run B0 for one order of one training seed.",
+    )
+    order_parser.add_argument("--inputs-zip", type=Path, required=True)
+    order_parser.add_argument("--seed", type=int, required=True)
+    order_parser.add_argument("--order-id", required=True)
+    order_parser.add_argument("--work-dir", type=Path, required=True)
+    order_parser.add_argument("--output-dir", type=Path, required=True)
+
     analyze_parser = commands.add_parser(
         "analyze",
         help="Validate seed result ZIPs and run combined RQ1 analysis.",
@@ -793,6 +940,14 @@ def main() -> None:
         train_seed(
             input_zip=args.inputs_zip,
             seed=args.seed,
+            work_dir=args.work_dir,
+            output_dir=args.output_dir,
+        )
+    elif args.command == "train-order":
+        train_seed(
+            input_zip=args.inputs_zip,
+            seed=args.seed,
+            order_id=args.order_id,
             work_dir=args.work_dir,
             output_dir=args.output_dir,
         )
