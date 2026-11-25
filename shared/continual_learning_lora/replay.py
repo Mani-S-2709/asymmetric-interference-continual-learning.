@@ -78,5 +78,12 @@ class ReplayBuffer:
             raise ValueError("Cannot sample from an empty replay buffer.")
         return [self._random.choice(self._items) for _ in range(batch_size)]
 
+    def snapshot(self) -> tuple[ReplayItem, ...]:
+        """Return a detached view of the current examples for custom selectors."""
+        return tuple(
+            ReplayItem(language=item.language, example=dict(item.example))
+            for item in self._items
+        )
+
     def __len__(self) -> int:
         return len(self._items)

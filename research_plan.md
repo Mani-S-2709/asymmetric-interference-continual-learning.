@@ -182,11 +182,23 @@ the language stream and rerunning the corresponding Phase 2 baselines.
 
 **Checkpoint:** A clear, directionally correct winner among priors, with a pre-specified statistical test and uncertainty limitations reported. If no prior beats the random control, stop, talk to Sayan, and consider a pivot. The five existing B0 orders with one training seed are pilot evidence only; add independent training seeds before making a robust generalization claim.
 
-### Phase 4 — Method development and matched-budget comparison (RQ2) (weeks 8–10)
+### Phase 4 — Method development and controlled pilot (RQ2) (weeks 8–10)
 
-Use the RQ1-winning prior to implement M3 (asymmetric interference-matrix replay) and run the full headline comparison: M3 vs all baselines, at a fixed 5% replay budget, on the controlled 10-language stream.
+Phase 4 is gated on the Phase 3 confirmatory decision selecting
+`published_interference`; otherwise stop and revise the method before training.
+The approved first execution is a **pilot**: B0–B8 plus M3, five frozen
+order/seed pairs (seeds 42–46), 500 train and 200 test examples per language,
+for 50 runs total. Report descriptive means and variability only. Five paired
+observations cannot support the planned Holm-corrected significance claim.
 
-**Checkpoint:** A headline table showing M3 outperforming all baselines on Average Accuracy and BWT, with statistical significance.
+The 5% budget means a 250-example replay buffer for this 10 × 500 training
+set. B2 and M3 use one replay example per current example; this does not make
+all methods compute-matched. Do not label this pilot a matched-compute
+headline comparison.
+
+**Pilot checkpoint:** All 50 records validate and the descriptive comparison
+is reported with the missing-run list. A statistically supported headline
+claim requires a separately frozen, adequately replicated follow-up.
 
 ### Phase 5 — Ablations (RQ3 + everything else) (weeks 11–13)
 
@@ -244,8 +256,8 @@ Drafting, revisions, related work survey, theory section, response to internal r
 
 We define three streams used throughout the project:
 
-- **Pilot stream (5 languages):** en → hi → bn → de → sw. Mixes scripts (Latin, Devanagari, Bengali) and families (Indo-European Germanic, Indo-European Indic, Niger-Congo). Cheap to iterate on.
-- **Controlled stream (10 languages):** Balanced across 5 scripts (Latin, Devanagari, Bengali, Cyrillic, Arabic) and 4 families (Indo-European, Niger-Congo, Afro-Asiatic, Sino-Tibetan). Used for Phase 4 headline numbers.
+- **Pilot stream (5 languages):** en, hi, es, de, sw. Mixes Latin and Devanagari scripts and Indo-European and Niger-Congo families. Cheap to iterate on.
+- **Controlled stream (10 languages):** en, de, es, fr, sw (Latin); ar, ur (Arabic script); bg, ru (Cyrillic); hi (Devanagari). This approved roster covers four scripts and three families: Indo-European (8 languages), Afro-Asiatic (ar), and Niger-Congo (sw). It does not meet the earlier five-script/four-family balance; report the actual coverage. Used for the Phase 4 pilot.
 - **Scale stream (51 languages):** Matches Winata et al. 2023 setup exactly. Used in Phase 6 for direct comparison to LR-ADJUST.
 
 **For every reported number, run ≥5 different permutations of stream order and report mean ± std.** Order effects are real and large — single-order results are not publishable.
@@ -282,7 +294,11 @@ The reviewer's mental checklist for a paper in this space contains every one of 
 | B7  | **COMPASS**                        | **The closest competitor — semantic-cluster-driven sampling**   | Flynn 2026 (use authors' code if released) |
 | B8  | Function-vector training           | ICLR 2025 strong CL baseline                                    | Yang et al. 2025                           |
 
-**For each baseline:** identical compute budget, identical replay buffer size, identical LoRA config, identical stream and seed. The only difference is the algorithm.
+**Target for a later confirmatory comparison:** identical compute budget,
+replay-buffer capacity, LoRA configuration, stream, and paired seed. The
+current Phase 4 pilot fixes the buffer capacity and core protocol, but replay
+methods add examples and some methods add selection work. Report the resulting
+compute/exposure differences; do not claim matched compute for this pilot.
 
 ---
 
@@ -583,12 +599,15 @@ Estimated single-A100-equivalent hours for the full study:
 
 - Phase 0–2 (harness + pilot baselines): ~150 hours
 - Phase 3 (prior comparison): ~80 hours
-- Phase 4 (headline 10-language stream, 9 methods × 5 seeds): ~400 hours
+- Phase 4: the original ~400-hour estimate used an inconsistent method count
+  and replication description. Recalculate from measured per-run time before
+  scheduling the 50-run pilot or any larger confirmatory study.
 - Phase 5 (ablations): ~500 hours
 - Phase 6 (scaling to 7B/8B, 3 methods × 5 seeds): ~600 hours
 - Phase 7 (M4 stretch): ~200 hours
 
-Total: ~2000 A100-hours. Plan accordingly — request institutional GPU allocation early.
+Known subtotal excluding Phase 4: ~1530 A100-hours. Add the measured Phase 4
+cost before finalizing the total or requesting GPU allocation.
 
 ---
 
@@ -616,7 +635,7 @@ flowchart TD
     C --> D[Phase 3: Prior comparison RQ1<br/>Rank correlation: prior vs observed forgetting]
     D --> E{Any prior beats random?}
     E -- No --> F[STOP. Pivot or rescope with Sayan.]
-    E -- Yes --> G[Phase 4: Headline comparison RQ2<br/>M3 vs all baselines, 10-lang stream, 5% budget]
+    E -- Yes --> G[Phase 4: Controlled pilot RQ2<br/>M3 vs baselines, 10-lang stream, 50 runs]
     G --> H[Phase 5: Ablations<br/>Component, prior, budget, stream, scale, buffer]
     H --> I[Phase 6: Scaling<br/>Qwen2.5-7B, Llama-3.1-8B headline numbers]
     I --> J[Phase 7: Learned prior M4<br/>Stretch goal — skip if behind schedule]

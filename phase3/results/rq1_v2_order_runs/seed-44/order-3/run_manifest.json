@@ -1,0 +1,28 @@
+{
+    "protocol_id":  "xnli-rq1-v2-phase4-roster-10lang-500x200-v2",
+    "data_manifest_sha256":  "373852a7f1e09ab99da8a25f21023fedc1977ab1969e09d938874f7c645a721a",
+    "prior_matrix_sha256":  {
+                                "priors/embedding_similarity.csv":  "269b01ead9db152fca46483e8e1ece0ca44686a331f000869f4c324a6ba36584",
+                                "priors/interference_matrix.csv":  "96736299ea294ef03935ac0c539210bfe0bab8e8b9f815a19f8b04674092c18b",
+                                "priors/uriel_syntactic_distance.csv":  "f5eb4a0c0d8499619af18e74ab0a43b93a9a9faabc8efa97cbb0540c30c7107d"
+                            },
+    "input_bundle_validation":  "passed",
+    "seed":  44,
+    "order_id":  "order-3",
+    "status":  "completed",
+    "notebook":  "phase3_rq1_v2_b0_seed_44_order-3.ipynb",
+    "expected_result_zip":  "phase3_rq1_v2_b0_seed_44_order-3.zip",
+    "executed_notebook":  "phase3_rq1_v2_b0_seed_44_order-3_executed.ipynb",
+    "training_result_zip":  "phase3_rq1_v2_b0_seed_44_order-3.zip",
+    "training_result_zip_sha256":  "a8667f997ad5470ea55eb443135ec33e41b9706d99aa63ef60ec2a6cf77a9cda",
+    "result_protocol_sha256":  "a7f809bd98c5531cfe8d9bf202f445b0c9b526d0e416cf6c3ce61e0de67fdb6c",
+    "metrics":  {
+                    "AA":  0.632,
+                    "ACC":  0.632,
+                    "BWT":  0.05111111111111113,
+                    "F":  0.032222222222222215,
+                    "FP":  0.632,
+                    "FWT":  0.23055555555555557
+                },
+    "completed":  true
+}

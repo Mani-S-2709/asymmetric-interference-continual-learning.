@@ -1,0 +1,298 @@
+{
+  "data_manifest_sha256": "373852a7f1e09ab99da8a25f21023fedc1977ab1969e09d938874f7c645a721a",
+  "embedding_metadata": {
+    "batch_size": 16,
+    "data_manifest_sha256": "373852a7f1e09ab99da8a25f21023fedc1977ab1969e09d938874f7c645a721a",
+    "device": "cpu",
+    "encoder": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+    "encoder_revision": "4328cf26390c98c5e3c738b4460a05b95f4911f5",
+    "examples_per_language": {
+      "ar": 500,
+      "bg": 500,
+      "de": 500,
+      "en": 500,
+      "es": 500,
+      "fr": 500,
+      "hi": 500,
+      "ru": 500,
+      "sw": 500,
+      "ur": 500
+    },
+    "language_representation": "L2-normalized mean of L2-normalized sentence-pair embeddings",
+    "languages": [
+      "en",
+      "de",
+      "es",
+      "fr",
+      "sw",
+      "ar",
+      "ur",
+      "bg",
+      "ru",
+      "hi"
+    ],
+    "matrix_path": "embedding_similarity.csv",
+    "matrix_sha256": "269b01ead9db152fca46483e8e1ece0ca44686a331f000869f4c324a6ba36584",
+    "max_sequence_length": 256,
+    "protocol_manifest_sha256": "8564d599a61387cf87e041113d041d1b05a5816d24d8bda57b919be88f11062b",
+    "sentence_transformers_version": "5.7.0",
+    "similarity": "cosine similarity between language centroids",
+    "source_dataset": "XNLI training split prepared by Phase 2 protocol",
+    "text_representation": "Premise: {premise}\\nHypothesis: {hypothesis}"
+  },
+  "excluded_priors": {
+    "grambank_distance": "Grambank v1.0.3 does not cover every configured language: de, es, ur, bg. No values were imputed."
+  },
+  "expected_b0_runs": 15,
+  "grambank_metadata": null,
+  "included_priors": [
+    "script_mismatch",
+    "family_mismatch",
+    "uriel_syntactic_distance",
+    "embedding_similarity",
+    "composite_script_uriel",
+    "published_interference",
+    "composite_interference_script"
+  ],
+  "interference_metadata": {
+    "imputation": {
+      "candidate_languages_with_valid_distance": 76,
+      "distance": "URIEL+ syntactic",
+      "distance_metric": "angular",
+      "excluded_languages_without_valid_distance": [
+        "azj_Latn",
+        "lvs_Latn",
+        "ory_Orya",
+        "pbt_Arab",
+        "prs_Arab",
+        "slk_Latn",
+        "snd_Arab"
+      ],
+      "feature_aggregation": "U",
+      "k": 5,
+      "language": "ar",
+      "method": "uniform_mean_of_k_nearest_languages",
+      "neighbors": [
+        {
+          "matrix_language": "cym_Latn",
+          "uriel_syntactic_distance": 0.3517
+        },
+        {
+          "matrix_language": "bel_Cyrl",
+          "uriel_syntactic_distance": 0.3695
+        },
+        {
+          "matrix_language": "als_Latn",
+          "uriel_syntactic_distance": 0.4192
+        },
+        {
+          "matrix_language": "gle_Latn",
+          "uriel_syntactic_distance": 0.4335
+        },
+        {
+          "matrix_language": "ell_Grek",
+          "uriel_syntactic_distance": 0.4346
+        }
+      ],
+      "package": "urielplus",
+      "package_version": "1.3.3",
+      "source_url": "https://github.com/Masonshipton25/URIELPlus"
+    },
+    "language_codes": {
+      "ar": {
+        "matrix_code": "arb_Arab",
+        "uriel_code": "arb"
+      },
+      "bg": {
+        "matrix_code": "bul_Cyrl",
+        "uriel_code": "bul"
+      },
+      "de": {
+        "matrix_code": "deu_Latn",
+        "uriel_code": "deu"
+      },
+      "en": {
+        "matrix_code": "eng_Latn",
+        "uriel_code": "eng"
+      },
+      "es": {
+        "matrix_code": "spa_Latn",
+        "uriel_code": "spa"
+      },
+      "fr": {
+        "matrix_code": "fra_Latn",
+        "uriel_code": "fra"
+      },
+      "hi": {
+        "matrix_code": "hin_Deva",
+        "uriel_code": "hin"
+      },
+      "ru": {
+        "matrix_code": "rus_Cyrl",
+        "uriel_code": "rus"
+      },
+      "sw": {
+        "matrix_code": "swh_Latn",
+        "uriel_code": "swa"
+      },
+      "ur": {
+        "matrix_code": "urd_Arab",
+        "uriel_code": "urd"
+      }
+    },
+    "matrix_codes": {
+      "ar": "arb_Arab",
+      "bg": "bul_Cyrl",
+      "de": "deu_Latn",
+      "en": "eng_Latn",
+      "es": "spa_Latn",
+      "fr": "fra_Latn",
+      "hi": "hin_Deva",
+      "ru": "rus_Cyrl",
+      "sw": "swh_Latn",
+      "ur": "urd_Arab"
+    },
+    "matrix_path": "priors/interference_matrix.csv",
+    "matrix_sha256": "96736299ea294ef03935ac0c539210bfe0bab8e8b9f815a19f8b04674092c18b",
+    "score_semantics": "Rows are past/affected languages; columns are incoming languages; negative scores indicate interference.",
+    "source_matrix": "interference_matrix.csv",
+    "source_matrix_sha256": "4207bee27e392e62d889c403653736f98deb61d61d5d1c4a0c73a43560272219",
+    "uriel_source_codes": {
+      "afr_Latn": "afr",
+      "als_Latn": "als",
+      "amh_Ethi": "amh",
+      "asm_Beng": "asm",
+      "azj_Latn": "azj",
+      "bel_Cyrl": "bel",
+      "bos_Latn": "bos",
+      "bul_Cyrl": "bul",
+      "cat_Latn": "cat",
+      "ces_Latn": "ces",
+      "cym_Latn": "cym",
+      "dan_Latn": "dan",
+      "deu_Latn": "deu",
+      "ell_Grek": "ell",
+      "eng_Latn": "eng",
+      "est_Latn": "est",
+      "eus_Latn": "eus",
+      "fin_Latn": "fin",
+      "fra_Latn": "fra",
+      "gaz_Latn": "gaz",
+      "gla_Latn": "gla",
+      "gle_Latn": "gle",
+      "glg_Latn": "glg",
+      "guj_Gujr": "guj",
+      "hau_Latn": "hau",
+      "heb_Hebr": "heb",
+      "hin_Deva": "hin",
+      "hrv_Latn": "hrv",
+      "hun_Latn": "hun",
+      "hye_Armn": "hye",
+      "ind_Latn": "ind",
+      "isl_Latn": "isl",
+      "ita_Latn": "ita",
+      "jav_Latn": "jav",
+      "jpn_Jpan": "jpn",
+      "kan_Knda": "kan",
+      "kat_Geor": "kat",
+      "kaz_Cyrl": "kaz",
+      "khk_Cyrl": "khk",
+      "khm_Khmr": "khm",
+      "kmr_Latn": "kmr",
+      "lao_Laoo": "lao",
+      "lit_Latn": "lit",
+      "lvs_Latn": "lvs",
+      "mal_Mlym": "mal",
+      "mar_Deva": "mar",
+      "mkd_Cyrl": "mkd",
+      "mya_Mymr": "mya",
+      "nld_Latn": "nld",
+      "npi_Deva": "npi",
+      "ory_Orya": "ory",
+      "pan_Guru": "pan",
+      "pbt_Arab": "pbt",
+      "plt_Latn": "plt",
+      "pol_Latn": "pol",
+      "por_Latn": "por",
+      "prs_Arab": "prs",
+      "ron_Latn": "ron",
+      "rus_Cyrl": "rus",
+      "san_Deva": "san",
+      "sin_Sinh": "sin",
+      "slk_Latn": "slk",
+      "slv_Latn": "slv",
+      "snd_Arab": "snd",
+      "som_Latn": "som",
+      "spa_Latn": "spa",
+      "srp_Cyrl": "srp",
+      "sun_Latn": "sun",
+      "swe_Latn": "swe",
+      "swh_Latn": "swa",
+      "tam_Taml": "tam",
+      "tel_Telu": "tel",
+      "tha_Thai": "tha",
+      "tur_Latn": "tur",
+      "uig_Arab": "uig",
+      "ukr_Cyrl": "ukr",
+      "urd_Arab": "urd",
+      "uzn_Latn": "uzn",
+      "vie_Latn": "vie",
+      "xho_Latn": "xho",
+      "ydd_Hebr": "ydd",
+      "zho_Hans": "zho",
+      "zho_Hant": "zho"
+    }
+  },
+  "languages": [
+    "en",
+    "de",
+    "es",
+    "fr",
+    "sw",
+    "ar",
+    "ur",
+    "bg",
+    "ru",
+    "hi"
+  ],
+  "orders": [
+    "order-1",
+    "order-2",
+    "order-3",
+    "order-4",
+    "order-5"
+  ],
+  "prior_matrix_sha256": {
+    "priors/embedding_similarity.csv": "269b01ead9db152fca46483e8e1ece0ca44686a331f000869f4c324a6ba36584",
+    "priors/interference_matrix.csv": "96736299ea294ef03935ac0c539210bfe0bab8e8b9f815a19f8b04674092c18b",
+    "priors/uriel_syntactic_distance.csv": "f5eb4a0c0d8499619af18e74ab0a43b93a9a9faabc8efa97cbb0540c30c7107d"
+  },
+  "protocol_id": "xnli-rq1-v2-phase4-roster-10lang-500x200-v2",
+  "protocol_sha256": "1c1547683b60b79161c430a0858aef8e2cde355455720f151f00e2515dbea771",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "uriel_metadata": {
+    "distance": "syntactic",
+    "language_codes": {
+      "ar": "arb",
+      "bg": "bul",
+      "de": "deu",
+      "en": "eng",
+      "es": "spa",
+      "fr": "fra",
+      "hi": "hin",
+      "ru": "rus",
+      "sw": "swa",
+      "ur": "urd"
+    },
+    "matrix_path": "uriel_syntactic_distance.csv",
+    "matrix_sha256": "f5eb4a0c0d8499619af18e74ab0a43b93a9a9faabc8efa97cbb0540c30c7107d",
+    "package_version": "1.3.3",
+    "source": "URIEL+ Python package",
+    "source_url": "https://github.com/Masonshipton25/URIELPlus"
+  },
+  "workflow": "phase3_rq1_v2"
+}

@@ -1,0 +1,310 @@
+{
+  "analysis": "phase3_rq1_prior_vs_forgetting",
+  "correlations": [
+    {
+      "directed_language_pairs": 20,
+      "forgetting_observations": 150,
+      "order_count": 5,
+      "p_holm": 1.0,
+      "p_one_sided": 0.4,
+      "permutation_count": 120,
+      "prior": "script_mismatch",
+      "spearman_rho": 0.10619884881071831,
+      "test_method": "exact_language_label_permutation"
+    },
+    {
+      "directed_language_pairs": 20,
+      "forgetting_observations": 150,
+      "order_count": 5,
+      "p_holm": 1.0,
+      "p_one_sided": 0.2,
+      "permutation_count": 120,
+      "prior": "family_mismatch",
+      "spearman_rho": 0.5840936684589507,
+      "test_method": "exact_language_label_permutation"
+    },
+    {
+      "directed_language_pairs": 20,
+      "forgetting_observations": 150,
+      "order_count": 5,
+      "p_holm": 1.0,
+      "p_one_sided": 0.30833333333333335,
+      "permutation_count": 120,
+      "prior": "published_interference",
+      "spearman_rho": 0.08673102027491708,
+      "test_method": "exact_language_label_permutation"
+    },
+    {
+      "directed_language_pairs": 20,
+      "forgetting_observations": 150,
+      "order_count": 5,
+      "p_holm": 0.525,
+      "p_one_sided": 0.075,
+      "permutation_count": 120,
+      "prior": "uriel_syntactic_distance",
+      "spearman_rho": 0.5554756530981174,
+      "test_method": "exact_language_label_permutation"
+    },
+    {
+      "directed_language_pairs": 20,
+      "forgetting_observations": 150,
+      "order_count": 5,
+      "p_holm": 0.65,
+      "p_one_sided": 0.10833333333333334,
+      "permutation_count": 120,
+      "prior": "embedding_similarity",
+      "spearman_rho": 0.4935958355981974,
+      "test_method": "exact_language_label_permutation"
+    },
+    {
+      "directed_language_pairs": 20,
+      "forgetting_observations": 150,
+      "order_count": 5,
+      "p_holm": 1.0,
+      "p_one_sided": 0.20833333333333334,
+      "permutation_count": 120,
+      "prior": "composite_script_uriel",
+      "spearman_rho": 0.3501911726053349,
+      "test_method": "exact_language_label_permutation"
+    },
+    {
+      "directed_language_pairs": 20,
+      "forgetting_observations": 150,
+      "order_count": 5,
+      "p_holm": 1.0,
+      "p_one_sided": 0.35833333333333334,
+      "permutation_count": 120,
+      "prior": "composite_interference_script",
+      "spearman_rho": 0.11484838168460271,
+      "test_method": "exact_language_label_permutation"
+    }
+  ],
+  "excluded_priors": {
+    "grambank_distance": "Excluded because Grambank v1.0.3 does not cover every configured language; see grambank_coverage.json."
+  },
+  "forgetting_definition": "accuracy before an incoming-language stage minus accuracy after that stage, for each previously seen language",
+  "interpretation_note": "Permutation p-values test alignment of prior language labels with this pilot's observed pair-forgetting matrix; they are not evidence of robustness across training seeds. Interpret them with the per-order results and replicate with additional training seeds before making a general claim.",
+  "missing_prior_inputs": [],
+  "pair_aggregation": "mean forgetting per directed past-language/incoming-language pair across stream orders",
+  "per_order_correlations": [
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-1",
+      "prior": "script_mismatch",
+      "spearman_rho": -0.24383007539455448
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-1",
+      "prior": "family_mismatch",
+      "spearman_rho": 0.6921627946684128
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-1",
+      "prior": "published_interference",
+      "spearman_rho": 0.1841519871048293
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-1",
+      "prior": "uriel_syntactic_distance",
+      "spearman_rho": 0.6519893397981033
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-1",
+      "prior": "embedding_similarity",
+      "spearman_rho": 0.6888817407126049
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-1",
+      "prior": "composite_script_uriel",
+      "spearman_rho": 0.09994486793201376
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-1",
+      "prior": "composite_interference_script",
+      "spearman_rho": -0.06391722085144029
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-2",
+      "prior": "script_mismatch",
+      "spearman_rho": -0.12188789419528276
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-2",
+      "prior": "family_mismatch",
+      "spearman_rho": 0.5740526629842349
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-2",
+      "prior": "published_interference",
+      "spearman_rho": -0.2771749109952916
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-2",
+      "prior": "uriel_syntactic_distance",
+      "spearman_rho": 0.7624967403481331
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-2",
+      "prior": "embedding_similarity",
+      "spearman_rho": 0.7041526625906243
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-2",
+      "prior": "composite_script_uriel",
+      "spearman_rho": 0.2803198218694104
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-2",
+      "prior": "composite_interference_script",
+      "spearman_rho": -0.23218420211975457
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-3",
+      "prior": "script_mismatch",
+      "spearman_rho": 0.14559258410038142
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-3",
+      "prior": "family_mismatch",
+      "spearman_rho": 0.3265995805495042
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-3",
+      "prior": "published_interference",
+      "spearman_rho": 0.009318148304852863
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-3",
+      "prior": "uriel_syntactic_distance",
+      "spearman_rho": 0.2718136109543273
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-3",
+      "prior": "embedding_similarity",
+      "spearman_rho": 0.1342289436811493
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-3",
+      "prior": "composite_script_uriel",
+      "spearman_rho": 0.2677867426438928
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-3",
+      "prior": "composite_interference_script",
+      "spearman_rho": 0.17915392115858877
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-4",
+      "prior": "script_mismatch",
+      "spearman_rho": -0.06689388999206713
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-4",
+      "prior": "family_mismatch",
+      "spearman_rho": 0.5312161852311214
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-4",
+      "prior": "published_interference",
+      "spearman_rho": 0.07235725205651583
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-4",
+      "prior": "uriel_syntactic_distance",
+      "spearman_rho": 0.5248351697932937
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-4",
+      "prior": "embedding_similarity",
+      "spearman_rho": 0.5208083014828592
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-4",
+      "prior": "composite_script_uriel",
+      "spearman_rho": 0.19463196833766647
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-4",
+      "prior": "composite_interference_script",
+      "spearman_rho": -0.032411981632373243
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-5",
+      "prior": "script_mismatch",
+      "spearman_rho": 0.1613143401629267
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-5",
+      "prior": "family_mismatch",
+      "spearman_rho": 0.20065930117827468
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-5",
+      "prior": "published_interference",
+      "spearman_rho": 0.16577648188932365
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-5",
+      "prior": "uriel_syntactic_distance",
+      "spearman_rho": 0.15568821909133881
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-5",
+      "prior": "embedding_similarity",
+      "spearman_rho": 0.022816376935799652
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-5",
+      "prior": "composite_script_uriel",
+      "spearman_rho": 0.21205809152096147
+    },
+    {
+      "forgetting_observations": 30,
+      "order_id": "order-5",
+      "prior": "composite_interference_script",
+      "spearman_rho": 0.2116671591209616
+    }
+  ],
+  "permutation_test": "one-sided positive Spearman test by permuting language labels on each complete prior matrix; Holm correction covers tested priors. This is conditional on the observed pilot forgetting matrix and does not capture training-seed uncertainty.",
+  "random_prior_control": {
+    "mean_rho": -0.0018315789473684228,
+    "repetitions": 1000,
+    "rho_2_5_percentile": -0.45864661654135336,
+    "rho_97_5_percentile": 0.42406015037593986,
+    "std_rho": 0.23324783127939308,
+    "valid_repetitions": 1000
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "experiment_id": "phase1-en-hi-bn-indicxnli",
+  "task": "xnli",
+  "splits": {
+    "train": "train",
+    "test": "test"
+  },
+  "require_parallel_label_alignment": true,
+  "stream": [
+    {
+      "language": "en",
+      "dataset_id": "facebook/xnli",
+      "dataset_config": "en",
+      "revision": "b8dd5d7af51114dbda02c0e3f6133f332186418e"
+    },
+    {
+      "language": "hi",
+      "dataset_id": "AdaMLLab/indicxnli_repaired",
+      "dataset_config": "hi",
+      "revision": "9ef25f8284832177984d411b91f99ac1ab3c8e59"
+    },
+    {
+      "language": "bn",
+      "dataset_id": "AdaMLLab/indicxnli_repaired",
+      "dataset_config": "bn",
+      "revision": "9ef25f8284832177984d411b91f99ac1ab3c8e59"
+    }
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "data_selection": {
+    "train_examples_per_language": 1000,
+    "test_examples_per_language": 500,
+    "test_selection_seed": 42
+  },
+  "model": {
+    "id": "meta-llama/Llama-3.2-1B",
+    "task_mode": "causal_lm",
+    "prompt_protocol": "phase1_b0_nli_prompt_candidate_label_log_likelihood"
+  },
+  "training": {
+    "max_length": 512,
+    "learning_rate": 0.0002,
+    "train_batch_size": 1,
+    "eval_batch_size": 1,
+    "gradient_accumulation_steps": 8,
+    "num_train_epochs": 1,
+    "lora_rank": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.05,
+    "load_in_4bit": true,
+    "gradient_checkpointing": true
+  }
+}

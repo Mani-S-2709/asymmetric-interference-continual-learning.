@@ -1,0 +1,20 @@
+{
+  "run_id": "confirmatory_b0_seeds_43_44_2026-11-19",
+  "base_protocol_id": "xnli-pilot-5lang-500x200-v1",
+  "data_manifest_sha256": "e459305688bf0ff5db4f744cee773ef2c0bb55c52df4bf71a7980479e58301a4",
+  "training_seeds": [
+    42,
+    43,
+    44
+  ],
+  "completed_runs": 15,
+  "completed_orders_per_seed": 5,
+  "source_archives": {
+    "phase3_confirmatory_b0_seed_43_results.zip": "E8DA3DFCC65297A88A1778448B28BAE23C42AE285B72B7AEF21B9082343AF4F2",
+    "phase3_confirmatory_b0_seed_44_results.zip": "05798A7D4FFDB1573A95C126EC96167480D2E22B9206CF41A82CA13E26E979AF"
+  },
+  "seed_protocol_sha256": {
+    "43": "a16ddbba169116872316d9692ee41fd56a880bea2722b86a4a04c62e61669708",
+    "44": "dccb0cd90163829423705f50d5f3135d462f72a7866f5884b90e1a11668f56e5"
+  }
+}

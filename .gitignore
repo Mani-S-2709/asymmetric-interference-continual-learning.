@@ -43,6 +43,7 @@ lightning_logs/
 phase1/checkpoints/
 phase1/results/**/*.zip
 phase1/local_artifacts/
+phase4/artifacts/
 
 # Jupyter temporary checkpoints
 .ipynb_checkpoints/

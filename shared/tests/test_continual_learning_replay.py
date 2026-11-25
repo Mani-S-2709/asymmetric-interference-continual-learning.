@@ -40,6 +40,16 @@ def test_replay_buffer_samples_with_replacement_reproducibly():
     assert all(item.language == "en" and item.example["id"] == 3 for item in first)
 
 
+def test_replay_buffer_snapshot_is_detached_from_internal_examples():
+    buffer = ReplayBuffer(capacity=2, seed=3)
+    buffer.add("en", {"id": 3})
+
+    snapshot = buffer.snapshot()
+    snapshot[0].example["id"] = 99
+
+    assert buffer.snapshot()[0].example["id"] == 3
+
+
 def test_replay_buffer_rejects_replacement_sample_from_empty_buffer():
     with pytest.raises(ValueError, match="empty replay buffer"):
         ReplayBuffer(capacity=2).sample_with_replacement(1)

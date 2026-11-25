@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -18,7 +19,10 @@ from continual_learning.metrics import (
     forward_transfer,
 
 )
-from continual_learning.stream_loader import StreamStage, XNLIStreamLoader
+from continual_learning.stream_loader import (
+    HuggingFaceStreamLoader,
+    StreamStage,
+)
 
 
 class SequentialExperimentRunner:
@@ -27,7 +31,7 @@ class SequentialExperimentRunner:
     def __init__(
         self,
         trainer: LoRAXNLITrainer,
-        stream_loader: XNLIStreamLoader,
+        stream_loader: HuggingFaceStreamLoader,
         output_dir: str | Path,
         experiment_id: str = "B0_en_hi_de",
     ) -> None:
@@ -53,11 +57,7 @@ class SequentialExperimentRunner:
             if stage.language in datasets_by_language:
                 continue
 
-            test_stage = StreamStage(
-                language=stage.language,
-                task=stage.task,
-                split="test",
-            )
+            test_stage = replace(stage, split="test")
             datasets_by_language[stage.language] = (
                 self.stream_loader.load_stage(test_stage)
             )
@@ -86,11 +86,7 @@ class SequentialExperimentRunner:
         # This creates the evaluation machinery but does not train the model.
         first_train_dataset = self.stream_loader.load_stage(stages[0])
         first_test_dataset = self.stream_loader.load_stage(
-            StreamStage(
-                language=stages[0].language,
-                task=stages[0].task,
-                split="test",
-            )
+            replace(stages[0], split="test")
         )
 
         self.trainer.build_trainer(

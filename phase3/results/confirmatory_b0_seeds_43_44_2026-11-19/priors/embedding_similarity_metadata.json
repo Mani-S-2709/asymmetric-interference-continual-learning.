@@ -1,0 +1,30 @@
+{
+  "batch_size": 16,
+  "data_manifest_sha256": "e459305688bf0ff5db4f744cee773ef2c0bb55c52df4bf71a7980479e58301a4",
+  "device": "cpu",
+  "encoder": "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+  "encoder_revision": "4328cf26390c98c5e3c738b4460a05b95f4911f5",
+  "examples_per_language": {
+    "de": 500,
+    "en": 500,
+    "es": 500,
+    "hi": 500,
+    "sw": 500
+  },
+  "language_representation": "L2-normalized mean of L2-normalized sentence-pair embeddings",
+  "languages": [
+    "en",
+    "hi",
+    "es",
+    "de",
+    "sw"
+  ],
+  "matrix_path": "embedding_similarity.csv",
+  "matrix_sha256": "5992c2c0ade75d8c3412dd4ab3e7909b7810ba4054168ccab960363f168fd903",
+  "max_sequence_length": 256,
+  "protocol_manifest_sha256": "832ee1940eb94b6bf6abab73cae293a5eda1c1f70a4463ae30a9a4906885a303",
+  "sentence_transformers_version": "5.7.0",
+  "similarity": "cosine similarity between language centroids",
+  "source_dataset": "XNLI training split prepared by Phase 2 protocol",
+  "text_representation": "Premise: {premise}\\nHypothesis: {hypothesis}"
+}

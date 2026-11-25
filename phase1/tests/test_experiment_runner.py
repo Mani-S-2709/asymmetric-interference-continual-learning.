@@ -23,7 +23,14 @@ def test_runner_evaluates_all_languages_after_each_stage(tmp_path: Path):
     languages = ["en", "hi", "de"]
 
     stages = [
-        StreamStage(language=language, task="nli", split="train")
+        StreamStage(
+            language=language,
+            task="nli",
+            split="train",
+            dataset_id=f"datasets/{language}",
+            dataset_config=language,
+            revision="pinned-revision",
+        )
         for language in languages
     ]
 
@@ -68,6 +75,18 @@ def test_runner_evaluates_all_languages_after_each_stage(tmp_path: Path):
     assert trainer.build_trainer.call_count == 1
     assert trainer.train_on_dataset.call_count == 3
     assert trainer.evaluate_dataset.call_count == 12
+    test_stages = [
+        call.args[0]
+        for call in stream_loader.load_stage.call_args_list
+        if call.args[0].split == "test"
+    ]
+    assert {stage.language for stage in test_stages} == set(languages)
+    assert all(
+        stage.dataset_id == f"datasets/{stage.language}"
+        and stage.dataset_config == stage.language
+        and stage.revision == "pinned-revision"
+        for stage in test_stages
+    )
 
     trained_languages = [
         call.kwargs["language"]

@@ -1,0 +1,29 @@
+{
+    "protocol_id":  "xnli-rq1-v2-phase4-roster-10lang-500x200-v2",
+    "data_manifest_sha256":  "373852a7f1e09ab99da8a25f21023fedc1977ab1969e09d938874f7c645a721a",
+    "input_zip_sha256":  "728809cc6a3cddcaddb45c270632de66eff9ad8406d5b41be429751cab1d9456",
+    "prior_matrix_sha256":  {
+                                "priors/embedding_similarity.csv":  "269b01ead9db152fca46483e8e1ece0ca44686a331f000869f4c324a6ba36584",
+                                "priors/interference_matrix.csv":  "96736299ea294ef03935ac0c539210bfe0bab8e8b9f815a19f8b04674092c18b",
+                                "priors/uriel_syntactic_distance.csv":  "f5eb4a0c0d8499619af18e74ab0a43b93a9a9faabc8efa97cbb0540c30c7107d"
+                            },
+    "input_bundle_validation":  "passed",
+    "seed":  43,
+    "order_id":  "order-5",
+    "status":  "completed",
+    "notebook":  "phase3_rq1_v2_b0_seed_43_order-5.ipynb",
+    "expected_result_zip":  "phase3_rq1_v2_b0_seed_43_order-5.zip",
+    "executed_notebook":  "phase3_rq1_v2_b0_seed_43_order-5_executed.ipynb",
+    "training_result_zip":  "phase3_rq1_v2_b0_seed_43_order-5.zip",
+    "training_result_zip_sha256":  "a554286b44af0795dbcb482e371c66b9cd4881d0f29fee2d8c769c48dc210235",
+    "result_protocol_sha256":  "1b2538df825cf5143b4be754a7cac0fafc8f752728f0bde75422c195d5e25a13",
+    "metrics":  {
+                    "AA":  0.673,
+                    "ACC":  0.673,
+                    "BWT":  0.16055555555555556,
+                    "F":  -0.044999999999999984,
+                    "FP":  0.673,
+                    "FWT":  0.17944444444444443
+                },
+    "completed":  true
+}
