@@ -476,8 +476,9 @@ completed and recorded.
 **Phase 0 status:** In progress — environment setup is complete; paper reading
 and the toy continual-learning reproduction are not documented complete.
 
-**Overall project status:** Experimental work for Phases 1–4 is recorded as
-complete, including a descriptive, single-seed Phase 4 pilot. See
+**Overall project status:** Phase 1–3 experimental records and the initial
+Phase 4 pilot are complete; an approved Phase 4 baseline extension remains to
+run. Phase 0 onboarding is still incomplete. See
 [`PROJECT_STATUS.md`](../PROJECT_STATUS.md) for results, limitations, and
 pending decisions.
 

@@ -10,7 +10,7 @@ from phase4.run_phase4 import (
     _require_comparison_gate,
     run_selected_pair,
 )
-from phase2.protocol import load_protocol
+from phase2.protocol import build_manifest, load_protocol
 from shared.continual_learning_lora import ReplayBuffer
 
 
@@ -87,6 +87,36 @@ def test_phase4_gate_allows_only_supervisor_approved_comparison_methods():
 
     with pytest.raises(ValueError, match="not included"):
         _require_comparison_gate(protocol, "B0")
+
+
+def test_expanded_phase4_protocol_schedules_remaining_methods_and_b1_once():
+    protocol_path = (
+        DEFAULT_PROTOCOL.parent
+        / "controlled_10lang_full_methods_seed42_extension_protocol.json"
+    )
+    protocol = load_protocol(protocol_path)
+    approved_methods = [method["id"] for method in protocol["methods"]]
+
+    assert protocol["phase4"]["prior_gate"]["approved_methods"] == approved_methods
+    assert protocol["run_methods"] == ["B0", "B1", "B3", "B4", "B6", "B7", "B8"]
+    for method_id in protocol["run_methods"]:
+        _require_comparison_gate(protocol, method_id)
+
+    manifest = build_manifest(protocol)
+    assert manifest["expected_run_count"] == 31
+    assert [
+        run["order_id"] for run in manifest["runs"] if run["method_id"] == "B1"
+    ] == ["order-independent"]
+    for method_id in set(protocol["run_methods"]) - {"B1"}:
+        assert sum(run["method_id"] == method_id for run in manifest["runs"]) == 5
+
+    with pytest.raises(ValueError, match="approved but not scheduled"):
+        run_selected_pair(
+            method_id="B2",
+            order_id="order-1",
+            training_seed=42,
+            protocol_path=protocol_path,
+        )
 
 
 def test_phase4_gate_rejects_missing_approval_or_single_prior_claim():

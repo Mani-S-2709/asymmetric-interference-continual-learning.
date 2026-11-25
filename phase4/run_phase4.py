@@ -81,6 +81,21 @@ def _require_comparison_gate(
     scheduled_methods = protocol.get("run_methods")
     comparison = phase4_config.get("comparison")
     training = protocol.get("training")
+    valid_approved_methods = (
+        isinstance(approved_methods, list)
+        and bool(approved_methods)
+        and all(isinstance(method_id, str) for method_id in approved_methods)
+        and len(set(approved_methods)) == len(approved_methods)
+        and set(approved_methods) <= set(METHOD_IDS)
+    )
+    valid_scheduled_methods = (
+        isinstance(scheduled_methods, list)
+        and bool(scheduled_methods)
+        and all(isinstance(method_id, str) for method_id in scheduled_methods)
+        and len(set(scheduled_methods)) == len(scheduled_methods)
+        and valid_approved_methods
+        and set(scheduled_methods) <= set(approved_methods)
+    )
     if (
         gate.get("status") != "passed"
         or gate.get("decision_type") != "supervisor_approved_comparison"
@@ -88,23 +103,27 @@ def _require_comparison_gate(
         or not isinstance(gate.get("approval_date"), str)
         or not isinstance(gate.get("approval_note"), str)
         or gate.get("selected_prior") is not None
-        or not isinstance(approved_methods, list)
-        or approved_methods != ["B2", "B5", "M3"]
-        or scheduled_methods != approved_methods
+        or not valid_approved_methods
+        or not valid_scheduled_methods
         or not isinstance(comparison, Mapping)
-        or comparison.get("design") != "matched_three_method_comparison"
         or comparison.get("methods") != approved_methods
+        or not isinstance(comparison.get("design"), str)
+        or not comparison["design"].strip()
         or comparison.get("training_seed") != 42
         or not isinstance(training, Mapping)
         or training.get("seeds") != [42]
     ):
         raise RuntimeError(
             "Phase 4 training is blocked until the supervisor-approved "
-            "B2/B5/M3 comparison gate is recorded in its protocol."
+            "method comparison gate is recorded in its protocol."
         )
     if method_id not in approved_methods:
         raise ValueError(
             f"Method {method_id!r} is not included in the approved Phase 4 comparison."
+        )
+    if method_id not in scheduled_methods:
+        raise ValueError(
+            f"Method {method_id!r} is approved but not scheduled by this Phase 4 protocol."
         )
 
 

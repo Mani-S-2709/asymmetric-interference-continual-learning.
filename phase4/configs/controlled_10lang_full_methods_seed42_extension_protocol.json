@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "protocol_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1",
+  "dataset": {
+    "id": "facebook/xnli",
+    "languages": [
+      "en",
+      "de",
+      "es",
+      "fr",
+      "sw",
+      "ar",
+      "ur",
+      "bg",
+      "ru",
+      "hi"
+    ],
+    "train_examples_per_language": 500,
+    "test_examples_per_language": 200,
+    "train_selection_seed": 20261110,
+    "test_selection_seed": 20261111
+  },
+  "orders": [
+    {
+      "id": "order-1",
+      "languages": ["es", "sw", "ur", "en", "de", "ar", "bg", "hi", "ru", "fr"]
+    },
+    {
+      "id": "order-2",
+      "languages": ["de", "ur", "sw", "fr", "ru", "ar", "bg", "hi", "en", "es"]
+    },
+    {
+      "id": "order-3",
+      "languages": ["es", "ur", "ar", "en", "ru", "hi", "sw", "bg", "fr", "de"]
+    },
+    {
+      "id": "order-4",
+      "languages": ["es", "ru", "fr", "de", "hi", "ur", "ar", "bg", "en", "sw"]
+    },
+    {
+      "id": "order-5",
+      "languages": ["de", "en", "ru", "ar", "sw", "es", "bg", "ur", "hi", "fr"]
+    }
+  ],
+  "model": {
+    "id": "meta-llama/Llama-3.2-1B",
+    "task_mode": "causal_lm",
+    "prompt_protocol": "phase1_b0_nli_prompt_candidate_label_log_likelihood"
+  },
+  "lora": {
+    "rank": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj"]
+  },
+  "training": {
+    "learning_rate": 0.0002,
+    "epochs": 1,
+    "train_batch_size": 1,
+    "gradient_accumulation_steps": 8,
+    "max_length": 512,
+    "load_in_4bit": true,
+    "gradient_checkpointing": true,
+    "seeds": [42]
+  },
+  "replay": {
+    "buffer_fraction": 0.05,
+    "buffer_capacity_examples": 250,
+    "seed": 20261112
+  },
+  "methods": [
+    {"id": "B0", "name": "sequential_no_replay", "status": "implemented_reference_runner"},
+    {"id": "B1", "name": "joint_multilingual", "status": "implemented_reference_runner"},
+    {"id": "B2", "name": "uniform_experience_replay", "status": "implemented_reference_runner"},
+    {"id": "B3", "name": "derpp", "status": "implemented_reference_runner"},
+    {"id": "B4", "name": "gradient_coreset_replay", "status": "implemented_reference_runner"},
+    {"id": "B5", "name": "embedding_similarity_replay", "status": "implemented_reference_runner"},
+    {"id": "B6", "name": "lr_adjust", "status": "implemented_reference_runner"},
+    {"id": "B7", "name": "compass", "status": "implemented_reference_runner"},
+    {"id": "B8", "name": "function_vector_training", "status": "implemented_reference_runner"},
+    {"id": "M3", "name": "asymmetric_interference_matrix_replay", "status": "phase4_runner"}
+  ],
+  "run_methods": ["B0", "B1", "B3", "B4", "B6", "B7", "B8"],
+  "phase4": {
+    "order_generation": {
+      "algorithm": "Python random.Random(seed).shuffle",
+      "seeds": [20261112, 20261113, 20261114, 20261115, 20261116]
+    },
+    "language_coverage": {
+      "scripts": ["Latn", "Arab", "Cyrl", "Deva"],
+      "families": ["Indo-European", "Afro-Asiatic", "Niger-Congo"]
+    },
+    "analysis_tier": "pilot",
+    "statistical_claims": "descriptive_only",
+    "comparison": {
+      "design": "single_seed_extension_for_remaining_baselines",
+      "methods": ["B0", "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "M3"],
+      "training_seed": 42,
+      "base_protocol_id": "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1",
+      "base_protocol_sha256": "8410f165679468b770528eb8083160570c374921d0f1a0fdb2935b87ba6b008b",
+      "interpretation": "Extension results for the remaining baselines at seed 42. B2/B5/M3 records remain validated under the base protocol; any combined report must preserve both protocol hashes."
+    },
+    "imputation": {
+      "method": "uniform_mean_of_k_nearest_languages",
+      "distance": "URIEL+ syntactic",
+      "k": 5
+    },
+    "m3": {
+      "replay_examples_per_current_example": 1,
+      "replay_update_timing": "after_each_language_stage"
+    },
+    "prior_gate": {
+      "status": "passed",
+      "decision_type": "supervisor_approved_comparison",
+      "required_stage": "Supervisor approval for extending the seed-42 comparison to the remaining Phase 4 baselines",
+      "approved_methods": ["B0", "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "M3"],
+      "selected_prior": null,
+      "approval_recorded": true,
+      "approval_date": "2026-11-25",
+      "approval_note": "Researcher confirmed supervisor approval for the expanded single-seed B0-B8 plus M3 comparison at seed 42 across five frozen orders. B1 is scheduled once because joint training is order-independent."
+    }
+  }
+}

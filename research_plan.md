@@ -184,21 +184,35 @@ the language stream and rerunning the corresponding Phase 2 baselines.
 
 ### Phase 4 — Method development and controlled pilot (RQ2) (weeks 8–10)
 
-Phase 4 is gated on the Phase 3 confirmatory decision selecting
-`published_interference`; otherwise stop and revise the method before training.
-The approved first execution is a **pilot**: B0–B8 plus M3, five frozen
-order/seed pairs (seeds 42–46), 500 train and 200 test examples per language,
-for 50 runs total. Report descriptive means and variability only. Five paired
-observations cannot support the planned Holm-corrected significance claim.
+Phase 3 selected embedding similarity, not `published_interference`. Following
+supervisor approval, the first Phase 4 execution was therefore a re-scoped
+three-method pilot: B2, B5, and M3 across five frozen orders at seed 42. Those
+15 runs are complete and remain under their original frozen protocol.
+
+The approved next stage is a **single-seed baseline extension** using the same
+ten-language data settings, five orders, and seed 42. Run B0, B1, B3, B4, B6,
+B7, and B8. B1 is joint and order-independent, so schedule it once; schedule
+the other six methods once for each order. This adds 31 records. Together with
+the existing 15 records, the screening comparison will contain 46 unique
+records validated under two protocol IDs. Preserve both protocol hashes when
+combining their results; do not rewrite the existing B2/B5/M3 records.
+
+This staged single-seed screen is not the originally drafted 50-run,
+five-order/seed-pair design and cannot establish seed-level robustness. Review
+its descriptive results before proposing a separately frozen, approved
+multi-seed follow-up. Do not claim the original confirmatory checkpoint has
+been met.
 
 The 5% budget means a 250-example replay buffer for this 10 × 500 training
 set. B2 and M3 use one replay example per current example; this does not make
 all methods compute-matched. Do not label this pilot a matched-compute
 headline comparison.
 
-**Pilot checkpoint:** All 50 records validate and the descriptive comparison
-is reported with the missing-run list. A statistically supported headline
-claim requires a separately frozen, adequately replicated follow-up.
+**Screening checkpoint:** All 46 unique records validate, with the three
+existing-method results validated under the original protocol and the
+31-extension records under the extension protocol. Report missing runs and
+protocol provenance. A statistically supported headline claim requires a
+separately frozen, adequately replicated follow-up.
 
 ### Phase 5 — Ablations (RQ3 + everything else) (weeks 11–13)
 

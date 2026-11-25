@@ -98,6 +98,62 @@ Kaggle GPU (or compatible CUDA runtime), access to
 `meta-llama/Llama-3.2-1B`, and an `HF_TOKEN` secret. The runner skips valid
 completed result records and refuses mismatched protocol/data hashes.
 
+## Approved single-seed extension: remaining baselines
+
+The supervisor-approved extension runs the remaining methods at seed 42 on
+the same five frozen orders and data settings. It uses a separate
+[extension protocol](./configs/controlled_10lang_full_methods_seed42_extension_protocol.json)
+so the original B2/B5/M3 protocol and its 15 result records remain unchanged.
+B0, B3, B4, B6, B7, and B8 each have five order-specific runs. B1 is joint and
+order-independent, so it has one run. The extension therefore expects 31
+records; together with the original 15, the screening comparison will contain
+46 records validated under two protocol IDs. Preserve both protocol hashes in
+any combined report.
+
+### Kaggle notebooks
+
+Attach
+[`phase4_full_baselines_code.zip`](./artifacts/phase4_full_baselines_code.zip),
+enable a GPU and Internet, accept the gated model terms, and configure the
+`HF_TOKEN` Kaggle secret. Attach an earlier output ZIP with the same batch ID
+only when resuming an interrupted notebook.
+
+- [B1 joint run](./notebooks/phase4_full_methods_seed42_b1_joint.ipynb)
+- B0/B3/B4:
+  [order 1](./notebooks/phase4_full_methods_seed42_order-1_b0_b3_b4.ipynb),
+  [order 2](./notebooks/phase4_full_methods_seed42_order-2_b0_b3_b4.ipynb),
+  [order 3](./notebooks/phase4_full_methods_seed42_order-3_b0_b3_b4.ipynb),
+  [order 4](./notebooks/phase4_full_methods_seed42_order-4_b0_b3_b4.ipynb),
+  [order 5](./notebooks/phase4_full_methods_seed42_order-5_b0_b3_b4.ipynb)
+- B6/B7/B8:
+  [order 1](./notebooks/phase4_full_methods_seed42_order-1_b6_b7_b8.ipynb),
+  [order 2](./notebooks/phase4_full_methods_seed42_order-2_b6_b7_b8.ipynb),
+  [order 3](./notebooks/phase4_full_methods_seed42_order-3_b6_b7_b8.ipynb),
+  [order 4](./notebooks/phase4_full_methods_seed42_order-4_b6_b7_b8.ipynb),
+  [order 5](./notebooks/phase4_full_methods_seed42_order-5_b6_b7_b8.ipynb)
+
+Each notebook saves a checkpoint ZIP after each method cell. Save/download its
+latest Kaggle output before ending the session; to resume, attach that output
+ZIP as a Kaggle input to the same notebook. A run is skipped only after its
+record validates against the extension protocol and prepared-data hash.
+
+### GPU-time planning estimates
+
+The completed B2/B5/M3 notebooks took 8.90–10.34 hours per order (mean
+9.49 hours) on the recorded Kaggle hardware. The new groups have not yet been
+benchmarked; use these as planning estimates, not guarantees:
+
+| Notebook workload | Approximate GPU time |
+|---|---:|
+| B0 + B3 + B4, one order | 9–13 hours; B4 may increase this |
+| B6 + B7 + B8, one order | 8–11 hours |
+| B1, one joint run | 2–4 hours; no ten-language timing is available |
+
+These are rough extrapolations from the completed three-method runs. Check the
+current Kaggle session limit and GPU quota before each run. If a grouped
+notebook may exceed the available session time, its separate method cells and
+checkpoints allow resuming without retraining completed methods.
+
 To reproduce the aggregate from the archived result records:
 
 ```powershell
@@ -135,7 +191,7 @@ metadata is present; Git checkouts continue to record the commit hash.
 
 ## Implementation and tests
 
-- [`run_phase4.py`](./run_phase4.py) delegates B2 and B5 to the Phase 2 runner and
+- [`run_phase4.py`](./run_phase4.py) delegates B0–B8 to the Phase 2 runner and
   implements M3 with the same fixed-size, with-replacement replay exposure as
   B2.
 - [`interference_matrix.py`](./interference_matrix.py) validates and records
