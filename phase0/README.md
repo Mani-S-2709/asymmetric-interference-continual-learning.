@@ -460,33 +460,25 @@ Phase 0 is complete only when:
 
 ---
 
-# 10. Rule for Phase 0
+# 10. Phase 0 sequencing note
 
-Do not start the full research experiment yet.
-
-Do not implement:
-
-* XNLI stream
-* Llama-3.2-1B
-* LoRA research model
-* B0-B8
-* 5 stream permutations
-* 10-language experiments
-* W&B full experiments
-* scaling experiments
-
-Those belong to later phases.
-
-The purpose of Phase 0 is to establish the conceptual and experimental foundation first.
+Phase 0 was originally intended to precede the full research experiments.
+Phases 1–4 have since been executed and are documented in
+[`PROJECT_STATUS.md`](../PROJECT_STATUS.md). Their completion does not
+retroactively satisfy the Phase 0 reading, understanding, or toy-reproduction
+items above. Keep Phase 0 marked in progress until those remaining items are
+completed and recorded.
 
 ---
 
 # 11. Current Status
 
-**Current phase:** Phase 0
+**Phase 0 status:** In progress — environment setup is complete; paper reading
+and the toy continual-learning reproduction are not documented complete.
 
-**Current step:** Environment setup completed.
+**Overall project status:** Experimental work for Phases 1–4 is recorded as
+complete, including a descriptive, single-seed Phase 4 pilot. See
+[`PROJECT_STATUS.md`](../PROJECT_STATUS.md) for results, limitations, and
+pending decisions.
 
-**Next step:** Begin Paper 1 — M'hamdi, Ren & May (2023).
-
-**Phase 0 status:** In progress
+**Next Phase 0 step:** Begin Paper 1 — M'hamdi, Ren & May (2023).
