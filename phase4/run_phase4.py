@@ -1,4 +1,4 @@
-"""Run one frozen Phase 4 method/order pair after the Phase 3 decision gate."""
+"""Run one frozen Phase 4 method/order/seed after comparison approval."""
 
 from __future__ import annotations
 
@@ -33,16 +33,24 @@ from phase4.interference_replay import AsymmetricInterferenceReplaySelector
 
 
 DEFAULT_PROTOCOL = (
-    PROJECT_ROOT / "phase4" / "configs" / "controlled_10lang_pilot_protocol.json"
+    PROJECT_ROOT
+    / "phase4"
+    / "configs"
+    / "controlled_10lang_prior_comparison_protocol.json"
 )
-DEFAULT_ARTIFACT_ROOT = PROJECT_ROOT / "phase4" / "artifacts" / "controlled_10lang_pilot"
+DEFAULT_ARTIFACT_ROOT = (
+    PROJECT_ROOT / "phase4" / "artifacts" / "controlled_10lang_prior_comparison"
+)
 DEFAULT_INTERFERENCE_MATRIX = (
     PROJECT_ROOT / "phase4" / "artifacts" / "interference_matrix_10lang.csv"
 )
 METHOD_IDS = tuple(f"B{index}" for index in range(9)) + ("M3",)
 
 
-def _require_phase3_gate(protocol: Mapping[str, Any]) -> None:
+def _require_comparison_gate(
+    protocol: Mapping[str, Any],
+    method_id: str,
+) -> None:
     phase4_config = protocol.get("phase4")
     if not isinstance(phase4_config, Mapping):
         raise ValueError("The protocol is missing its Phase 4 configuration.")
@@ -65,34 +73,50 @@ def _require_phase3_gate(protocol: Mapping[str, Any]) -> None:
         phase4_config.get("analysis_tier") != "pilot"
         or phase4_config.get("statistical_claims") != "descriptive_only"
     ):
-        raise ValueError("The five-pair Phase 4 protocol must remain descriptive-only.")
+        raise ValueError("The single-seed Phase 4 protocol must remain descriptive-only.")
     gate = phase4_config.get("prior_gate")
     if not isinstance(gate, Mapping):
-        raise ValueError("The protocol is missing its Phase 3 prior-selection gate.")
-    required_prior = gate.get("required_prior")
-    selected_prior = gate.get("selected_prior")
+        raise ValueError("The protocol is missing its Phase 4 comparison-approval gate.")
+    approved_methods = gate.get("approved_methods")
+    scheduled_methods = protocol.get("run_methods")
+    comparison = phase4_config.get("comparison")
+    training = protocol.get("training")
     if (
         gate.get("status") != "passed"
-        or selected_prior != required_prior
-        or required_prior != "published_interference"
+        or gate.get("decision_type") != "supervisor_approved_comparison"
+        or gate.get("approval_recorded") is not True
+        or not isinstance(gate.get("approval_date"), str)
+        or not isinstance(gate.get("approval_note"), str)
+        or gate.get("selected_prior") is not None
+        or not isinstance(approved_methods, list)
+        or approved_methods != ["B2", "B5", "M3"]
+        or scheduled_methods != approved_methods
+        or not isinstance(comparison, Mapping)
+        or comparison.get("design") != "matched_three_method_comparison"
+        or comparison.get("methods") != approved_methods
+        or comparison.get("training_seed") != 42
+        or not isinstance(training, Mapping)
+        or training.get("seeds") != [42]
     ):
         raise RuntimeError(
-            "Phase 4 training is blocked until the matching-roster Phase 3 v2 "
-            "analysis selects published_interference and the protocol gate is updated."
+            "Phase 4 training is blocked until the supervisor-approved "
+            "B2/B5/M3 comparison gate is recorded in its protocol."
+        )
+    if method_id not in approved_methods:
+        raise ValueError(
+            f"Method {method_id!r} is not included in the approved Phase 4 comparison."
         )
 
 
-def _paired_seed(protocol: Mapping[str, Any], order_id: str) -> int:
-    pairs = protocol["training"].get("order_seed_pairs")
-    if not isinstance(pairs, list):
-        raise ValueError("Phase 4 protocol must define order_seed_pairs.")
-    matches = [
-        pair["seed"] for pair in pairs
-        if isinstance(pair, Mapping) and pair.get("order_id") == order_id
-    ]
-    if len(matches) != 1:
-        raise ValueError(f"Expected one configured seed for order {order_id!r}.")
-    return matches[0]
+def _validate_training_seed(
+    protocol: Mapping[str, Any],
+    training_seed: int,
+) -> None:
+    seeds = protocol["training"]["seeds"]
+    if isinstance(training_seed, bool) or training_seed not in seeds:
+        raise ValueError(
+            f"Training seed {training_seed!r} is not configured in the Phase 4 protocol."
+        )
 
 
 def _ensure_prepared_data(
@@ -189,7 +213,8 @@ def run_m3(
     from shared.continual_learning_lora import run_sequential_experiment
 
     protocol = load_protocol(protocol_path)
-    _require_phase3_gate(protocol)
+    _require_comparison_gate(protocol, "M3")
+    _validate_training_seed(protocol, training_seed)
     prepared_manifest = validate_prepared_artifacts(protocol, artifact_root)
     run_manifest = build_manifest(protocol)
     run_manifest["data_artifacts"] = prepared_manifest["data_artifacts"]
@@ -320,6 +345,7 @@ def run_selected_pair(
     *,
     method_id: str,
     order_id: str,
+    training_seed: int,
     protocol_path: str | Path = DEFAULT_PROTOCOL,
     artifact_root: str | Path = DEFAULT_ARTIFACT_ROOT,
     interference_matrix_path: str | Path = DEFAULT_INTERFERENCE_MATRIX,
@@ -329,11 +355,11 @@ def run_selected_pair(
     if method_id not in METHOD_IDS:
         raise ValueError(f"method_id must be one of {METHOD_IDS}.")
     protocol = load_protocol(protocol_path)
-    _require_phase3_gate(protocol)
+    _require_comparison_gate(protocol, method_id)
+    _validate_training_seed(protocol, training_seed)
     order_ids = {order["id"] for order in protocol["orders"]}
     if order_id not in order_ids:
         raise ValueError(f"Unknown Phase 4 order ID: {order_id!r}.")
-    training_seed = _paired_seed(protocol, order_id)
 
     if method_id == "M3":
         load_phase4_matrix(interference_matrix_path)
@@ -367,6 +393,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--method", choices=METHOD_IDS, required=True)
     parser.add_argument("--order-id", required=True)
+    parser.add_argument("--seed", type=int, required=True)
     parser.add_argument("--protocol", type=Path, default=DEFAULT_PROTOCOL)
     parser.add_argument("--artifact-root", type=Path, default=DEFAULT_ARTIFACT_ROOT)
     parser.add_argument(
@@ -385,6 +412,7 @@ def main() -> None:
     result = run_selected_pair(
         method_id=args.method,
         order_id=args.order_id,
+        training_seed=args.seed,
         protocol_path=args.protocol,
         artifact_root=args.artifact_root,
         interference_matrix_path=args.interference_matrix,

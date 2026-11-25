@@ -1,17 +1,32 @@
-# Phase 4: controlled ten-language pilot
+# Phase 4: controlled ten-language prior comparison
 
-Phase 4 is prepared but **training is gated** on the Phase 3 v2 decision
-selecting the published-interference prior. Phase 3 v2 now uses this same
-ten-language roster; its Arabic row and column use the pre-specified `k=5`
-URIEL+ imputation described below. Do not edit the gate to `passed` unless the
-corrected analysis and its imputation provenance have been reviewed and
-recorded. If a different prior wins, stop and revise the Phase 4 method before
-training.
+The supervisor-approved Phase 4 pilot is **complete: 15/15 runs** across B2,
+B5, and M3, five frozen language orders, and training seed 42. The results are
+a descriptive single-seed pilot and do not establish training-seed robustness.
+Phase 3 did not select one winning prior: embedding similarity was the only
+pooled prior with Holm-adjusted `p < 0.05` (Spearman `rho=0.4718`, adjusted
+`p=0.0455`), while published interference was not selected. Accordingly,
+Phase 4 compares three replay methods instead of representing one prior as
+selected. See the
+[Phase 3 combined-analysis report](../phase3/results/rq1_v2_combined_analysis_2026-11-24/README.md).
 
-## Frozen pilot
+The [completed Phase 4 results report](./results/prior_comparison_seed42_2026-11-25/README.md)
+records the checks, aggregated metrics, and limitations. The unified
+[aggregate](./results/prior_comparison_seed42_2026-11-25/aggregate.json)
+validates all 15 expected run records with no missing runs.
+
+The approved design is B2 (uniform replay), B5 (embedding-similarity replay),
+and M3 (published-interference replay), across all five frozen orders with
+training seed 42: **15 runs**. Seed 42 is preselected, not selected from Phase 4
+outcomes. This single-seed design is descriptive and cannot establish
+seed-level robustness or support a significance claim. The approval gate
+records the user's confirmation of supervisor approval; it does not claim
+that Phase 3 selected `published_interference`.
+
+## Approved comparison protocol
 
 The protocol is
-[`configs/controlled_10lang_pilot_protocol.json`](./configs/controlled_10lang_pilot_protocol.json).
+[`configs/controlled_10lang_prior_comparison_protocol.json`](./configs/controlled_10lang_prior_comparison_protocol.json).
 It uses XNLI with 500 train and 200 test examples per language, a 250-example
 buffer (5% of the 5,000 selected training examples), and these languages:
 
@@ -29,16 +44,19 @@ buffer (5% of the 5,000 selected training examples), and these languages:
 | `hi` | Hindi | Devanagari | Indo-European |
 
 This is four scripts and three families, not the five scripts/four families in
-the initial research-plan draft. The protocol freezes five distinct stream
-orders and pairs them with seeds 42–46. B1 remains order-independent and runs
-once per seed. B0–B8 plus M3 produce 50 records total.
+the initial research-plan draft. The comparison schedules only B2, B5, and M3
+on each order using seed 42. The earlier
+[`controlled_10lang_pilot_protocol.json`](./configs/controlled_10lang_pilot_protocol.json)
+is preserved unchanged as the original, now superseded protocol; do not use it
+for this approved comparison.
 
-This five-pair design is a **descriptive pilot**, not a significance-backed
-headline experiment: five paired observations cannot resolve a Holm-corrected
-test across nine baseline comparisons. The 5% figure refers to buffer
+This 15-run design is a **descriptive pilot**, not a significance-backed
+headline experiment: one seed cannot establish training-seed robustness. The
+5% figure refers to buffer
 capacity; B2 and M3 use one replay example per current example. This does not
-make every method compute-matched. The original Phase 4 hour estimate is
-withdrawn until measured per-run time is available.
+make every method compute-matched. The completed Kaggle notebooks record
+8.90–10.34 hours per order (mean 9.49 hours) for the three-method run cell;
+actual runtime varies with Kaggle hardware and scheduling.
 
 ## Arabic interference-score imputation
 
@@ -64,51 +82,60 @@ source-controlled experiment results.
 
 ## Running and aggregating
 
-First complete and review Phase 3 v2 prior selection for this matching roster.
-Then set both
-`phase4.prior_gate.status` to `passed` and
-`phase4.prior_gate.selected_prior` to `published_interference` in the frozen
-protocol. This gate is checked before Phase 4 data preparation or training.
-
-Prepare data and run one method/order pair at a time:
+The comparison approval gate is already recorded in the new protocol. Keep
+the original protocol and its pending single-prior gate unchanged. Prepare data
+and run one method/order/seed combination at a time:
 
 ```powershell
-python -m phase4.run_phase4 --method B0 --order-id order-1
-python -m phase4.run_phase4 --method M3 --order-id order-1
+python -m phase4.run_phase4 --method B2 --order-id order-1 --seed 42
+python -m phase4.run_phase4 --method B5 --order-id order-1 --seed 42
+python -m phase4.run_phase4 --method M3 --order-id order-1 --seed 42
 ```
 
-The seed is selected from the frozen order/seed mapping. Repeat for all five
-orders and methods B0–B8 plus M3. The first run prepares the fixed XNLI
+Repeat these three methods for orders 1–5. The first run prepares the fixed XNLI
 subsets; later runs validate and reuse their manifest. Training requires a
 Kaggle GPU (or compatible CUDA runtime), access to
 `meta-llama/Llama-3.2-1B`, and an `HF_TOKEN` secret. The runner skips valid
 completed result records and refuses mismatched protocol/data hashes.
 
-After runs complete, aggregate the available records:
+To reproduce the aggregate from the archived result records:
 
 ```powershell
-python -m phase4.summarize_phase4
+python -m phase4.summarize_phase4 `
+  --protocol phase4\configs\controlled_10lang_prior_comparison_protocol.json `
+  --artifact-root phase4\results\prior_comparison_seed42_2026-11-25
 ```
 
-For separate Kaggle sessions, collect each output ZIP, extract the `results`
-folders into one artifact root, and retain a `protocol_manifest.json` from
-those runs. The summary command can aggregate using the saved checksummed data
-metadata without requiring the raw XNLI examples. The report explicitly lists
-incomplete method/run cells. It is descriptive only; do not report the pilot
-as statistically significant.
+The [archived result folder](./results/prior_comparison_seed42_2026-11-25/)
+contains all five original output ZIPs, the unified manifest, 15 result
+records, shared M3 matrix files, provenance checks, and aggregate. The
+summary command uses the saved checksummed data metadata and does not require
+raw XNLI examples. Report the comparison as descriptive only; do not claim
+statistical significance or seed-level robustness.
 
 ## Kaggle notebook
 
-[`notebooks/phase4_controlled_10lang_kaggle.ipynb`](./notebooks/phase4_controlled_10lang_kaggle.ipynb)
-is a single-job template. Select a method and order in its configuration cell,
-attach a Kaggle secret named `HF_TOKEN`, enable a GPU, and run only after the
-gate is passed. The notebook clones this repository from the configured
-`Mani-S-2709` origin. Push the prepared code to that repository before using
-the notebook.
+Order-specific Kaggle notebook templates (the corresponding submitted
+executions were checked and validated) are:
+
+- [Order 1](./notebooks/phase4_controlled_10lang_kaggle_order1.ipynb)
+- [Order 2](./notebooks/phase4_controlled_10lang_kaggle_order2.ipynb)
+- [Order 3](./notebooks/phase4_controlled_10lang_kaggle_order3.ipynb)
+- [Order 4](./notebooks/phase4_controlled_10lang_kaggle_order4.ipynb)
+- [Order 5](./notebooks/phase4_controlled_10lang_kaggle_order5.ipynb)
+
+The [general notebook template](./notebooks/phase4_controlled_10lang_kaggle.ipynb)
+can also be configured for one order at a time. Attach a Kaggle secret named
+`HF_TOKEN`, enable Internet and a GPU, and accept the gated model terms. Attach
+[`artifacts/phase4_prior_comparison_code.zip`](./artifacts/phase4_prior_comparison_code.zip)
+as a Kaggle input dataset. The notebook reads the bundled source directly and
+does not require GitHub cloning or authentication. In the bundle, the runner
+records a deterministic source-tree SHA-256 fingerprint because no `.git`
+metadata is present; Git checkouts continue to record the commit hash.
 
 ## Implementation and tests
 
-- [`run_phase4.py`](./run_phase4.py) delegates B0–B8 to the Phase 2 runner and
+- [`run_phase4.py`](./run_phase4.py) delegates B2 and B5 to the Phase 2 runner and
   implements M3 with the same fixed-size, with-replacement replay exposure as
   B2.
 - [`interference_matrix.py`](./interference_matrix.py) validates and records

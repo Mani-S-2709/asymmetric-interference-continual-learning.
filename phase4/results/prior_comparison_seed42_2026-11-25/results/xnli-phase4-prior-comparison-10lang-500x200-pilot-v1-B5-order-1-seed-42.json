@@ -1,0 +1,513 @@
+{
+  "completed": true,
+  "data_manifest_sha256": "373852a7f1e09ab99da8a25f21023fedc1977ab1969e09d938874f7c645a721a",
+  "evaluation_mode": "sequential",
+  "final_accuracy_by_language": {
+    "ar": 0.63,
+    "bg": 0.675,
+    "de": 0.695,
+    "en": 0.785,
+    "es": 0.72,
+    "fr": 0.745,
+    "hi": 0.64,
+    "ru": 0.685,
+    "sw": 0.495,
+    "ur": 0.5
+  },
+  "metadata": {
+    "checkpoint_attempt": "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B5-order-1-seed-42",
+    "cuda_available": true,
+    "cuda_device": "Tesla T4",
+    "embedding_batch_size": 4,
+    "embedding_model": "pretrained Llama backbone with LoRA adapters disabled",
+    "embedding_pooling": "attention_masked_mean_last_hidden_state",
+    "embedding_similarity": "cosine",
+    "lora": {
+      "alpha": 32,
+      "dropout": 0.05,
+      "rank": 16,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ]
+    },
+    "memory_update": "uniform_reservoir_after_each_language_stage",
+    "method_deviation": "Embedding-similarity replay adaptation: encode each current prompt with attention-masked mean pooling of the pretrained Llama backbone's final hidden states while LoRA adapters are disabled, then replay its nearest prior-language example by cosine similarity from a 125-example uniform reservoir. Add current examples to that reservoir after the stage. Select one nearest neighbor per current example, giving 1:1 replay. This is a documented nearest-neighbor operationalization of the research plan's embedding-similarity replay.",
+    "method_id": "B5",
+    "model_id": "meta-llama/Llama-3.2-1B",
+    "order_id": "order-1",
+    "package_versions": {
+      "accelerate": "1.15.0",
+      "bitsandbytes": "0.50.2",
+      "datasets": "5.0.1",
+      "peft": "0.21.2",
+      "torch": "2.11.0+cu130",
+      "transformers": "5.18.0"
+    },
+    "protocol_sha256": "8410f165679468b770528eb8083160570c374921d0f1a0fdb2935b87ba6b008b",
+    "replay_buffer_capacity_examples": 250,
+    "replay_examples_per_current_example": 1,
+    "replay_neighbor_count": 1,
+    "replay_policy": "frozen_base_prompt_embedding_nearest_neighbor",
+    "replay_seed": 20261112,
+    "replay_stages": [
+      {
+        "buffer_examples_by_language": {
+          "es": 250
+        },
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "embedding_seconds": 46.660837834999256,
+        "language": "es",
+        "mean_replay_cosine_similarity": null,
+        "memory_update_seconds": 0.21856042000035814,
+        "min_replay_cosine_similarity": null,
+        "nearest_neighbor_selection_seconds": 0.0002414070004306268,
+        "replay_examples": 0,
+        "replay_examples_by_language": {},
+        "selection": "frozen_base_prompt_embedding_nearest_neighbor",
+        "stage_index": 0,
+        "training_examples": 500,
+        "training_seconds": 171.89742245400157
+      },
+      {
+        "buffer_examples_by_language": {
+          "es": 139,
+          "sw": 111
+        },
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "embedding_seconds": 54.522465887999715,
+        "language": "sw",
+        "mean_replay_cosine_similarity": 0.866590510208645,
+        "memory_update_seconds": 0.20225199900050939,
+        "min_replay_cosine_similarity": 0.6752180248685816,
+        "nearest_neighbor_selection_seconds": 0.24177840700031084,
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "es": 500
+        },
+        "selection": "frozen_base_prompt_embedding_nearest_neighbor",
+        "stage_index": 1,
+        "training_examples": 1000,
+        "training_seconds": 326.4365909600001
+      },
+      {
+        "buffer_examples_by_language": {
+          "es": 97,
+          "sw": 69,
+          "ur": 84
+        },
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "embedding_seconds": 72.59024968800077,
+        "language": "ur",
+        "mean_replay_cosine_similarity": 0.39283966032944384,
+        "memory_update_seconds": 0.21661715999834996,
+        "min_replay_cosine_similarity": 0.091489816346831,
+        "nearest_neighbor_selection_seconds": 0.23516201499842282,
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "es": 95,
+          "sw": 405
+        },
+        "selection": "frozen_base_prompt_embedding_nearest_neighbor",
+        "stage_index": 2,
+        "training_examples": 1000,
+        "training_seconds": 379.76924392399997
+      },
+      {
+        "buffer_examples_by_language": {
+          "en": 55,
+          "es": 75,
+          "sw": 50,
+          "ur": 70
+        },
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "embedding_seconds": 40.35834967700066,
+        "language": "en",
+        "mean_replay_cosine_similarity": 0.9372444392968047,
+        "memory_update_seconds": 0.21945056500044302,
+        "min_replay_cosine_similarity": 0.829360810811644,
+        "nearest_neighbor_selection_seconds": 0.23341090900066774,
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "es": 33,
+          "sw": 467
+        },
+        "selection": "frozen_base_prompt_embedding_nearest_neighbor",
+        "stage_index": 3,
+        "training_examples": 1000,
+        "training_seconds": 265.89187302499886
+      },
+      {
+        "buffer_examples_by_language": {
+          "de": 54,
+          "en": 44,
+          "es": 57,
+          "sw": 42,
+          "ur": 53
+        },
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "embedding_seconds": 49.94210769299934,
+        "language": "de",
+        "mean_replay_cosine_similarity": 0.8748525294289533,
+        "memory_update_seconds": 0.20815203999882215,
+        "min_replay_cosine_similarity": 0.7616534952704532,
+        "nearest_neighbor_selection_seconds": 0.2360420860004524,
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "en": 8,
+          "es": 95,
+          "sw": 397
+        },
+        "selection": "frozen_base_prompt_embedding_nearest_neighbor",
+        "stage_index": 4,
+        "training_examples": 1000,
+        "training_seconds": 301.4055622830001
+      },
+      {
+        "buffer_examples_by_language": {
+          "ar": 38,
+          "de": 45,
+          "en": 38,
+          "es": 47,
+          "sw": 38,
+          "ur": 44
+        },
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "embedding_seconds": 50.57536835300198,
+        "language": "ar",
+        "mean_replay_cosine_similarity": 0.7677511013801223,
+        "memory_update_seconds": 0.21243564700125717,
+        "min_replay_cosine_similarity": 0.642751029329808,
+        "nearest_neighbor_selection_seconds": 0.2362063440014026,
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "en": 2,
+          "es": 3,
+          "ur": 495
+        },
+        "selection": "frozen_base_prompt_embedding_nearest_neighbor",
+        "stage_index": 5,
+        "training_examples": 1000,
+        "training_seconds": 329.1462975710019
+      },
+      {
+        "buffer_examples_by_language": {
+          "ar": 35,
+          "bg": 30,
+          "de": 39,
+          "en": 37,
+          "es": 39,
+          "sw": 33,
+          "ur": 37
+        },
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "embedding_seconds": 62.89561361200322,
+        "language": "bg",
+        "mean_replay_cosine_similarity": 0.6186945655013965,
+        "memory_update_seconds": 0.20953720800025621,
+        "min_replay_cosine_similarity": 0.4050910212943823,
+        "nearest_neighbor_selection_seconds": 0.23776876899864874,
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "ar": 401,
+          "en": 62,
+          "es": 32,
+          "sw": 5
+        },
+        "selection": "frozen_base_prompt_embedding_nearest_neighbor",
+        "stage_index": 6,
+        "training_examples": 1000,
+        "training_seconds": 335.5283417870014
+      },
+      {
+        "buffer_examples_by_language": {
+          "ar": 33,
+          "bg": 23,
+          "de": 37,
+          "en": 34,
+          "es": 35,
+          "hi": 25,
+          "sw": 27,
+          "ur": 36
+        },
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "embedding_seconds": 81.56167922100212,
+        "language": "hi",
+        "mean_replay_cosine_similarity": 0.535465327658281,
+        "memory_update_seconds": 0.20404649999909452,
+        "min_replay_cosine_similarity": 0.37445543481722415,
+        "nearest_neighbor_selection_seconds": 0.23654685899964534,
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "ar": 494,
+          "bg": 5,
+          "sw": 1
+        },
+        "selection": "frozen_base_prompt_embedding_nearest_neighbor",
+        "stage_index": 7,
+        "training_examples": 1000,
+        "training_seconds": 397.3995555319998
+      },
+      {
+        "buffer_examples_by_language": {
+          "ar": 30,
+          "bg": 21,
+          "de": 30,
+          "en": 29,
+          "es": 32,
+          "hi": 23,
+          "ru": 27,
+          "sw": 24,
+          "ur": 34
+        },
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "embedding_seconds": 51.255834752002556,
+        "language": "ru",
+        "mean_replay_cosine_similarity": 0.91279410246908,
+        "memory_update_seconds": 0.1993738579985802,
+        "min_replay_cosine_similarity": 0.8324326211944918,
+        "nearest_neighbor_selection_seconds": 0.23780225399968913,
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "bg": 500
+        },
+        "selection": "frozen_base_prompt_embedding_nearest_neighbor",
+        "stage_index": 8,
+        "training_examples": 1000,
+        "training_seconds": 324.58513579400096
+      },
+      {
+        "buffer_examples_by_language": {
+          "ar": 27,
+          "bg": 18,
+          "de": 29,
+          "en": 26,
+          "es": 31,
+          "fr": 23,
+          "hi": 19,
+          "ru": 27,
+          "sw": 24,
+          "ur": 26
+        },
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "embedding_seconds": 51.07849948199873,
+        "language": "fr",
+        "mean_replay_cosine_similarity": 0.8886212566663457,
+        "memory_update_seconds": 0.22060749599768315,
+        "min_replay_cosine_similarity": 0.7645624579068135,
+        "nearest_neighbor_selection_seconds": 0.24320708899904275,
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "de": 1,
+          "en": 6,
+          "es": 454,
+          "sw": 39
+        },
+        "selection": "frozen_base_prompt_embedding_nearest_neighbor",
+        "stage_index": 9,
+        "training_examples": 1000,
+        "training_seconds": 303.65892483800053
+      }
+    ],
+    "source_revision": "sha256:642db1b58cf5105a3801fe9ffa70431b845c3dad2f4a08873a40c7d5732d424d",
+    "source_revision_type": "source_tree_sha256",
+    "task_order": [
+      "es",
+      "sw",
+      "ur",
+      "en",
+      "de",
+      "ar",
+      "bg",
+      "hi",
+      "ru",
+      "fr"
+    ],
+    "training": {
+      "epochs": 1,
+      "gradient_accumulation_steps": 8,
+      "gradient_checkpointing": true,
+      "learning_rate": 0.0002,
+      "load_in_4bit": true,
+      "max_length": 512,
+      "seeds": [
+        42
+      ],
+      "train_batch_size": 1
+    },
+    "training_seed": 42
+  },
+  "method_id": "B5",
+  "metrics": {
+    "AA": 0.657,
+    "ACC": 0.657,
+    "BWT": 0.06833333333333336,
+    "F": 0.03666666666666665,
+    "FP": 0.657,
+    "FWT": 0.2677777777777778
+  },
+  "order_id": "order-1",
+  "performance_matrix": [
+    [
+      0.4,
+      0.315,
+      0.31,
+      0.365,
+      0.33,
+      0.39,
+      0.365,
+      0.36,
+      0.315,
+      0.405
+    ],
+    [
+      0.455,
+      0.355,
+      0.465,
+      0.55,
+      0.435,
+      0.49,
+      0.44,
+      0.49,
+      0.475,
+      0.47
+    ],
+    [
+      0.48,
+      0.43,
+      0.435,
+      0.56,
+      0.465,
+      0.5,
+      0.525,
+      0.535,
+      0.525,
+      0.505
+    ],
+    [
+      0.605,
+      0.425,
+      0.44,
+      0.725,
+      0.615,
+      0.54,
+      0.595,
+      0.575,
+      0.63,
+      0.615
+    ],
+    [
+      0.63,
+      0.555,
+      0.52,
+      0.705,
+      0.645,
+      0.625,
+      0.645,
+      0.66,
+      0.64,
+      0.705
+    ],
+    [
+      0.645,
+      0.53,
+      0.56,
+      0.695,
+      0.6,
+      0.585,
+      0.645,
+      0.625,
+      0.645,
+      0.685
+    ],
+    [
+      0.685,
+      0.505,
+      0.53,
+      0.7,
+      0.61,
+      0.65,
+      0.715,
+      0.65,
+      0.695,
+      0.71
+    ],
+    [
+      0.665,
+      0.535,
+      0.585,
+      0.685,
+      0.605,
+      0.59,
+      0.675,
+      0.62,
+      0.655,
+      0.695
+    ],
+    [
+      0.715,
+      0.465,
+      0.575,
+      0.78,
+      0.705,
+      0.64,
+      0.74,
+      0.695,
+      0.73,
+      0.77
+    ],
+    [
+      0.72,
+      0.495,
+      0.5,
+      0.785,
+      0.695,
+      0.63,
+      0.675,
+      0.64,
+      0.685,
+      0.745
+    ]
+  ],
+  "protocol_id": "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1",
+  "protocol_sha256": "8410f165679468b770528eb8083160570c374921d0f1a0fdb2935b87ba6b008b",
+  "run_id": "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B5-order-1-seed-42",
+  "schema_version": 1,
+  "task_order": [
+    "es",
+    "sw",
+    "ur",
+    "en",
+    "de",
+    "ar",
+    "bg",
+    "hi",
+    "ru",
+    "fr"
+  ],
+  "training_seed": 42,
+  "zero_shot_accuracy": [
+    0.365,
+    0.315,
+    0.315,
+    0.32,
+    0.315,
+    0.335,
+    0.34,
+    0.35,
+    0.305,
+    0.295
+  ]
+}

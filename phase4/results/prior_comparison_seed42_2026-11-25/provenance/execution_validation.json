@@ -1,0 +1,83 @@
+{
+  "completed_run_count": 15,
+  "data_manifest_sha256": "373852a7f1e09ab99da8a25f21023fedc1977ab1969e09d938874f7c645a721a",
+  "executed_notebooks": [
+    {
+      "code_cells": 4,
+      "error_cells": 0,
+      "filename": "phase-4-controlled-10-language-pilot-order-1.ipynb",
+      "order_id": "order-1",
+      "papermill_status": "completed",
+      "run_cell_duration_seconds": 32663.211992,
+      "sha256": "fdc3b7653f2772a11969cc5a5c632859cc1ba76ae830b64863f8149c24878fec"
+    },
+    {
+      "code_cells": 3,
+      "error_cells": 0,
+      "filename": "phase-4-controlled-10-language-pilot-order-2.ipynb",
+      "order_id": "order-2",
+      "papermill_status": "completed",
+      "run_cell_duration_seconds": 34911.628612,
+      "sha256": "31912c8af351025ed25f2cb3b80a6047b177e75d48b04bef28beaacbf1b8384d"
+    },
+    {
+      "code_cells": 3,
+      "error_cells": 0,
+      "filename": "phase-4-controlled-10-language-pilot-order-3.ipynb",
+      "order_id": "order-3",
+      "papermill_status": "completed",
+      "run_cell_duration_seconds": 34004.626959,
+      "sha256": "fae0f485604d359e9906bf0582a57ad968f06277b6d2245ecd0da0907ccbb6c2"
+    },
+    {
+      "code_cells": 3,
+      "error_cells": 0,
+      "filename": "phase-4-controlled-10-language-pilot-order-4.ipynb",
+      "order_id": "order-4",
+      "papermill_status": "completed",
+      "run_cell_duration_seconds": 32023.819827,
+      "sha256": "c4ccc00f0edce1c868191cc609d29613c05dfa175d1cb77915deb76e1b5dfbf1"
+    },
+    {
+      "code_cells": 3,
+      "error_cells": 0,
+      "filename": "phase-4-controlled-10-language-pilot-order-5.ipynb",
+      "order_id": "order-5",
+      "papermill_status": "completed",
+      "run_cell_duration_seconds": 37240.916186,
+      "sha256": "257ce71c6ac4faa5635ee9438b004b51577b862f0a24b550d16444dcf84632ca"
+    }
+  ],
+  "expected_run_count": 15,
+  "protocol_id": "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1",
+  "protocol_sha256": "8410f165679468b770528eb8083160570c374921d0f1a0fdb2935b87ba6b008b",
+  "source_bundle_fingerprint": "sha256:642db1b58cf5105a3801fe9ffa70431b845c3dad2f4a08873a40c7d5732d424d",
+  "submitted_output_archives": [
+    {
+      "filename": "phase4_order-1_seed_42_B2_B5_M3.zip",
+      "order_id": "order-1",
+      "sha256": "0905c48c8269b615a44aae7bb9ddf54b3d75a77ebe8eb54067b96c3a7bb92497"
+    },
+    {
+      "filename": "phase4_order-2_seed_42_B2_B5_M3.zip",
+      "order_id": "order-2",
+      "sha256": "da859ca813235d5240ae3d88044168eaabca6d074adf500107f04cc365ca50d7"
+    },
+    {
+      "filename": "phase4_order-3_seed_42_B2_B5_M3.zip",
+      "order_id": "order-3",
+      "sha256": "fe6d77a61ebdc6ff45767fb58b6927df0ce7bb674fd8441318fe6da3b3e46b56"
+    },
+    {
+      "filename": "phase4_order-4_seed_42_B2_B5_M3.zip",
+      "order_id": "order-4",
+      "sha256": "a1e5064509921e262360fa344ba852f88eca4669c8d1f783d508ee7ffca39301"
+    },
+    {
+      "filename": "phase4_order-5_seed_42_B2_B5_M3.zip",
+      "order_id": "order-5",
+      "sha256": "bfac62e5c65755e4b4816e79fb1654c088b0c57730180e4d77f08fa190416082"
+    }
+  ],
+  "validated_at": "2026-11-25"
+}

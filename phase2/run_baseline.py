@@ -7,6 +7,7 @@ from collections.abc import Callable, Mapping, Sequence
 import hashlib
 import importlib.metadata
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -206,15 +207,57 @@ def _new_trainer(
     )
 
 
+def _source_revision() -> tuple[str, str]:
+    git_metadata = PROJECT_ROOT / ".git"
+    if git_metadata.exists():
+        result = subprocess.run(
+            ["git", "-C", str(PROJECT_ROOT), "rev-parse", "HEAD"],
+            capture_output=True,
+            check=False,
+            text=True,
+        )
+        if result.returncode != 0 or not result.stdout.strip():
+            raise RuntimeError(
+                f"Unable to read the Git revision for {PROJECT_ROOT}: "
+                f"{result.stderr.strip() or 'git returned no revision'}"
+            )
+        return result.stdout.strip(), "git_commit"
+
+    excluded_directories = {
+        ".git", ".venv", "__pycache__", "artifacts", "checkpoints",
+        "data", "notebooks", "results", "runs", "tests",
+    }
+    digest = hashlib.sha256()
+    source_count = 0
+    for current_root, directories, filenames in os.walk(PROJECT_ROOT):
+        directories[:] = sorted(
+            directory for directory in directories
+            if directory not in excluded_directories
+        )
+        current_path = Path(current_root)
+        for filename in sorted(filenames):
+            path = current_path / filename
+            if path.suffix not in {".json", ".py", ".toml"} and not (
+                filename.startswith("requirements") and path.suffix == ".txt"
+            ):
+                continue
+            relative_path = path.relative_to(PROJECT_ROOT).as_posix()
+            digest.update(relative_path.encode("utf-8"))
+            digest.update(b"\0")
+            digest.update(path.read_bytes())
+            digest.update(b"\0")
+            source_count += 1
+    if source_count == 0:
+        raise RuntimeError(
+            f"Cannot identify a Git revision or source files under {PROJECT_ROOT}."
+        )
+    return f"sha256:{digest.hexdigest()}", "source_tree_sha256"
+
+
 def _runtime_metadata(protocol: Mapping[str, Any], method_id: str) -> dict[str, Any]:
     import torch
 
-    source_revision = subprocess.run(
-        ["git", "-C", str(PROJECT_ROOT), "rev-parse", "HEAD"],
-        capture_output=True,
-        check=True,
-        text=True,
-    ).stdout.strip()
+    source_revision, source_revision_type = _source_revision()
     packages = {}
     for package in ("torch", "transformers", "datasets", "peft", "accelerate", "bitsandbytes"):
         try:
@@ -224,6 +267,7 @@ def _runtime_metadata(protocol: Mapping[str, Any], method_id: str) -> dict[str, 
     metadata: dict[str, Any] = {
         "method_id": method_id,
         "source_revision": source_revision,
+        "source_revision_type": source_revision_type,
         "model_id": protocol["model"]["id"],
         "training": dict(protocol["training"]),
         "lora": dict(protocol["lora"]),
@@ -233,23 +277,6 @@ def _runtime_metadata(protocol: Mapping[str, Any], method_id: str) -> dict[str, 
     if torch.cuda.is_available():
         metadata["cuda_device"] = torch.cuda.get_device_name(0)
     return metadata
-
-
-def _expected_run(
-    manifest: Mapping[str, Any],
-    method_id: str,
-    order_id: str,
-) -> Mapping[str, Any]:
-    matches = [
-        run for run in manifest["runs"]
-        if run["method_id"] == method_id and run["order_id"] == order_id
-    ]
-    if len(matches) != 1:
-        raise ValueError(
-            f"Expected exactly one {method_id} run for order {order_id}; "
-            f"found {len(matches)}."
-        )
-    return matches[0]
 
 
 def _create_checkpoint_attempt(output_root: Path, run_id: str) -> Path:
@@ -1317,6 +1344,7 @@ def run_baseline(
     protocol_path: str | Path,
     artifact_root: str | Path,
     order_ids: Sequence[str] | None = None,
+    training_seeds: Sequence[int] | None = None,
     wandb_project: str | None = None,
     wandb_entity: str | None = None,
     trainer_factory: TrainerFactory | None = None,
@@ -1334,11 +1362,10 @@ def run_baseline(
     run_manifest = build_manifest(protocol)
     run_manifest["data_artifacts"] = prepared_manifest["data_artifacts"]
     run_manifest["data_manifest_sha256"] = prepared_manifest["data_manifest_sha256"]
-    available_orders = {
-        run["order_id"]
-        for run in run_manifest["runs"]
-        if run["method_id"] == method_id
-    }
+    method_runs = [
+        run for run in run_manifest["runs"] if run["method_id"] == method_id
+    ]
+    available_orders = {run["order_id"] for run in method_runs}
     selected_orders = list(order_ids) if order_ids is not None else sorted(available_orders)
     if not selected_orders or len(set(selected_orders)) != len(selected_orders):
         raise ValueError("Select one or more distinct order IDs.")
@@ -1346,22 +1373,41 @@ def run_baseline(
     if unknown_orders:
         raise ValueError(f"Unknown order IDs: {unknown_orders}.")
 
-    pending_orders = []
+    available_seeds = {run["training_seed"] for run in method_runs}
+    selected_seeds = (
+        list(training_seeds)
+        if training_seeds is not None
+        else sorted(available_seeds)
+    )
+    if not selected_seeds or len(set(selected_seeds)) != len(selected_seeds):
+        raise ValueError("Select one or more distinct training seeds.")
+    unknown_seeds = sorted(set(selected_seeds) - available_seeds)
+    if unknown_seeds:
+        raise ValueError(f"Unknown training seeds: {unknown_seeds}.")
+
+    selected_runs = [
+        run for run in method_runs
+        if run["order_id"] in selected_orders
+        and run["training_seed"] in selected_seeds
+    ]
+    if not selected_runs:
+        raise ValueError("The selected orders and seeds identify no scheduled runs.")
+
+    pending_runs = []
     completed_results = {}
     results_dir = Path(artifact_root) / "results"
-    for order_id in selected_orders:
-        run = _expected_run(run_manifest, method_id, order_id)
+    for run in selected_runs:
         result_path = results_dir / f"{run['run_id']}.json"
         if result_path.exists():
             with result_path.open(encoding="utf-8") as source:
                 record = json.load(source)
             validate_result_record(record, run_manifest)
-            completed_results[order_id] = record
+            completed_results[run["run_id"]] = record
             print(f"Already completed; skipping {run['run_id']}.")
         else:
-            pending_orders.append(order_id)
-    if not pending_orders:
-        return [completed_results[order_id] for order_id in selected_orders]
+            pending_runs.append(run)
+    if not pending_runs:
+        return [completed_results[run["run_id"]] for run in selected_runs]
 
     from huggingface_hub import get_token
     import torch
@@ -1376,8 +1422,7 @@ def run_baseline(
     train_sets, test_sets = load_prepared_datasets(protocol, artifact_root)
     factory = trainer_factory or _new_trainer
     output_root = Path(artifact_root)
-    for order_id in pending_orders:
-        run = _expected_run(run_manifest, method_id, order_id)
+    for run in pending_runs:
         print(f"Starting {run['run_id']}")
         if method_id == "B0":
             result = _run_b0(
@@ -1505,12 +1550,12 @@ def run_baseline(
                 wandb_project,
                 wandb_entity,
             )
-        completed_results[order_id] = result
+        completed_results[run["run_id"]] = result
         print(
             f"Completed {run['run_id']}: "
             f"ACC={result['metrics']['ACC']:.4f}"
         )
-    return [completed_results[order_id] for order_id in selected_orders]
+    return [completed_results[run["run_id"]] for run in selected_runs]
 
 
 def main() -> None:
@@ -1528,6 +1573,13 @@ def main() -> None:
         action="append",
         dest="order_ids",
         help="Run only this order; repeat the flag to select multiple orders. Default: all five.",
+    )
+    parser.add_argument(
+        "--training-seed",
+        action="append",
+        dest="training_seeds",
+        type=int,
+        help="Run only this training seed; repeat the flag to select multiple seeds.",
     )
     parser.add_argument("--wandb-project")
     parser.add_argument("--wandb-entity")
@@ -1547,6 +1599,7 @@ def main() -> None:
         protocol_path=args.protocol,
         artifact_root=args.artifact_root,
         order_ids=args.order_ids,
+        training_seeds=args.training_seeds,
         wandb_project=args.wandb_project,
         wandb_entity=args.wandb_entity,
     )

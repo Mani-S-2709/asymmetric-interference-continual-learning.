@@ -1,0 +1,385 @@
+{
+  "completed": true,
+  "data_manifest_sha256": "373852a7f1e09ab99da8a25f21023fedc1977ab1969e09d938874f7c645a721a",
+  "evaluation_mode": "sequential",
+  "final_accuracy_by_language": {
+    "ar": 0.69,
+    "bg": 0.71,
+    "de": 0.69,
+    "en": 0.775,
+    "es": 0.715,
+    "fr": 0.725,
+    "hi": 0.685,
+    "ru": 0.77,
+    "sw": 0.45,
+    "ur": 0.57
+  },
+  "metadata": {
+    "checkpoint_attempt": "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B2-order-1-seed-42",
+    "cuda_available": true,
+    "cuda_device": "Tesla T4",
+    "lora": {
+      "alpha": 32,
+      "dropout": 0.05,
+      "rank": 16,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ]
+    },
+    "method_deviation": "Stagewise uniform experience replay adaptation: before each language stage, sample one replay example with replacement per current example from a uniform reservoir containing only prior languages; append the current stage to the reservoir after training data for that stage is formed. The first stage has no replay. Replay increases training-example exposure relative to B0.",
+    "method_id": "B2",
+    "model_id": "meta-llama/Llama-3.2-1B",
+    "order_id": "order-1",
+    "package_versions": {
+      "accelerate": "1.15.0",
+      "bitsandbytes": "0.50.2",
+      "datasets": "5.0.1",
+      "peft": "0.21.2",
+      "torch": "2.11.0+cu130",
+      "transformers": "5.18.0"
+    },
+    "protocol_sha256": "8410f165679468b770528eb8083160570c374921d0f1a0fdb2935b87ba6b008b",
+    "replay_buffer_capacity_examples": 250,
+    "replay_examples_per_current_example": 1,
+    "replay_policy": "stagewise_uniform_reservoir",
+    "replay_seed": 20261112,
+    "replay_stages": [
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "es",
+        "replay_examples": 0,
+        "replay_examples_by_language": {},
+        "stage_index": 0,
+        "training_examples": 500
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "sw",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "es": 500
+        },
+        "stage_index": 1,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "ur",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "es": 248,
+          "sw": 252
+        },
+        "stage_index": 2,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "en",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "es": 176,
+          "sw": 164,
+          "ur": 160
+        },
+        "stage_index": 3,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "de",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "en": 107,
+          "es": 144,
+          "sw": 127,
+          "ur": 122
+        },
+        "stage_index": 4,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "ar",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "de": 73,
+          "en": 95,
+          "es": 119,
+          "sw": 101,
+          "ur": 112
+        },
+        "stage_index": 5,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "bg",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "ar": 84,
+          "de": 61,
+          "en": 72,
+          "es": 92,
+          "sw": 93,
+          "ur": 98
+        },
+        "stage_index": 6,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "hi",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "ar": 48,
+          "bg": 73,
+          "de": 51,
+          "en": 71,
+          "es": 88,
+          "sw": 79,
+          "ur": 90
+        },
+        "stage_index": 7,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "ru",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "ar": 59,
+          "bg": 60,
+          "de": 48,
+          "en": 52,
+          "es": 68,
+          "hi": 77,
+          "sw": 80,
+          "ur": 56
+        },
+        "stage_index": 8,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "fr",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "ar": 50,
+          "bg": 54,
+          "de": 39,
+          "en": 52,
+          "es": 63,
+          "hi": 70,
+          "ru": 36,
+          "sw": 79,
+          "ur": 57
+        },
+        "stage_index": 9,
+        "training_examples": 1000
+      }
+    ],
+    "replay_update_timing": "after_each_language_stage",
+    "source_revision": "sha256:642db1b58cf5105a3801fe9ffa70431b845c3dad2f4a08873a40c7d5732d424d",
+    "source_revision_type": "source_tree_sha256",
+    "task_order": [
+      "es",
+      "sw",
+      "ur",
+      "en",
+      "de",
+      "ar",
+      "bg",
+      "hi",
+      "ru",
+      "fr"
+    ],
+    "training": {
+      "epochs": 1,
+      "gradient_accumulation_steps": 8,
+      "gradient_checkpointing": true,
+      "learning_rate": 0.0002,
+      "load_in_4bit": true,
+      "max_length": 512,
+      "seeds": [
+        42
+      ],
+      "train_batch_size": 1
+    },
+    "training_seed": 42
+  },
+  "method_id": "B2",
+  "metrics": {
+    "AA": 0.678,
+    "ACC": 0.678,
+    "BWT": 0.06999999999999997,
+    "F": 0.010000000000000002,
+    "FP": 0.678,
+    "FWT": 0.29388888888888887
+  },
+  "order_id": "order-1",
+  "performance_matrix": [
+    [
+      0.425,
+      0.315,
+      0.38,
+      0.48,
+      0.395,
+      0.465,
+      0.425,
+      0.46,
+      0.45,
+      0.42
+    ],
+    [
+      0.525,
+      0.375,
+      0.45,
+      0.56,
+      0.43,
+      0.475,
+      0.43,
+      0.505,
+      0.53,
+      0.485
+    ],
+    [
+      0.56,
+      0.405,
+      0.455,
+      0.65,
+      0.485,
+      0.53,
+      0.51,
+      0.54,
+      0.55,
+      0.665
+    ],
+    [
+      0.665,
+      0.48,
+      0.565,
+      0.795,
+      0.685,
+      0.685,
+      0.655,
+      0.61,
+      0.67,
+      0.68
+    ],
+    [
+      0.7,
+      0.495,
+      0.53,
+      0.75,
+      0.635,
+      0.665,
+      0.65,
+      0.64,
+      0.71,
+      0.735
+    ],
+    [
+      0.71,
+      0.42,
+      0.535,
+      0.755,
+      0.685,
+      0.645,
+      0.64,
+      0.665,
+      0.72,
+      0.74
+    ],
+    [
+      0.735,
+      0.445,
+      0.515,
+      0.755,
+      0.69,
+      0.675,
+      0.66,
+      0.665,
+      0.735,
+      0.695
+    ],
+    [
+      0.71,
+      0.425,
+      0.515,
+      0.755,
+      0.68,
+      0.705,
+      0.675,
+      0.66,
+      0.735,
+      0.69
+    ],
+    [
+      0.745,
+      0.445,
+      0.56,
+      0.775,
+      0.7,
+      0.68,
+      0.675,
+      0.69,
+      0.775,
+      0.73
+    ],
+    [
+      0.715,
+      0.45,
+      0.57,
+      0.775,
+      0.69,
+      0.69,
+      0.71,
+      0.685,
+      0.77,
+      0.725
+    ]
+  ],
+  "protocol_id": "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1",
+  "protocol_sha256": "8410f165679468b770528eb8083160570c374921d0f1a0fdb2935b87ba6b008b",
+  "run_id": "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B2-order-1-seed-42",
+  "schema_version": 1,
+  "task_order": [
+    "es",
+    "sw",
+    "ur",
+    "en",
+    "de",
+    "ar",
+    "bg",
+    "hi",
+    "ru",
+    "fr"
+  ],
+  "training_seed": 42,
+  "zero_shot_accuracy": [
+    0.365,
+    0.315,
+    0.315,
+    0.32,
+    0.315,
+    0.335,
+    0.34,
+    0.35,
+    0.305,
+    0.295
+  ]
+}

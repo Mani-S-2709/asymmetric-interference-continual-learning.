@@ -1,0 +1,430 @@
+{
+  "completed": true,
+  "data_manifest_sha256": "373852a7f1e09ab99da8a25f21023fedc1977ab1969e09d938874f7c645a721a",
+  "evaluation_mode": "sequential",
+  "final_accuracy_by_language": {
+    "ar": 0.67,
+    "bg": 0.675,
+    "de": 0.66,
+    "en": 0.815,
+    "es": 0.745,
+    "fr": 0.76,
+    "hi": 0.665,
+    "ru": 0.72,
+    "sw": 0.51,
+    "ur": 0.605
+  },
+  "metadata": {
+    "checkpoint_attempt": "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-M3-order-2-seed-42",
+    "cuda_available": true,
+    "cuda_device": "Tesla T4",
+    "interference_imputation": {
+      "candidate_languages_with_valid_distance": 76,
+      "distance": "URIEL+ syntactic",
+      "distance_metric": "angular",
+      "excluded_languages_without_valid_distance": [
+        "azj_Latn",
+        "lvs_Latn",
+        "ory_Orya",
+        "pbt_Arab",
+        "prs_Arab",
+        "slk_Latn",
+        "snd_Arab"
+      ],
+      "feature_aggregation": "U",
+      "k": 5,
+      "language": "ar",
+      "method": "uniform_mean_of_k_nearest_languages",
+      "neighbors": [
+        {
+          "matrix_language": "cym_Latn",
+          "uriel_syntactic_distance": 0.3517
+        },
+        {
+          "matrix_language": "bel_Cyrl",
+          "uriel_syntactic_distance": 0.3695
+        },
+        {
+          "matrix_language": "als_Latn",
+          "uriel_syntactic_distance": 0.4192
+        },
+        {
+          "matrix_language": "gle_Latn",
+          "uriel_syntactic_distance": 0.4335
+        },
+        {
+          "matrix_language": "ell_Grek",
+          "uriel_syntactic_distance": 0.4346
+        }
+      ],
+      "package": "urielplus",
+      "package_version": "1.3.3",
+      "source_url": "https://github.com/Masonshipton25/URIELPlus"
+    },
+    "interference_matrix_sha256": "e150a56bef86a7de7790cc2fd4f7b862b606cbd0597a0680e49b7fd41fb12be1",
+    "interference_source_matrix_sha256": "4207bee27e392e62d889c403653736f98deb61d61d5d1c4a0c73a43560272219",
+    "lora": {
+      "alpha": 32,
+      "dropout": 0.05,
+      "rank": 16,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj"
+      ]
+    },
+    "method_deviation": "Arabic row and column scores are uniform means over the five nearest covered languages in URIEL+ syntactic-distance space. M3 samples exactly one replay example per current example with replacement; the first language stage has no replay.",
+    "method_id": "M3",
+    "model_id": "meta-llama/Llama-3.2-1B",
+    "order_id": "order-2",
+    "package_versions": {
+      "accelerate": "1.15.0",
+      "bitsandbytes": "0.50.2",
+      "datasets": "5.0.1",
+      "peft": "0.21.2",
+      "torch": "2.11.0+cu130",
+      "transformers": "5.18.0"
+    },
+    "protocol_sha256": "8410f165679468b770528eb8083160570c374921d0f1a0fdb2935b87ba6b008b",
+    "replay_buffer_capacity_examples": 250,
+    "replay_examples_per_current_example": 1,
+    "replay_policy": "asymmetric_published_interference_matrix",
+    "replay_seed": 20261112,
+    "replay_stages": [
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "de",
+        "replay_examples": 0,
+        "replay_examples_by_language": {},
+        "stage_index": 0,
+        "training_examples": 500
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "ur",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "de": 500
+        },
+        "stage_index": 1,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "sw",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "de": 244,
+          "ur": 256
+        },
+        "stage_index": 2,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "fr",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "de": 167,
+          "sw": 192,
+          "ur": 141
+        },
+        "stage_index": 3,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "ru",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "de": 107,
+          "fr": 138,
+          "sw": 156,
+          "ur": 99
+        },
+        "stage_index": 4,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "ar",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "de": 87,
+          "fr": 108,
+          "ru": 92,
+          "sw": 120,
+          "ur": 93
+        },
+        "stage_index": 5,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "bg",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "ar": 107,
+          "de": 81,
+          "fr": 88,
+          "ru": 54,
+          "sw": 100,
+          "ur": 70
+        },
+        "stage_index": 6,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "hi",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "ar": 99,
+          "bg": 55,
+          "de": 80,
+          "fr": 73,
+          "ru": 55,
+          "sw": 84,
+          "ur": 54
+        },
+        "stage_index": 7,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "en",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "ar": 89,
+          "bg": 43,
+          "de": 56,
+          "fr": 64,
+          "hi": 59,
+          "ru": 50,
+          "sw": 83,
+          "ur": 56
+        },
+        "stage_index": 8,
+        "training_examples": 1000
+      },
+      {
+        "buffer_size_after_stage": 250,
+        "current_examples": 500,
+        "language": "es",
+        "replay_examples": 500,
+        "replay_examples_by_language": {
+          "ar": 79,
+          "bg": 66,
+          "de": 48,
+          "en": 35,
+          "fr": 55,
+          "hi": 58,
+          "ru": 49,
+          "sw": 58,
+          "ur": 52
+        },
+        "stage_index": 9,
+        "training_examples": 1000
+      }
+    ],
+    "replay_update_timing": "after_each_language_stage",
+    "source_revision": "sha256:642db1b58cf5105a3801fe9ffa70431b845c3dad2f4a08873a40c7d5732d424d",
+    "source_revision_type": "source_tree_sha256",
+    "task_order": [
+      "de",
+      "ur",
+      "sw",
+      "fr",
+      "ru",
+      "ar",
+      "bg",
+      "hi",
+      "en",
+      "es"
+    ],
+    "training": {
+      "epochs": 1,
+      "gradient_accumulation_steps": 8,
+      "gradient_checkpointing": true,
+      "learning_rate": 0.0002,
+      "load_in_4bit": true,
+      "max_length": 512,
+      "seeds": [
+        42
+      ],
+      "train_batch_size": 1
+    },
+    "training_seed": 42
+  },
+  "method_id": "M3",
+  "metrics": {
+    "AA": 0.6825,
+    "ACC": 0.6825,
+    "BWT": 0.06833333333333333,
+    "F": 0.0,
+    "FP": 0.6825,
+    "FWT": 0.2838888888888889
+  },
+  "order_id": "order-2",
+  "performance_matrix": [
+    [
+      0.47,
+      0.385,
+      0.435,
+      0.42,
+      0.455,
+      0.41,
+      0.42,
+      0.47,
+      0.43,
+      0.415
+    ],
+    [
+      0.44,
+      0.475,
+      0.365,
+      0.49,
+      0.505,
+      0.465,
+      0.46,
+      0.485,
+      0.6,
+      0.49
+    ],
+    [
+      0.545,
+      0.535,
+      0.45,
+      0.605,
+      0.61,
+      0.53,
+      0.605,
+      0.6,
+      0.67,
+      0.55
+    ],
+    [
+      0.64,
+      0.58,
+      0.49,
+      0.67,
+      0.675,
+      0.615,
+      0.67,
+      0.635,
+      0.715,
+      0.72
+    ],
+    [
+      0.63,
+      0.565,
+      0.505,
+      0.69,
+      0.655,
+      0.66,
+      0.625,
+      0.655,
+      0.69,
+      0.7
+    ],
+    [
+      0.65,
+      0.585,
+      0.495,
+      0.705,
+      0.705,
+      0.65,
+      0.66,
+      0.635,
+      0.72,
+      0.715
+    ],
+    [
+      0.645,
+      0.555,
+      0.51,
+      0.73,
+      0.685,
+      0.665,
+      0.675,
+      0.645,
+      0.725,
+      0.7
+    ],
+    [
+      0.68,
+      0.58,
+      0.545,
+      0.72,
+      0.73,
+      0.68,
+      0.69,
+      0.65,
+      0.765,
+      0.75
+    ],
+    [
+      0.645,
+      0.58,
+      0.51,
+      0.75,
+      0.675,
+      0.67,
+      0.665,
+      0.64,
+      0.77,
+      0.735
+    ],
+    [
+      0.66,
+      0.605,
+      0.51,
+      0.76,
+      0.72,
+      0.67,
+      0.675,
+      0.665,
+      0.815,
+      0.745
+    ]
+  ],
+  "protocol_id": "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1",
+  "protocol_sha256": "8410f165679468b770528eb8083160570c374921d0f1a0fdb2935b87ba6b008b",
+  "run_id": "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-M3-order-2-seed-42",
+  "schema_version": 1,
+  "task_order": [
+    "de",
+    "ur",
+    "sw",
+    "fr",
+    "ru",
+    "ar",
+    "bg",
+    "hi",
+    "en",
+    "es"
+  ],
+  "training_seed": 42,
+  "zero_shot_accuracy": [
+    0.315,
+    0.315,
+    0.315,
+    0.295,
+    0.305,
+    0.335,
+    0.34,
+    0.35,
+    0.32,
+    0.365
+  ]
+}

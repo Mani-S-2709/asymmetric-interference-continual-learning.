@@ -90,6 +90,42 @@ def test_phase4_protocol_pairs_five_seeds_with_five_orders():
     } == {"Indo-European", "Afro-Asiatic", "Niger-Congo"}
 
 
+def test_phase4_comparison_protocol_schedules_three_methods_across_all_orders():
+    comparison_path = (
+        Path(__file__).parents[2]
+        / "phase4"
+        / "configs"
+        / "controlled_10lang_prior_comparison_protocol.json"
+    )
+    protocol = load_protocol(comparison_path)
+    manifest = build_manifest(protocol)
+
+    assert protocol["training"]["seeds"] == [42]
+    assert protocol["run_methods"] == ["B2", "B5", "M3"]
+    assert manifest["expected_run_count"] == 15
+    assert {run["method_id"] for run in manifest["runs"]} == {"B2", "B5", "M3"}
+    assert {
+        run["order_id"] for run in manifest["runs"]
+    } == {f"order-{index}" for index in range(1, 6)}
+    assert {
+        run["training_seed"] for run in manifest["runs"]
+    } == {42}
+
+
+def test_protocol_rejects_duplicate_or_unknown_run_methods():
+    comparison_path = (
+        Path(__file__).parents[2]
+        / "phase4"
+        / "configs"
+        / "controlled_10lang_prior_comparison_protocol.json"
+    )
+    protocol = load_protocol(comparison_path)
+    protocol["run_methods"] = ["B2", "B2"]
+
+    with pytest.raises(ValueError, match="run_methods"):
+        validate_protocol(protocol)
+
+
 def test_protocol_rejects_duplicate_seed_order_assignment():
     phase4_path = (
         Path(__file__).parents[2]

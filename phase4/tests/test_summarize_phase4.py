@@ -34,6 +34,6 @@ def test_aggregate_phase4_uses_saved_manifest_without_raw_dataset_files(tmp_path
 
     report = aggregate_phase4(DEFAULT_PROTOCOL, tmp_path)
 
-    assert report["expected_run_count"] == 50
+    assert report["expected_run_count"] == 15
     assert report["completed_run_count"] == 0
-    assert len(report["missing_runs"]) == 50
+    assert len(report["missing_runs"]) == 15

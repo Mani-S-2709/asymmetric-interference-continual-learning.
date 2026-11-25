@@ -1,4 +1,4 @@
-"""Frozen Phase 2 protocol and deterministic run-manifest helpers."""
+"""Frozen experiment protocol and deterministic run-manifest helpers."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ ORDER_INVARIANT_METHOD_IDS = frozenset({"B1"})
 
 
 def load_protocol(path: str | Path) -> dict[str, Any]:
-    """Load and validate a Phase 2 protocol JSON file."""
+    """Load and validate a frozen protocol JSON file."""
     with Path(path).open(encoding="utf-8") as protocol_file:
         protocol = json.load(protocol_file)
     validate_protocol(protocol)
@@ -77,6 +77,50 @@ def validate_protocol(protocol: Mapping[str, Any]) -> None:
     if len(set(normalized_orders)) != len(normalized_orders):
         raise ValueError("The five stream orders must be distinct.")
 
+    training = protocol.get("training")
+    if not isinstance(training, Mapping):
+        raise ValueError("protocol.training must be an object.")
+    seeds = training.get("seeds")
+    if (
+        not isinstance(seeds, list)
+        or not seeds
+        or any(isinstance(seed, bool) or not isinstance(seed, int) for seed in seeds)
+        or len(set(seeds)) != len(seeds)
+    ):
+        raise ValueError("training.seeds must contain unique integer seeds.")
+    order_seed_pairs = training.get("order_seed_pairs")
+    if order_seed_pairs is not None:
+        if not isinstance(order_seed_pairs, list) or len(order_seed_pairs) != len(orders):
+            raise ValueError(
+                "training.order_seed_pairs must assign one seed to each order."
+            )
+        paired_order_ids = []
+        paired_seeds = []
+        for pair in order_seed_pairs:
+            if not isinstance(pair, Mapping):
+                raise ValueError("Each training.order_seed_pairs entry must be an object.")
+            order_id = pair.get("order_id")
+            seed = pair.get("seed")
+            if not isinstance(order_id, str) or order_id not in order_ids:
+                raise ValueError(
+                    f"training.order_seed_pairs references unknown order {order_id!r}."
+                )
+            if isinstance(seed, bool) or seed not in seeds:
+                raise ValueError(
+                    f"training.order_seed_pairs has an unconfigured seed for {order_id!r}."
+                )
+            paired_order_ids.append(order_id)
+            paired_seeds.append(seed)
+        if (
+            set(paired_order_ids) != order_ids
+            or len(set(paired_order_ids)) != len(orders)
+            or set(paired_seeds) != set(seeds)
+            or len(set(paired_seeds)) != len(seeds)
+        ):
+            raise ValueError(
+                "training.order_seed_pairs must assign one distinct seed to every order."
+            )
+
     replay = protocol.get("replay")
     if not isinstance(replay, Mapping):
         raise ValueError("protocol.replay must be an object.")
@@ -92,11 +136,30 @@ def validate_protocol(protocol: Mapping[str, Any]) -> None:
         )
 
     methods = protocol.get("methods")
-    if not isinstance(methods, list) or len(methods) != 9:
+    if not isinstance(methods, list):
         raise ValueError("protocol.methods must define B0 through B8.")
-    method_ids = {method.get("id") for method in methods if isinstance(method, Mapping)}
-    if method_ids != {f"B{index}" for index in range(9)}:
-        raise ValueError("protocol.methods must define each baseline B0 through B8 once.")
+    method_ids = {
+        method.get("id") for method in methods if isinstance(method, Mapping)
+    }
+    expected_method_ids = {f"B{index}" for index in range(9)}
+    if (
+        len(method_ids) != len(methods)
+        or method_ids not in (expected_method_ids, expected_method_ids | {"M3"})
+    ):
+        raise ValueError(
+            "protocol.methods must define B0 through B8 and may define M3 once."
+        )
+    run_methods = protocol.get("run_methods")
+    if run_methods is not None and (
+        not isinstance(run_methods, list)
+        or not run_methods
+        or any(not isinstance(method_id, str) for method_id in run_methods)
+        or len(set(run_methods)) != len(run_methods)
+        or not set(run_methods) <= method_ids
+    ):
+        raise ValueError(
+            "protocol.run_methods must be a non-empty unique subset of protocol.methods."
+        )
 
 
 def _stable_seed(seed: int, language: str, split: str) -> int:
@@ -150,28 +213,48 @@ def build_manifest(
                 "sample_count": sample_count,
             }
 
+    run_methods = protocol.get("run_methods")
+    scheduled_methods = (
+        [
+            method for method in protocol["methods"]
+            if method["id"] in run_methods
+        ]
+        if run_methods is not None
+        else protocol["methods"]
+    )
     runs = []
-    for method in protocol["methods"]:
-        method_orders = (
-            [{
-                "id": "order-independent",
-                "languages": dataset["languages"],
-            }]
-            if method["id"] in ORDER_INVARIANT_METHOD_IDS
-            else protocol["orders"]
-        )
-        for order in method_orders:
-            for training_seed in protocol["training"]["seeds"]:
-                runs.append({
-                    "run_id": f"{protocol['protocol_id']}-{method['id']}-"
-                              f"{order['id']}-seed-{training_seed}",
-                    "method_id": method["id"],
-                    "method_name": method["name"],
-                    "method_status": method["status"],
-                    "order_id": order["id"],
-                    "task_order": order["languages"],
-                    "training_seed": training_seed,
-                })
+    for method in scheduled_methods:
+        if method["id"] in ORDER_INVARIANT_METHOD_IDS:
+            schedule = [
+                ({
+                    "id": "order-independent",
+                    "languages": dataset["languages"],
+                }, training_seed)
+                for training_seed in protocol["training"]["seeds"]
+            ]
+        elif protocol["training"].get("order_seed_pairs") is not None:
+            orders_by_id = {order["id"]: order for order in protocol["orders"]}
+            schedule = [
+                (orders_by_id[pair["order_id"]], pair["seed"])
+                for pair in protocol["training"]["order_seed_pairs"]
+            ]
+        else:
+            schedule = [
+                (order, training_seed)
+                for order in protocol["orders"]
+                for training_seed in protocol["training"]["seeds"]
+            ]
+        for order, training_seed in schedule:
+            runs.append({
+                "run_id": f"{protocol['protocol_id']}-{method['id']}-"
+                          f"{order['id']}-seed-{training_seed}",
+                "method_id": method["id"],
+                "method_name": method["name"],
+                "method_status": method["status"],
+                "order_id": order["id"],
+                "task_order": order["languages"],
+                "training_seed": training_seed,
+            })
 
     return {
         "schema_version": 1,
@@ -181,7 +264,7 @@ def build_manifest(
         "languages": dataset["languages"],
         "selection": selections,
         "orders": protocol["orders"],
-        "methods": protocol["methods"],
+        "methods": scheduled_methods,
         "runs": runs,
         "expected_run_count": len(runs),
     }

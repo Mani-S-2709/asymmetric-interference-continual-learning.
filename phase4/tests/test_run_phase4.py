@@ -7,8 +7,10 @@ from phase4.interference_replay import AsymmetricInterferenceReplaySelector
 from phase4.run_phase4 import (
     DEFAULT_PROTOCOL,
     _prepare_m3_stage_datasets,
+    _require_comparison_gate,
     run_selected_pair,
 )
+from phase2.protocol import load_protocol
 from shared.continual_learning_lora import ReplayBuffer
 
 
@@ -64,10 +66,58 @@ def test_replay_buffer_snapshot_does_not_expose_internal_example_dict():
     assert buffer.snapshot()[0].example["id"] == 1
 
 
-def test_phase4_runner_blocks_before_data_preparation_until_prior_selection():
-    with pytest.raises(RuntimeError, match="matching-roster Phase 3 v2 analysis"):
+def test_phase4_runner_blocks_legacy_protocol_before_data_preparation():
+    legacy_protocol = (
+        DEFAULT_PROTOCOL.parent / "controlled_10lang_pilot_protocol.json"
+    )
+    with pytest.raises(RuntimeError, match="supervisor-approved"):
+        run_selected_pair(
+            method_id="M3",
+            order_id="order-1",
+            training_seed=42,
+            protocol_path=legacy_protocol,
+        )
+
+
+def test_phase4_gate_allows_only_supervisor_approved_comparison_methods():
+    protocol = load_protocol(DEFAULT_PROTOCOL)
+
+    for method_id in ("B2", "B5", "M3"):
+        _require_comparison_gate(protocol, method_id)
+
+    with pytest.raises(ValueError, match="not included"):
+        _require_comparison_gate(protocol, "B0")
+
+
+def test_phase4_gate_rejects_missing_approval_or_single_prior_claim():
+    protocol = load_protocol(DEFAULT_PROTOCOL)
+    protocol["phase4"]["prior_gate"]["approval_recorded"] = False
+
+    with pytest.raises(RuntimeError, match="comparison gate"):
+        _require_comparison_gate(protocol, "B2")
+
+    protocol = load_protocol(DEFAULT_PROTOCOL)
+    protocol["phase4"]["prior_gate"]["selected_prior"] = "published_interference"
+
+    with pytest.raises(RuntimeError, match="comparison gate"):
+        _require_comparison_gate(protocol, "M3")
+
+
+def test_phase4_runner_rejects_unapproved_method_before_preparation():
+    with pytest.raises(ValueError, match="not included"):
         run_selected_pair(
             method_id="B0",
             order_id="order-1",
+            training_seed=42,
+            protocol_path=DEFAULT_PROTOCOL,
+        )
+
+
+def test_phase4_runner_rejects_seed_outside_approved_grid_before_preparation():
+    with pytest.raises(ValueError, match="not configured"):
+        run_selected_pair(
+            method_id="B2",
+            order_id="order-1",
+            training_seed=43,
             protocol_path=DEFAULT_PROTOCOL,
         )

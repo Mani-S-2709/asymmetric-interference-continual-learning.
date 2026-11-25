@@ -1,0 +1,150 @@
+{
+  "complete": true,
+  "completed_run_count": 15,
+  "expected_run_count": 15,
+  "methods": {
+    "B2": {
+      "complete": true,
+      "completed_runs": 5,
+      "expected_runs": 5,
+      "implementation_status": "implemented_reference_runner",
+      "metrics": {
+        "AA": {
+          "mean": 0.6807,
+          "n": 5,
+          "std": 0.008628441342444225
+        },
+        "ACC": {
+          "mean": 0.6807,
+          "n": 5,
+          "std": 0.008628441342444225
+        },
+        "BWT": {
+          "mean": 0.06744444444444443,
+          "n": 5,
+          "std": 0.00903183669438692
+        },
+        "F": {
+          "mean": 0.005555555555555551,
+          "n": 5,
+          "std": 0.0053719665571704735
+        },
+        "FP": {
+          "mean": 0.6807,
+          "n": 5,
+          "std": 0.008628441342444225
+        },
+        "FWT": {
+          "mean": 0.28544444444444445,
+          "n": 5,
+          "std": 0.011774632703767966
+        }
+      },
+      "name": "uniform_experience_replay",
+      "run_ids": [
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B2-order-1-seed-42",
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B2-order-2-seed-42",
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B2-order-3-seed-42",
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B2-order-4-seed-42",
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B2-order-5-seed-42"
+      ]
+    },
+    "B5": {
+      "complete": true,
+      "completed_runs": 5,
+      "expected_runs": 5,
+      "implementation_status": "implemented_reference_runner",
+      "metrics": {
+        "AA": {
+          "mean": 0.6632,
+          "n": 5,
+          "std": 0.01371860051171402
+        },
+        "ACC": {
+          "mean": 0.6632,
+          "n": 5,
+          "std": 0.01371860051171402
+        },
+        "BWT": {
+          "mean": 0.07144444444444444,
+          "n": 5,
+          "std": 0.01360033587094336
+        },
+        "F": {
+          "mean": 0.016777777777777773,
+          "n": 5,
+          "std": 0.024226936340454693
+        },
+        "FP": {
+          "mean": 0.6632,
+          "n": 5,
+          "std": 0.01371860051171402
+        },
+        "FWT": {
+          "mean": 0.24855555555555556,
+          "n": 5,
+          "std": 0.012048000704998915
+        }
+      },
+      "name": "embedding_similarity_replay",
+      "run_ids": [
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B5-order-1-seed-42",
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B5-order-2-seed-42",
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B5-order-3-seed-42",
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B5-order-4-seed-42",
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-B5-order-5-seed-42"
+      ]
+    },
+    "M3": {
+      "complete": true,
+      "completed_runs": 5,
+      "expected_runs": 5,
+      "implementation_status": "phase4_runner",
+      "metrics": {
+        "AA": {
+          "mean": 0.6858,
+          "n": 5,
+          "std": 0.010407929669247385
+        },
+        "ACC": {
+          "mean": 0.6858,
+          "n": 5,
+          "std": 0.010407929669247385
+        },
+        "BWT": {
+          "mean": 0.0701111111111111,
+          "n": 5,
+          "std": 0.013260216187277404
+        },
+        "F": {
+          "mean": 0.006222222222222221,
+          "n": 5,
+          "std": 0.01230652742588058
+        },
+        "FP": {
+          "mean": 0.6858,
+          "n": 5,
+          "std": 0.010407929669247385
+        },
+        "FWT": {
+          "mean": 0.2823333333333333,
+          "n": 5,
+          "std": 0.011455765705584006
+        }
+      },
+      "name": "asymmetric_interference_matrix_replay",
+      "run_ids": [
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-M3-order-1-seed-42",
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-M3-order-2-seed-42",
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-M3-order-3-seed-42",
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-M3-order-4-seed-42",
+        "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1-M3-order-5-seed-42"
+      ]
+    }
+  },
+  "missing_runs": [],
+  "note": "Metric means/std are across completed run-level values. Joint training does not define sequential BWT/FWT/forgetting; those values are omitted.",
+  "protocol_id": "xnli-phase4-prior-comparison-10lang-500x200-pilot-v1",
+  "protocol_sha256": "8410f165679468b770528eb8083160570c374921d0f1a0fdb2935b87ba6b008b",
+  "schema_version": 1
+}

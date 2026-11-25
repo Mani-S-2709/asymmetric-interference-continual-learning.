@@ -1,0 +1,177 @@
+{
+  "imputation": {
+    "candidate_languages_with_valid_distance": 76,
+    "distance": "URIEL+ syntactic",
+    "distance_metric": "angular",
+    "excluded_languages_without_valid_distance": [
+      "azj_Latn",
+      "lvs_Latn",
+      "ory_Orya",
+      "pbt_Arab",
+      "prs_Arab",
+      "slk_Latn",
+      "snd_Arab"
+    ],
+    "feature_aggregation": "U",
+    "k": 5,
+    "language": "ar",
+    "method": "uniform_mean_of_k_nearest_languages",
+    "neighbors": [
+      {
+        "matrix_language": "cym_Latn",
+        "uriel_syntactic_distance": 0.3517
+      },
+      {
+        "matrix_language": "bel_Cyrl",
+        "uriel_syntactic_distance": 0.3695
+      },
+      {
+        "matrix_language": "als_Latn",
+        "uriel_syntactic_distance": 0.4192
+      },
+      {
+        "matrix_language": "gle_Latn",
+        "uriel_syntactic_distance": 0.4335
+      },
+      {
+        "matrix_language": "ell_Grek",
+        "uriel_syntactic_distance": 0.4346
+      }
+    ],
+    "package": "urielplus",
+    "package_version": "1.3.3",
+    "source_url": "https://github.com/Masonshipton25/URIELPlus"
+  },
+  "language_codes": {
+    "ar": {
+      "matrix_code": "arb_Arab",
+      "uriel_code": "arb"
+    },
+    "bg": {
+      "matrix_code": "bul_Cyrl",
+      "uriel_code": "bul"
+    },
+    "de": {
+      "matrix_code": "deu_Latn",
+      "uriel_code": "deu"
+    },
+    "en": {
+      "matrix_code": "eng_Latn",
+      "uriel_code": "eng"
+    },
+    "es": {
+      "matrix_code": "spa_Latn",
+      "uriel_code": "spa"
+    },
+    "fr": {
+      "matrix_code": "fra_Latn",
+      "uriel_code": "fra"
+    },
+    "hi": {
+      "matrix_code": "hin_Deva",
+      "uriel_code": "hin"
+    },
+    "ru": {
+      "matrix_code": "rus_Cyrl",
+      "uriel_code": "rus"
+    },
+    "sw": {
+      "matrix_code": "swh_Latn",
+      "uriel_code": "swa"
+    },
+    "ur": {
+      "matrix_code": "urd_Arab",
+      "uriel_code": "urd"
+    }
+  },
+  "matrix_path": "interference_matrix_10lang.csv",
+  "matrix_sha256": "e150a56bef86a7de7790cc2fd4f7b862b606cbd0597a0680e49b7fd41fb12be1",
+  "score_semantics": "Rows are past/affected languages; columns are incoming languages; negative scores indicate interference.",
+  "source_matrix": "interference_matrix.csv",
+  "source_matrix_sha256": "4207bee27e392e62d889c403653736f98deb61d61d5d1c4a0c73a43560272219",
+  "uriel_source_codes": {
+    "afr_Latn": "afr",
+    "als_Latn": "als",
+    "amh_Ethi": "amh",
+    "asm_Beng": "asm",
+    "azj_Latn": "azj",
+    "bel_Cyrl": "bel",
+    "bos_Latn": "bos",
+    "bul_Cyrl": "bul",
+    "cat_Latn": "cat",
+    "ces_Latn": "ces",
+    "cym_Latn": "cym",
+    "dan_Latn": "dan",
+    "deu_Latn": "deu",
+    "ell_Grek": "ell",
+    "eng_Latn": "eng",
+    "est_Latn": "est",
+    "eus_Latn": "eus",
+    "fin_Latn": "fin",
+    "fra_Latn": "fra",
+    "gaz_Latn": "gaz",
+    "gla_Latn": "gla",
+    "gle_Latn": "gle",
+    "glg_Latn": "glg",
+    "guj_Gujr": "guj",
+    "hau_Latn": "hau",
+    "heb_Hebr": "heb",
+    "hin_Deva": "hin",
+    "hrv_Latn": "hrv",
+    "hun_Latn": "hun",
+    "hye_Armn": "hye",
+    "ind_Latn": "ind",
+    "isl_Latn": "isl",
+    "ita_Latn": "ita",
+    "jav_Latn": "jav",
+    "jpn_Jpan": "jpn",
+    "kan_Knda": "kan",
+    "kat_Geor": "kat",
+    "kaz_Cyrl": "kaz",
+    "khk_Cyrl": "khk",
+    "khm_Khmr": "khm",
+    "kmr_Latn": "kmr",
+    "lao_Laoo": "lao",
+    "lit_Latn": "lit",
+    "lvs_Latn": "lvs",
+    "mal_Mlym": "mal",
+    "mar_Deva": "mar",
+    "mkd_Cyrl": "mkd",
+    "mya_Mymr": "mya",
+    "nld_Latn": "nld",
+    "npi_Deva": "npi",
+    "ory_Orya": "ory",
+    "pan_Guru": "pan",
+    "pbt_Arab": "pbt",
+    "plt_Latn": "plt",
+    "pol_Latn": "pol",
+    "por_Latn": "por",
+    "prs_Arab": "prs",
+    "ron_Latn": "ron",
+    "rus_Cyrl": "rus",
+    "san_Deva": "san",
+    "sin_Sinh": "sin",
+    "slk_Latn": "slk",
+    "slv_Latn": "slv",
+    "snd_Arab": "snd",
+    "som_Latn": "som",
+    "spa_Latn": "spa",
+    "srp_Cyrl": "srp",
+    "sun_Latn": "sun",
+    "swe_Latn": "swe",
+    "swh_Latn": "swa",
+    "tam_Taml": "tam",
+    "tel_Telu": "tel",
+    "tha_Thai": "tha",
+    "tur_Latn": "tur",
+    "uig_Arab": "uig",
+    "ukr_Cyrl": "ukr",
+    "urd_Arab": "urd",
+    "uzn_Latn": "uzn",
+    "vie_Latn": "vie",
+    "xho_Latn": "xho",
+    "ydd_Hebr": "ydd",
+    "zho_Hans": "zho",
+    "zho_Hant": "zho"
+  }
+}

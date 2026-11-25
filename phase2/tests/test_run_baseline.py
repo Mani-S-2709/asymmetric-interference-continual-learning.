@@ -3,10 +3,12 @@ from pathlib import Path
 
 import pytest
 
+import phase2.run_baseline as baseline_module
 from phase2.prepare_data import hash_data_artifacts, write_jsonl_records
 from phase2.protocol import build_manifest, load_protocol, write_manifest
 from phase2.results import (
     make_joint_record,
+    make_sequential_record,
     validate_result_record,
     write_result_record,
 )
@@ -163,6 +165,72 @@ def test_run_baseline_skips_a_valid_completed_run_without_gpu(
 
     assert len(completed) == 1
     assert completed[0]["run_id"] == run["run_id"]
+
+
+def test_run_baseline_selects_one_paired_order_and_seed_without_gpu(tmp_path):
+    protocol = load_protocol(PROTOCOL_PATH)
+    protocol["dataset"]["train_examples_per_language"] = 4
+    protocol["dataset"]["test_examples_per_language"] = 2
+    protocol["replay"]["buffer_capacity_examples"] = 1
+    protocol["training"]["seeds"] = [42, 43, 44, 45, 46]
+    protocol["training"]["order_seed_pairs"] = [
+        {"order_id": f"order-{index}", "seed": 41 + index}
+        for index in range(1, 6)
+    ]
+    protocol_path = tmp_path / "paired_protocol.json"
+    protocol_path.write_text(json.dumps(protocol), encoding="utf-8")
+    artifact_root = tmp_path / "paired_artifacts"
+    _write_small_artifact(protocol, artifact_root)
+
+    manifest = build_manifest(protocol)
+    with (artifact_root / "protocol_manifest.json").open(encoding="utf-8") as source:
+        manifest["data_manifest_sha256"] = json.load(source)["data_manifest_sha256"]
+    run = next(
+        item for item in manifest["runs"]
+        if item["method_id"] == "B0"
+        and item["order_id"] == "order-1"
+        and item["training_seed"] == 42
+    )
+    result = make_sequential_record(
+        manifest=manifest,
+        run=run,
+        performance_matrix=[
+            [0.5] * len(run["task_order"])
+            for _ in run["task_order"]
+        ],
+        zero_shot_accuracy=[0.5] * len(run["task_order"]),
+    )
+    write_result_record(result, artifact_root / "results", manifest)
+
+    completed = run_baseline(
+        method_id="B0",
+        protocol_path=protocol_path,
+        artifact_root=artifact_root,
+        order_ids=["order-1"],
+        training_seeds=[42],
+    )
+
+    assert [record["run_id"] for record in completed] == [run["run_id"]]
+
+
+def test_source_revision_fingerprints_bundled_source_without_git(tmp_path, monkeypatch):
+    source_file = tmp_path / "phase2" / "run_baseline.py"
+    source_file.parent.mkdir()
+    source_file.write_text("source = 1\n", encoding="utf-8")
+    results_dir = tmp_path / "phase2" / "results"
+    results_dir.mkdir()
+    (results_dir / "output.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(baseline_module, "PROJECT_ROOT", tmp_path)
+
+    initial_revision, revision_type = baseline_module._source_revision()
+    assert revision_type == "source_tree_sha256"
+    assert initial_revision.startswith("sha256:")
+
+    (results_dir / "output.json").write_text('{"changed": true}', encoding="utf-8")
+    assert baseline_module._source_revision()[0] == initial_revision
+
+    source_file.write_text("source = 2\n", encoding="utf-8")
+    assert baseline_module._source_revision()[0] != initial_revision
 
 
 class _FakeTrainer:
