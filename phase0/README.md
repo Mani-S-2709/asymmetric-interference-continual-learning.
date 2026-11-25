@@ -48,6 +48,10 @@ Current hardware:
 * PyTorch: 2.14.1+cu130
 * CUDA runtime: 13.0
 
+Verification note (2026-11-25): the repository's current `.venv` could not
+import PyTorch, so the toy experiment could not be rerun in this environment.
+The hardware checklist above records the earlier environment setup.
+
 ---
 
 # 3. Phase 0 Directory Structure
@@ -72,7 +76,7 @@ phase0/
 
 **M'hamdi, Ren & May (2023)**
 
-Status: [ ] Not started
+Status: [x] Completed per researcher report; notes not recorded
 
 Focus:
 
@@ -96,7 +100,7 @@ Notes:
 
 **Winata et al. (2023)**
 
-Status: [ ] Not started
+Status: [x] Completed per researcher report; notes not recorded
 
 Focus:
 
@@ -119,7 +123,7 @@ Notes:
 
 **Interference Matrix: Quantifying Cross-Lingual Interference in Transformer Encoders**
 
-Status: [ ] Not started
+Status: [x] Completed per researcher report; notes not recorded
 
 Focus:
 
@@ -143,7 +147,7 @@ Notes:
 
 **COMPASS: COntinual Multilingual PEFT with Adaptive Semantic Sampling**
 
-Status: [ ] Not started
+Status: [x] Completed per researcher report; notes not recorded
 
 Focus:
 
@@ -165,7 +169,7 @@ Notes:
 
 **GCR: Gradient Coreset Based Replay Buffer Selection for Continual Learning**
 
-Status: [ ] Not started
+Status: [x] Completed per researcher report; notes not recorded
 
 Focus:
 
@@ -187,7 +191,7 @@ Notes:
 
 **Dark Experience for General Continual Learning**
 
-Status: [ ] Not started
+Status: [x] Completed per researcher report; notes not recorded
 
 Focus:
 
@@ -211,7 +215,7 @@ Notes:
 
 **Overcoming Catastrophic Forgetting in Neural Networks**
 
-Status: [ ] Not started
+Status: [x] Completed per researcher report; notes not recorded
 
 Focus:
 
@@ -232,7 +236,7 @@ Notes:
 
 **Littell et al. (2017)**
 
-Status: [ ] Not started
+Status: [x] Completed per researcher report; notes not recorded
 
 Focus:
 
@@ -420,43 +424,56 @@ Phase 0 is complete only when:
 
 ## Research Understanding
 
-* [ ] I can define continual learning.
-* [ ] I can explain catastrophic forgetting.
-* [ ] I understand forward transfer.
-* [ ] I understand backward transfer.
-* [ ] I understand experience replay.
-* [ ] I understand replay-buffer selection.
-* [ ] I understand cross-lingual continual learning.
-* [ ] I understand cross-lingual interference.
-* [ ] I understand why interference may be asymmetric.
-* [ ] I understand the motivation for a language-similarity prior.
+These items are marked complete per the researcher's self-report; this
+checklist is not an independent assessment.
+
+* [x] I can define continual learning.
+* [x] I can explain catastrophic forgetting.
+* [x] I understand forward transfer.
+* [x] I understand backward transfer.
+* [x] I understand experience replay.
+* [x] I understand replay-buffer selection.
+* [x] I understand cross-lingual continual learning.
+* [x] I understand cross-lingual interference.
+* [x] I understand why interference may be asymmetric.
+* [x] I understand the motivation for a language-similarity prior.
 
 ## Paper Reading
 
-* [ ] Paper 1 completed
-* [ ] Paper 2 completed
-* [ ] Paper 3 completed
-* [ ] Paper 4 completed
-* [ ] Paper 5 completed
-* [ ] Paper 6 completed
-* [ ] Paper 7 completed
-* [ ] Paper 8 completed
+* [x] Paper 1 completed (researcher-reported; notes not recorded)
+* [x] Paper 2 completed (researcher-reported; notes not recorded)
+* [x] Paper 3 completed (researcher-reported; notes not recorded)
+* [x] Paper 4 completed (researcher-reported; notes not recorded)
+* [x] Paper 5 completed (researcher-reported; notes not recorded)
+* [x] Paper 6 completed (researcher-reported; notes not recorded)
+* [x] Paper 7 completed (researcher-reported; notes not recorded)
+* [x] Paper 8 completed (researcher-reported; notes not recorded)
 
 ## Engineering
 
-* [ ] Toy continual-learning experiment implemented
-* [ ] Sequential training works
-* [ ] Evaluation after every task works
-* [ ] Forgetting is observable
-* [ ] Results are saved
-* [ ] Experiment can be rerun
+* [x] Toy continual-learning experiment implemented (`experiments/tiny_cl.py`)
+* [x] Sequential training is implemented; researcher reports execution
+* [x] Evaluation after every task is implemented
+* [x] Earlier-task accuracy is evaluated after later tasks
+* [ ] Results are saved as a project artifact
+* [ ] Experiment rerun is verified in the current project environment
+
+The checked-in toy script trains on three sequential tasks and prints accuracy
+for every task seen after each stage. The researcher reports that the experiment
+was executed, but no `phase0/results` directory or saved output is present in
+the project. A rerun attempted on 2026-11-25 stopped with
+`ModuleNotFoundError: No module named 'torch'` in the repository `.venv`.
+Save the executed metrics and make PyTorch available in the active environment
+before marking the final two engineering items complete.
 
 ## Research Connection
 
-* [ ] I can explain why replay may reduce forgetting.
-* [ ] I can explain why replay selection matters.
-* [ ] I can explain why language relationships may help replay selection.
-* [ ] I can explain how the Phase 0 findings motivate Phase 1.
+These items are also marked complete per the researcher's self-report.
+
+* [x] I can explain why replay may reduce forgetting.
+* [x] I can explain why replay selection matters.
+* [x] I can explain why language relationships may help replay selection.
+* [x] I can explain how the Phase 0 findings motivate Phase 1.
 
 ---
 
@@ -464,22 +481,26 @@ Phase 0 is complete only when:
 
 Phase 0 was originally intended to precede the full research experiments.
 Phases 1–4 have since been executed and are documented in
-[`PROJECT_STATUS.md`](../PROJECT_STATUS.md). Their completion does not
-retroactively satisfy the Phase 0 reading, understanding, or toy-reproduction
-items above. Keep Phase 0 marked in progress until those remaining items are
-completed and recorded.
+[`PROJECT_STATUS.md`](../PROJECT_STATUS.md). The paper-reading and concept
+checklists are marked complete per the researcher's report; the reading-note
+files remain unfilled. Keep Phase 0 in progress until the toy run's results are
+saved and its rerun is verified.
 
 ---
 
 # 11. Current Status
 
-**Phase 0 status:** In progress — environment setup is complete; paper reading
-and the toy continual-learning reproduction are not documented complete.
+**Phase 0 status:** In progress — all eight paper readings and the concepts
+checklist are marked complete per researcher report. The toy experiment source
+is present and execution is reported, but saved results are absent and a rerun
+is blocked by missing PyTorch in the current `.venv`.
 
 **Overall project status:** Phase 1–3 experimental records and the initial
-Phase 4 pilot are complete; an approved Phase 4 baseline extension remains to
-run. Phase 0 onboarding is still incomplete. See
+Phase 4 pilot are complete; an approved Phase 4 baseline extension remains in
+progress. Phase 0 also remains in progress pending saved toy results and a
+verified rerun. See
 [`PROJECT_STATUS.md`](../PROJECT_STATUS.md) for results, limitations, and
 pending decisions.
 
-**Next Phase 0 step:** Begin Paper 1 — M'hamdi, Ren & May (2023).
+**Next Phase 0 step:** Save the toy experiment's run metrics, restore PyTorch
+in the active environment, and verify that the experiment can be rerun.
