@@ -42,6 +42,16 @@ BWT, FWT, and forgetting are not defined for this joint-training run and are
 `null` in the record. B1 is scheduled once as order-independent; it should not
 be repeated for each of the five stream orders.
 
+## Accuracy comparison CSV
+
+[`accuracy_comparison_B1_B2_B5_M3.csv`](./accuracy_comparison_B1_B2_B5_M3.csv)
+compares B1 with the completed B2/B5/M3 pilot overall and by language. The
+overall row reports B1 ACC 0.693, compared descriptively with the five-order
+means B2 0.6807, B5 0.6632, and M3 0.6858. B1 is one joint run; each existing
+baseline value is a mean across five orders at seed 42. The SD columns describe
+variation across those five orders, not training seeds. The deltas are
+descriptive differences, not significance tests or a confirmatory ranking.
+
 ## Validation and provenance
 
 - Every code cell in the executed notebook completed; no notebook execution
@@ -77,6 +87,8 @@ Kaggle session time. Setup, dataset/model downloads, and evaluation add time.
   prepared-data hashes.
 - [`results/`](./results/): validated B1 result record.
 - [`aggregate.json`](./aggregate.json): partial 1/31 extension summary.
+- [`accuracy_comparison_B1_B2_B5_M3.csv`](./accuracy_comparison_B1_B2_B5_M3.csv):
+  descriptive overall and per-language ACC comparison.
 - [Prepared B1 notebook template](../../notebooks/phase4_full_methods_seed42_b1_joint.ipynb)
   and [extension protocol](../../configs/controlled_10lang_full_methods_seed42_extension_protocol.json).
 

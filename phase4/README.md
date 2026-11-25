@@ -117,7 +117,9 @@ only completed extension record so far: the extension aggregate is therefore
 incomplete at 1/31, with 30 records still missing. Do not treat it as the final
 full-baseline comparison. The executed notebook, output archive, extracted
 record, and validation details are in the
-[B1 execution folder](./results/full_methods_seed42_b1_joint_2026-11-25/README.md).
+[B1 execution folder](./results/full_methods_seed42_b1_joint_2026-11-25/README.md);
+its [accuracy comparison CSV](./results/full_methods_seed42_b1_joint_2026-11-25/accuracy_comparison_B1_B2_B5_M3.csv)
+shows B1 alongside the initial B2/B5/M3 pilot, overall and by language.
 
 ### Kaggle notebooks
 
