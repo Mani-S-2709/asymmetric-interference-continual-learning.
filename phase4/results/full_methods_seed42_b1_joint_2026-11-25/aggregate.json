@@ -1,0 +1,865 @@
+{
+  "complete": false,
+  "completed_run_count": 1,
+  "expected_run_count": 31,
+  "methods": {
+    "B0": {
+      "complete": false,
+      "completed_runs": 0,
+      "expected_runs": 5,
+      "implementation_status": "implemented_reference_runner",
+      "metrics": {
+        "AA": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "ACC": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "BWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "F": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "FP": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "FWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        }
+      },
+      "name": "sequential_no_replay",
+      "run_ids": []
+    },
+    "B1": {
+      "complete": true,
+      "completed_runs": 1,
+      "expected_runs": 1,
+      "implementation_status": "implemented_reference_runner",
+      "metrics": {
+        "AA": {
+          "mean": 0.693,
+          "n": 1,
+          "std": null
+        },
+        "ACC": {
+          "mean": 0.693,
+          "n": 1,
+          "std": null
+        },
+        "BWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "F": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "FP": {
+          "mean": 0.693,
+          "n": 1,
+          "std": null
+        },
+        "FWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        }
+      },
+      "name": "joint_multilingual",
+      "run_ids": [
+        "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B1-order-independent-seed-42"
+      ]
+    },
+    "B3": {
+      "complete": false,
+      "completed_runs": 0,
+      "expected_runs": 5,
+      "implementation_status": "implemented_reference_runner",
+      "metrics": {
+        "AA": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "ACC": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "BWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "F": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "FP": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "FWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        }
+      },
+      "name": "derpp",
+      "run_ids": []
+    },
+    "B4": {
+      "complete": false,
+      "completed_runs": 0,
+      "expected_runs": 5,
+      "implementation_status": "implemented_reference_runner",
+      "metrics": {
+        "AA": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "ACC": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "BWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "F": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "FP": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "FWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        }
+      },
+      "name": "gradient_coreset_replay",
+      "run_ids": []
+    },
+    "B6": {
+      "complete": false,
+      "completed_runs": 0,
+      "expected_runs": 5,
+      "implementation_status": "implemented_reference_runner",
+      "metrics": {
+        "AA": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "ACC": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "BWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "F": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "FP": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "FWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        }
+      },
+      "name": "lr_adjust",
+      "run_ids": []
+    },
+    "B7": {
+      "complete": false,
+      "completed_runs": 0,
+      "expected_runs": 5,
+      "implementation_status": "implemented_reference_runner",
+      "metrics": {
+        "AA": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "ACC": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "BWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "F": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "FP": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "FWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        }
+      },
+      "name": "compass",
+      "run_ids": []
+    },
+    "B8": {
+      "complete": false,
+      "completed_runs": 0,
+      "expected_runs": 5,
+      "implementation_status": "implemented_reference_runner",
+      "metrics": {
+        "AA": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "ACC": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "BWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "F": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "FP": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        },
+        "FWT": {
+          "mean": null,
+          "n": 0,
+          "std": null
+        }
+      },
+      "name": "function_vector_training",
+      "run_ids": []
+    }
+  },
+  "missing_runs": [
+    {
+      "method_id": "B0",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-1",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B0-order-1-seed-42",
+      "task_order": [
+        "es",
+        "sw",
+        "ur",
+        "en",
+        "de",
+        "ar",
+        "bg",
+        "hi",
+        "ru",
+        "fr"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B0",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-2",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B0-order-2-seed-42",
+      "task_order": [
+        "de",
+        "ur",
+        "sw",
+        "fr",
+        "ru",
+        "ar",
+        "bg",
+        "hi",
+        "en",
+        "es"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B0",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-3",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B0-order-3-seed-42",
+      "task_order": [
+        "es",
+        "ur",
+        "ar",
+        "en",
+        "ru",
+        "hi",
+        "sw",
+        "bg",
+        "fr",
+        "de"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B0",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-4",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B0-order-4-seed-42",
+      "task_order": [
+        "es",
+        "ru",
+        "fr",
+        "de",
+        "hi",
+        "ur",
+        "ar",
+        "bg",
+        "en",
+        "sw"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B0",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-5",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B0-order-5-seed-42",
+      "task_order": [
+        "de",
+        "en",
+        "ru",
+        "ar",
+        "sw",
+        "es",
+        "bg",
+        "ur",
+        "hi",
+        "fr"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B3",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-1",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B3-order-1-seed-42",
+      "task_order": [
+        "es",
+        "sw",
+        "ur",
+        "en",
+        "de",
+        "ar",
+        "bg",
+        "hi",
+        "ru",
+        "fr"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B3",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-2",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B3-order-2-seed-42",
+      "task_order": [
+        "de",
+        "ur",
+        "sw",
+        "fr",
+        "ru",
+        "ar",
+        "bg",
+        "hi",
+        "en",
+        "es"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B3",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-3",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B3-order-3-seed-42",
+      "task_order": [
+        "es",
+        "ur",
+        "ar",
+        "en",
+        "ru",
+        "hi",
+        "sw",
+        "bg",
+        "fr",
+        "de"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B3",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-4",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B3-order-4-seed-42",
+      "task_order": [
+        "es",
+        "ru",
+        "fr",
+        "de",
+        "hi",
+        "ur",
+        "ar",
+        "bg",
+        "en",
+        "sw"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B3",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-5",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B3-order-5-seed-42",
+      "task_order": [
+        "de",
+        "en",
+        "ru",
+        "ar",
+        "sw",
+        "es",
+        "bg",
+        "ur",
+        "hi",
+        "fr"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B4",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-1",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B4-order-1-seed-42",
+      "task_order": [
+        "es",
+        "sw",
+        "ur",
+        "en",
+        "de",
+        "ar",
+        "bg",
+        "hi",
+        "ru",
+        "fr"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B4",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-2",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B4-order-2-seed-42",
+      "task_order": [
+        "de",
+        "ur",
+        "sw",
+        "fr",
+        "ru",
+        "ar",
+        "bg",
+        "hi",
+        "en",
+        "es"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B4",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-3",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B4-order-3-seed-42",
+      "task_order": [
+        "es",
+        "ur",
+        "ar",
+        "en",
+        "ru",
+        "hi",
+        "sw",
+        "bg",
+        "fr",
+        "de"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B4",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-4",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B4-order-4-seed-42",
+      "task_order": [
+        "es",
+        "ru",
+        "fr",
+        "de",
+        "hi",
+        "ur",
+        "ar",
+        "bg",
+        "en",
+        "sw"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B4",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-5",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B4-order-5-seed-42",
+      "task_order": [
+        "de",
+        "en",
+        "ru",
+        "ar",
+        "sw",
+        "es",
+        "bg",
+        "ur",
+        "hi",
+        "fr"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B6",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-1",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B6-order-1-seed-42",
+      "task_order": [
+        "es",
+        "sw",
+        "ur",
+        "en",
+        "de",
+        "ar",
+        "bg",
+        "hi",
+        "ru",
+        "fr"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B6",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-2",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B6-order-2-seed-42",
+      "task_order": [
+        "de",
+        "ur",
+        "sw",
+        "fr",
+        "ru",
+        "ar",
+        "bg",
+        "hi",
+        "en",
+        "es"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B6",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-3",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B6-order-3-seed-42",
+      "task_order": [
+        "es",
+        "ur",
+        "ar",
+        "en",
+        "ru",
+        "hi",
+        "sw",
+        "bg",
+        "fr",
+        "de"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B6",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-4",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B6-order-4-seed-42",
+      "task_order": [
+        "es",
+        "ru",
+        "fr",
+        "de",
+        "hi",
+        "ur",
+        "ar",
+        "bg",
+        "en",
+        "sw"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B6",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-5",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B6-order-5-seed-42",
+      "task_order": [
+        "de",
+        "en",
+        "ru",
+        "ar",
+        "sw",
+        "es",
+        "bg",
+        "ur",
+        "hi",
+        "fr"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B7",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-1",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B7-order-1-seed-42",
+      "task_order": [
+        "es",
+        "sw",
+        "ur",
+        "en",
+        "de",
+        "ar",
+        "bg",
+        "hi",
+        "ru",
+        "fr"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B7",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-2",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B7-order-2-seed-42",
+      "task_order": [
+        "de",
+        "ur",
+        "sw",
+        "fr",
+        "ru",
+        "ar",
+        "bg",
+        "hi",
+        "en",
+        "es"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B7",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-3",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B7-order-3-seed-42",
+      "task_order": [
+        "es",
+        "ur",
+        "ar",
+        "en",
+        "ru",
+        "hi",
+        "sw",
+        "bg",
+        "fr",
+        "de"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B7",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-4",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B7-order-4-seed-42",
+      "task_order": [
+        "es",
+        "ru",
+        "fr",
+        "de",
+        "hi",
+        "ur",
+        "ar",
+        "bg",
+        "en",
+        "sw"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B7",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-5",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B7-order-5-seed-42",
+      "task_order": [
+        "de",
+        "en",
+        "ru",
+        "ar",
+        "sw",
+        "es",
+        "bg",
+        "ur",
+        "hi",
+        "fr"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B8",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-1",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B8-order-1-seed-42",
+      "task_order": [
+        "es",
+        "sw",
+        "ur",
+        "en",
+        "de",
+        "ar",
+        "bg",
+        "hi",
+        "ru",
+        "fr"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B8",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-2",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B8-order-2-seed-42",
+      "task_order": [
+        "de",
+        "ur",
+        "sw",
+        "fr",
+        "ru",
+        "ar",
+        "bg",
+        "hi",
+        "en",
+        "es"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B8",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-3",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B8-order-3-seed-42",
+      "task_order": [
+        "es",
+        "ur",
+        "ar",
+        "en",
+        "ru",
+        "hi",
+        "sw",
+        "bg",
+        "fr",
+        "de"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B8",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-4",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B8-order-4-seed-42",
+      "task_order": [
+        "es",
+        "ru",
+        "fr",
+        "de",
+        "hi",
+        "ur",
+        "ar",
+        "bg",
+        "en",
+        "sw"
+      ],
+      "training_seed": 42
+    },
+    {
+      "method_id": "B8",
+      "method_status": "implemented_reference_runner",
+      "order_id": "order-5",
+      "run_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1-B8-order-5-seed-42",
+      "task_order": [
+        "de",
+        "en",
+        "ru",
+        "ar",
+        "sw",
+        "es",
+        "bg",
+        "ur",
+        "hi",
+        "fr"
+      ],
+      "training_seed": 42
+    }
+  ],
+  "note": "Metric means/std are across completed run-level values. Joint training does not define sequential BWT/FWT/forgetting; those values are omitted.",
+  "protocol_id": "xnli-phase4-full-methods-10lang-500x200-seed42-extension-v1",
+  "protocol_sha256": "842767e85c7649123639ee3a760d833387958a7e40ca8357610e1b81071f0f46",
+  "schema_version": 1
+}

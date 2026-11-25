@@ -110,6 +110,15 @@ records; together with the original 15, the screening comparison will contain
 46 records validated under two protocol IDs. Preserve both protocol hashes in
 any combined report.
 
+### Current extension status: B1 completed
+
+The order-independent B1 seed-42 run is validated with ACC 0.693. It is the
+only completed extension record so far: the extension aggregate is therefore
+incomplete at 1/31, with 30 records still missing. Do not treat it as the final
+full-baseline comparison. The executed notebook, output archive, extracted
+record, and validation details are in the
+[B1 execution folder](./results/full_methods_seed42_b1_joint_2026-11-25/README.md).
+
 ### Kaggle notebooks
 
 Attach
@@ -137,22 +146,26 @@ latest Kaggle output before ending the session; to resume, attach that output
 ZIP as a Kaggle input to the same notebook. A run is skipped only after its
 record validates against the extension protocol and prepared-data hash.
 
-### GPU-time planning estimates
+### GPU-time estimates and observations
 
 The completed B2/B5/M3 notebooks took 8.90–10.34 hours per order (mean
-9.49 hours) on the recorded Kaggle hardware. The new groups have not yet been
-benchmarked; use these as planning estimates, not guarantees:
+9.49 hours) on the recorded Kaggle hardware. The order-specific extension
+groups have not yet been benchmarked; their times are planning estimates, not
+guarantees. B1 now has one observed training-stage runtime:
 
-| Notebook workload | Approximate GPU time |
+| Notebook workload | GPU time |
 |---|---:|
 | B0 + B3 + B4, one order | 9–13 hours; B4 may increase this |
 | B6 + B7 + B8, one order | 8–11 hours |
-| B1, one joint run | 2–4 hours; no ten-language timing is available |
+| B1, one joint run | 30m 31s training stage on a Tesla T4; total notebook time is longer |
 
-These are rough extrapolations from the completed three-method runs. Check the
-current Kaggle session limit and GPU quota before each run. If a grouped
-notebook may exceed the available session time, its separate method cells and
-checkpoints allow resuming without retraining completed methods.
+The B1 time is the recorded Trainer `train_runtime` for one run, not a
+hardware-independent guarantee or the full notebook elapsed time; data/model
+downloads, setup, and evaluation add time. The other group estimates are rough
+extrapolations from the completed three-method runs. Check the current Kaggle
+session limit and GPU quota before each run. If a grouped notebook may exceed
+the available session time, its separate method cells and checkpoints allow
+resuming without retraining completed methods.
 
 To reproduce the aggregate from the archived result records:
 
