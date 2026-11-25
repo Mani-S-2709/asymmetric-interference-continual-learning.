@@ -48,9 +48,10 @@ Current hardware:
 * PyTorch: 2.14.1+cu130
 * CUDA runtime: 13.0
 
-Verification note (2026-11-25): the repository's current `.venv` could not
-import PyTorch, so the toy experiment could not be rerun in this environment.
-The hardware checklist above records the earlier environment setup.
+Verification note (2026-11-25): the archived experiment records a successful
+run on the NVIDIA GeForce RTX 2050. The repository's current `.venv` could not
+import PyTorch during this review, so a fresh local rerun attempt was blocked.
+Restore the recorded PyTorch/CUDA environment before reproducing the run.
 
 ---
 
@@ -338,54 +339,34 @@ The first three papers are the highest-priority papers because they establish th
 
 ---
 
-# 7. Toy Continual-Learning Experiment
+# 7. Completed Continual-Learning Experiment
 
-After the paper-reading foundation, implement a small continual-learning experiment.
+The completed Phase 0 demonstration is a two-stage cross-lingual sequence:
+fine-tune on English IMDb sentiment, then fine-tune the English-trained
+adapter on Hindi movie reviews. English is evaluated before and after Hindi
+training, and Hindi is evaluated after its training stage. This demonstrates
+sequential transfer and measurable forgetting. It replaces the originally
+outlined synthetic Task A/B/C demonstration; `experiments/tiny_cl.py` remains
+as an additional three-task synthetic implementation, but its run output was
+not part of the completion archive.
 
-The experiment should contain three sequential tasks:
+The archived results report:
 
-```text
-Task A
-  ↓
-Train
-  ↓
-Evaluate A
-  ↓
-Task B
-  ↓
-Train
-  ↓
-Evaluate A + B
-  ↓
-Task C
-  ↓
-Train
-  ↓
-Evaluate A + B + C
-```
+| Evaluation | Accuracy |
+|---|---:|
+| English IMDb before Hindi training | 0.914 (91.4%) |
+| Hindi movie reviews after Hindi training | 0.8939 (89.39%) |
+| English IMDb after Hindi training | 0.870 (87.0%) |
+| English forgetting (before minus after) | 0.044 (4.4 percentage points) |
 
-The purpose is to observe catastrophic forgetting directly.
-
-The experiment should record:
-
-* Accuracy on Task A after Task A
-* Accuracy on Task A after Task B
-* Accuracy on Task A after Task C
-* Accuracy on Task B after Task B
-* Accuracy on Task B after Task C
-* Accuracy on Task C after Task C
-
-Save experiment code in:
-
-```text
-experiments/
-```
-
-Save results in:
-
-```text
-results/
-```
+The archive included the training/evaluation source, Hindi data, result JSONs,
+trained adapters, tokenizer files, forgetting plot, and a Phase 0 report. The
+data, checkpoints, report, and exact archived source snapshots are extracted
+under the local `phase0/results/` and `phase0/data/` directories. These
+generated data/results are intentionally excluded from Git by `.gitignore`.
+The source snapshots preserve the versions used for the archived run without
+replacing newer active experiment scripts. The supplied archive SHA-256 is
+`158905470cbf575b772f89b907d658aa13ea7711ef0c0a77552f0df2bbb8e375`.
 
 ---
 
@@ -451,20 +432,20 @@ checklist is not an independent assessment.
 
 ## Engineering
 
-* [x] Toy continual-learning experiment implemented (`experiments/tiny_cl.py`)
-* [x] Sequential training is implemented; researcher reports execution
-* [x] Evaluation after every task is implemented
-* [x] Earlier-task accuracy is evaluated after later tasks
-* [ ] Results are saved as a project artifact
-* [ ] Experiment rerun is verified in the current project environment
+* [x] Continual-learning experiment implemented
+* [x] Sequential English-to-Hindi training completed
+* [x] English evaluated before and after Hindi training
+* [x] Forgetting measured (4.4 percentage points on English IMDb)
+* [x] Results and reproducibility artifacts saved
+* [x] Rerun code, data, and checkpoints preserved
 
-The checked-in toy script trains on three sequential tasks and prints accuracy
-for every task seen after each stage. The researcher reports that the experiment
-was executed, but no `phase0/results` directory or saved output is present in
-the project. A rerun attempted on 2026-11-25 stopped with
-`ModuleNotFoundError: No module named 'torch'` in the repository `.venv`.
-Save the executed metrics and make PyTorch available in the active environment
-before marking the final two engineering items complete.
+The archived completion package is internally consistent: English accuracy
+falls from 0.914 to 0.870, matching the recorded 0.044 forgetting value;
+Hindi accuracy is 0.8939 on 198 test examples. The package also contains 794
+Hindi training examples and trained checkpoints. A fresh rerun was not
+completed in the current repository `.venv`: the attempt stopped with
+`ModuleNotFoundError: No module named 'torch'`. Restore the recorded
+environment before rerunning.
 
 ## Research Connection
 
@@ -481,26 +462,26 @@ These items are also marked complete per the researcher's self-report.
 
 Phase 0 was originally intended to precede the full research experiments.
 Phases 1–4 have since been executed and are documented in
-[`PROJECT_STATUS.md`](../PROJECT_STATUS.md). The paper-reading and concept
-checklists are marked complete per the researcher's report; the reading-note
-files remain unfilled. Keep Phase 0 in progress until the toy run's results are
-saved and its rerun is verified.
+[`PROJECT_STATUS.md`](../PROJECT_STATUS.md). Phase 0 is now recorded complete
+based on the researcher's paper/concept self-report and the archived
+English-to-Hindi experiment results. The reading-note files remain unfilled;
+the current `.venv` also needs PyTorch restored before a fresh local rerun.
 
 ---
 
 # 11. Current Status
 
-**Phase 0 status:** In progress — all eight paper readings and the concepts
-checklist are marked complete per researcher report. The toy experiment source
-is present and execution is reported, but saved results are absent and a rerun
-is blocked by missing PyTorch in the current `.venv`.
+**Phase 0 status:** Complete — all eight paper readings and the concepts
+checklists are marked complete per researcher report, and the archived
+English-to-Hindi sequential experiment includes validated results and
+reproducibility artifacts. The current `.venv` needs PyTorch restored before a
+fresh local rerun.
 
 **Overall project status:** Phase 1–3 experimental records and the initial
-Phase 4 pilot are complete; an approved Phase 4 baseline extension remains in
-progress. Phase 0 also remains in progress pending saved toy results and a
-verified rerun. See
+Phase 4 pilot are complete; the approved Phase 4 baseline extension remains in
+progress. Phase 0 is complete. See
 [`PROJECT_STATUS.md`](../PROJECT_STATUS.md) for results, limitations, and
 pending decisions.
 
-**Next Phase 0 step:** Save the toy experiment's run metrics, restore PyTorch
-in the active environment, and verify that the experiment can be rerun.
+**Optional reproducibility step:** Restore PyTorch in the active environment
+and rerun the archived experiment.
